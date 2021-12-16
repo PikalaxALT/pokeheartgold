@@ -89,12 +89,15 @@ ALL_BUILDDIRS             := $(sort $(ALL_BUILDDIRS) $(foreach obj,$(ALL_OBJS),$
 NEF               := $(BUILD_DIR)/$(NEFNAME).nef
 ELF               := $(NEF:%.nef=%.elf)
 LCF               := $(NEF:%.nef=%.lcf)
+RESPONSE          := $(NEF:%.nef=%.response)
 SBIN              := $(NEF:%.nef=%.sbin)
 XMAP              := $(NEF).xMAP
 
+RESPONSE_TEMPLATE := $(WORK_DIR)/$(notdir $(MWLD:%.exe=%)).response.template
+
 MWCFLAGS           = $(DEFINES) $(OPTFLAGS) -enum int -lang c99 -Cpp_exceptions off -gccext,on -proc $(PROC) -msgstyle gcc -gccinc -i ./include -i $(WORK_DIR)/files -I$(WORK_DIR)/lib/include -ipa file -interworking
 MWASFLAGS          = $(DEFINES) -proc $(PROC_S) -i ./include -DSDK_ASM
-MWLDFLAGS         := -w off -proc $(PROC) -nopic -nopid -interworking -map closure,unused -symtab sort -m _start -msgstyle gcc
+MWLDFLAGS         := -w off -proc $(PROC) -nopic -nopid -interworking -map closure,unused -symtab sort -m _start -msgstyle gcc -Llib/asm -lcrt0.o
 ARFLAGS           := rcS
 
 export MWCIncludes := lib/include
@@ -178,9 +181,11 @@ else
 	$(SED) -i '/\} > check\.WORKRAM/a SDK_SUBPRIV_ARENA_LO = SDK_SUBPRIV_ARENA_LO + SDK_AUTOLOAD.EXT_WRAM.SIZE + SDK_AUTOLOAD.EXT_WRAM.BSS_SIZE;' $@
 endif
 
-$(NEF): $(LCF) $(ALL_OBJS)
-	echo $(ALL_OBJS:$(BUILD_DIR)/%=%) >$(BUILD_DIR)/obj.list
-	cd $(BUILD_DIR) && LM_LICENSE_FILE=$(BACK_REL)/$(LM_LICENSE_FILE) $(WINE) $(MWLD) $(MWLDFLAGS) $(LIBS) -o $(BACK_REL)/$(NEF) $(LCF:$(BUILD_DIR)/%=%) @obj.list
+$(RESPONSE): $(LSF) $(RESPONSE_TEMPLATE)
+	$(WINE) $(MAKELCF) $(MAKELCF_FLAGS) $^ $@
+
+$(NEF): $(LCF) $(RESPONSE) $(ALL_OBJS)
+	cd $(BUILD_DIR) && LM_LICENSE_FILE=$(BACK_REL)/$(LM_LICENSE_FILE) $(WINE) $(MWLD) $(MWLDFLAGS) $(LIBS) -o $(BACK_REL)/$(NEF) $(LCF:$(BUILD_DIR)/%=%) @$(BACK_REL)/$(RESPONSE)
 
 .INTERMEDIATE: $(BUILD_DIR)/obj.list
 

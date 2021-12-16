@@ -32,6 +32,7 @@ cmake-build-debug/
 
 *.lcf.template
 *.lcf
+*.response.template
 
 # Working files
 overlays/*/module_*.s
