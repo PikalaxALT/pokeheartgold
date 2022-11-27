@@ -81,9 +81,11 @@ usage () {
     echo "  -f FILE       Dump the indicated file, and use hexdump instead"
     echo "  -F FSDIR      Filesystem path on the home system"
     echo "  -t            Force THUMB instructions (default: ARM)"
+    echo "  -x            Decrypt the overlay sbin"
     echo "  -h            Show this message and exit"
 }
 
+decrypt=0
 while [[ $# -gt 0 ]]; do
   key="$1"
   case $key in
@@ -128,6 +130,10 @@ while [[ $# -gt 0 ]]; do
   -d)
     builddir="$2"
     shift 2
+    ;;
+  -x)
+    decrypt=1
+    shift
     ;;
   -*)
     usage
@@ -195,7 +201,16 @@ case "$mode" in
         "$MYDIR"/ntruncompbw "$basefile" "$vma" $((vma+compsize)) || { rm -f "$basefile"; exit 1; }
       }
     }
-    buildfile=$builddir/$ovyfile
+    if [ $decrypt == 1 ]; then
+      tmpfile=$(mktemp)
+      tmpfile2=$(mktemp)
+      $MYDIR/../mod123encry/mod123encry decry $basefile $tmpfile $overlay
+      $MYDIR/../mod123encry/mod123encry decry $buildfile $tmpfile2 $overlay
+      basefile=$tmpfile
+      buildfile=$tmpfile2
+    else
+      buildfile=$builddir/$ovyfile
+    fi
     ;;
   static|autoload)
     case $proc in
@@ -257,3 +272,5 @@ do-objdump () {
   arm-none-eabi-objdump -Drz -bbinary -m$proc $thumb --adjust-vma="$vma" --start-address="$start" --stop-address=$((start+size)) "$1"
 }
 cmp -s "$basefile" "$buildfile" || diff -u <(do-objdump "$basefile") <(do-objdump "$buildfile")
+if [ -n "$tmpfile" ]; then rm -f $tmpfile; fi
+if [ -n "$tmpfile2" ]; then rm -f $tmpfile2; fi

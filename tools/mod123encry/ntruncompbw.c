@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include "ntruncompbw.h"
@@ -32,7 +31,6 @@ uint32_t MIi_UncompressBackwards(unsigned char ** out_p, size_t compsize)
                 int ip = *--end;
                 int r7 = *--end;
 
-
                 r7 = ((r7 | (ip << 8)) & ~0xF000) + 2;
                 ip += 0x20;
                 while (ip >= 0) {
@@ -43,7 +41,7 @@ uint32_t MIi_UncompressBackwards(unsigned char ** out_p, size_t compsize)
             }
             if (end <= start)
                 break;
-                r5 <<= 1;
+            r5 <<= 1;
         }
     }
     *out_p = out;

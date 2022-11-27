@@ -8,18 +8,21 @@
 enum ExecMode {
     EXEC_DECRY = 0,
     EXEC_ENCRY = 1,
+    EXEC_HELP = 2,
 };
 
 struct Options {
     Options(int argc, char ** argv) {};
     virtual ~Options() = default;
     virtual int main() = 0;
-    static ExecMode TranslateExecMode(const char * value) {
+    static ExecMode TranslateExecMode(std::string const& value) {
         ExecMode mode;
-        if (strcmp(value, "decry") == 0) {
+        if (value == "decry") {
             mode = EXEC_DECRY;
-        } else if (strcmp(value, "encry") == 0) {
+        } else if (value == "encry") {
             mode = EXEC_ENCRY;
+        } else if (value == "help" || value == "-h" || value == "--help") {
+            mode = EXEC_HELP;
         } else {
             throw std::invalid_argument(std::string("invalid ExecMode value: expected 'encry' or 'decry'; got ") + value);
         }
