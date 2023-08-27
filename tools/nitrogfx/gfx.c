@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <assert.h>
 #include "global.h"
 #include "gfx.h"
 #include "util.h"
@@ -704,6 +705,8 @@ void ReadNtrPalette(char *path, struct Palette *palette, int bitdepth, int palIn
         FATAL_ERROR("Not a valid NCLR or NCPR palette file.\n");
     }
 
+    int nblocks = data[0xE] | (data[0xF] << 8);
+
     unsigned char *paletteHeader = data + 0x10;
 
     if (memcmp(paletteHeader, "TTLP", 4) != 0)
@@ -719,29 +722,37 @@ void ReadNtrPalette(char *path, struct Palette *palette, int bitdepth, int palIn
     bitdepth = bitdepth ? bitdepth : palette->bitDepth;
 
     size_t paletteSize = (paletteHeader[0x10]) | (paletteHeader[0x11] << 8) | (paletteHeader[0x12] << 16) | (paletteHeader[0x13] << 24);
-    if (palIndex == 0) {
-        palette->numColors = paletteSize / 2;
-    } else {
-        palette->numColors = bitdepth == 4 ? 16 : 256; //remove header and divide by 2
-        --palIndex;
+
+    int numColors = bitdepth == 4 ? 16 : 256; //remove header and divide by 2
+    int numPalettes = paletteSize / numColors / 2;
+    size_t pcmp_offset = -1u;
+    if (nblocks == 2) {
+        pcmp_offset = 0x28 + paletteSize;
+        numPalettes = data[pcmp_offset + 0x8] | (data[pcmp_offset + 0x9] << 8);
+    } else if (palIndex != 0) {
+        numPalettes = 1;
     }
+
+    palette->numColors = numColors * numPalettes;
+    --palIndex;
 
     unsigned char *paletteData = paletteHeader + 0x18;
 
-    for (int i = 0; i < 256; i++)
+    for (int i = 0; i < numPalettes; i++)
     {
-        if (i < palette->numColors)
-        {
-            uint16_t paletteEntry = (paletteData[(32 * palIndex) + i * 2 + 1] << 8) | paletteData[(32 * palIndex) + i * 2];
-            palette->colors[i].red = UPCONVERT_BIT_DEPTH(GET_GBA_PAL_RED(paletteEntry));
-            palette->colors[i].green = UPCONVERT_BIT_DEPTH(GET_GBA_PAL_GREEN(paletteEntry));
-            palette->colors[i].blue = UPCONVERT_BIT_DEPTH(GET_GBA_PAL_BLUE(paletteEntry));
+        if (pcmp_offset != -1u) {
+            palIndex = data[pcmp_offset + 0x10 + i * 2] | (data[pcmp_offset + 0x11 + i * 2] << 8);
+        } else if (numPalettes != 1) {
+            palIndex = i;
         }
-        else
-        {
-            palette->colors[i].red = 0;
-            palette->colors[i].green = 0;
-            palette->colors[i].blue = 0;
+        for (int j = 0; j < numColors; j++) {
+            size_t pal_offset = (palIndex * numColors + j) * 2;
+            assert(pal_offset < paletteSize);
+            size_t out_offset = i * numColors + j;
+            uint16_t paletteEntry = (paletteData[pal_offset + 1] << 8) | paletteData[pal_offset];
+            palette->colors[out_offset].red = UPCONVERT_BIT_DEPTH(GET_GBA_PAL_RED(paletteEntry));
+            palette->colors[out_offset].green = UPCONVERT_BIT_DEPTH(GET_GBA_PAL_GREEN(paletteEntry));
+            palette->colors[out_offset].blue = UPCONVERT_BIT_DEPTH(GET_GBA_PAL_BLUE(paletteEntry));
         }
     }
 
@@ -769,20 +780,17 @@ void WriteGbaPalette(char *path, struct Palette *palette)
     fclose(fp);
 }
 
-void WriteNtrPalette(char *path, struct Palette *palette, bool ncpr, bool ir, int bitdepth, bool pad, int compNum)
+void WriteNtrPalette(char *path, struct Palette *palette, bool ncpr, bool ir, int bitdepth, bool pad, int compNum, bool withNCMP)
 {
     FILE *fp = fopen(path, "wb");
 
     if (fp == NULL)
         FATAL_ERROR("Failed to open \"%s\" for writing.\n", path);
 
-    int colourNum = pad ? 256 : 16;
+    int colourNum = pad ? 256 : palette->numColors;
 
     uint32_t size = colourNum * 2; //todo check if there's a better way to detect :/
     uint32_t extSize = size + (ncpr ? 0x10 : 0x18);
-
-    //NCLR header
-    WriteGenericNtrHeader(fp, (ncpr ? "RPCN" : "RLCN"), extSize, !ncpr, false, 1);
 
     unsigned char palHeader[0x18] =
             {
@@ -815,10 +823,18 @@ void WriteNtrPalette(char *path, struct Palette *palette, bool ncpr, bool ir, in
     palHeader[18] = (size >> 16) & 0xFF;
     palHeader[19] = (size >> 24) & 0xFF;
 
+    uint32_t numPalettes = withNCMP ? palette->numColors >> bitdepth : 1;
+    uint32_t ncmpSize = withNCMP ? 0x10 + 2 * numPalettes : 0;
+    uint32_t fullSize = extSize + ncmpSize;
+
+    //NCLR header
+    WriteGenericNtrHeader(fp, (ncpr ? "RPCN" : "RLCN"), fullSize, !ncpr, false, withNCMP ? 2 : 1);
+
     fwrite(palHeader, 1, 0x18, fp);
 
     unsigned char * colours = malloc(colourNum * 2);
     //palette data
+    //todo: is there any other purpose for NCMP?
     for (int i = 0; i < colourNum; i++)
     {
         if (i < palette->numColors)
@@ -847,6 +863,21 @@ void WriteNtrPalette(char *path, struct Palette *palette, bool ncpr, bool ir, in
 
     fwrite(colours, 1, colourNum * 2, fp);
     free(colours);
+
+    if (withNCMP) {
+        unsigned char ncmpHeader[0x10] = {0x50, 0x4D, 0x43, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xEF, 0xBE, 0x08, 0x00, 0x00, 0x00};
+        ncmpHeader[0x4] = ncmpSize & 0xFF;
+        ncmpHeader[0x5] = (ncmpSize >> 8) & 0xFF;
+        ncmpHeader[0x6] = (ncmpSize >> 16) & 0xFF;
+        ncmpHeader[0x7] = (ncmpSize >> 24) & 0xFF;
+        ncmpHeader[0x8] = numPalettes & 0xFF;
+        ncmpHeader[0x9] = (numPalettes >> 8) & 0xFF;
+        fwrite(ncmpHeader, 1, 0x10, fp);
+        for (int i = 0; i < numPalettes; ++i) {
+            unsigned char index[2] = {i & 0xFF, (i >> 8) & 0xFF};
+            fwrite(index, 1, 2, fp);
+        }
+    }
 
     fclose(fp);
 }

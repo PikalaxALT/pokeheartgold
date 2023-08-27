@@ -551,7 +551,7 @@ void HandlePngToNtrCommand(char *inputPath, char *outputPath, int argc, char **a
 
 void HandlePngToGbaPaletteCommand(char *inputPath, char *outputPath, int argc UNUSED, char **argv UNUSED)
 {
-    struct Palette palette;
+    struct Palette palette = {0};
 
     ReadPngPalette(inputPath, &palette);
     WriteGbaPalette(outputPath, &palette);
@@ -559,7 +559,7 @@ void HandlePngToGbaPaletteCommand(char *inputPath, char *outputPath, int argc UN
 
 void HandlePngToNtrPaletteCommand(char *inputPath, char *outputPath, int argc, char **argv)
 {
-    struct Palette palette;
+    struct Palette palette = {0};
     bool ncpr = false;
     bool ir = false;
     bool nopad = false;
@@ -615,12 +615,12 @@ void HandlePngToNtrPaletteCommand(char *inputPath, char *outputPath, int argc, c
     }
 
     ReadPngPalette(inputPath, &palette);
-    WriteNtrPalette(outputPath, &palette, ncpr, ir, bitdepth, !nopad, compNum);
+    WriteNtrPalette(outputPath, &palette, ncpr, ir, bitdepth, !nopad, compNum, false);
 }
 
 void HandleGbaToJascPaletteCommand(char *inputPath, char *outputPath, int argc UNUSED, char **argv UNUSED)
 {
-    struct Palette palette;
+    struct Palette palette = {0};
 
     ReadGbaPalette(inputPath, &palette);
     WriteJascPalette(outputPath, &palette);
@@ -628,7 +628,7 @@ void HandleGbaToJascPaletteCommand(char *inputPath, char *outputPath, int argc U
 
 void HandleNtrToJascPaletteCommand(char *inputPath, char *outputPath, int argc, char **argv)
 {
-    struct Palette palette;
+    struct Palette palette = {0};
     int bitdepth = 0;
 
     for (int i = 3; i < argc; i++)
@@ -685,7 +685,7 @@ void HandleJascToGbaPaletteCommand(char *inputPath, char *outputPath, int argc, 
         }
     }
 
-    struct Palette palette;
+    struct Palette palette = {0};
 
     ReadJascPalette(inputPath, &palette);
 
@@ -703,6 +703,7 @@ void HandleJascToNtrPaletteCommand(char *inputPath, char *outputPath, int argc, 
     bool nopad = false;
     int bitdepth = 0;
     int compNum = 0;
+    bool withNCMP = false;
 
     for (int i = 3; i < argc; i++)
     {
@@ -759,20 +760,24 @@ void HandleJascToNtrPaletteCommand(char *inputPath, char *outputPath, int argc, 
         {
             nopad = true;
         }
+        else if (strcmp(option, "-with-ncmp") == 0)
+        {
+            withNCMP = true;
+        }
         else
         {
             FATAL_ERROR("Unrecognized option \"%s\".\n", option);
         }
     }
 
-    struct Palette palette;
+    struct Palette palette = {0};
 
     ReadJascPalette(inputPath, &palette);
 
     if (numColors != 0)
         palette.numColors = numColors;
 
-    WriteNtrPalette(outputPath, &palette, ncpr, ir, bitdepth, !nopad, compNum);
+    WriteNtrPalette(outputPath, &palette, ncpr, ir, bitdepth, !nopad, compNum, withNCMP);
 }
 
 void HandleJsonToNtrCellCommand(char *inputPath, char *outputPath, int argc UNUSED, char **argv UNUSED)
