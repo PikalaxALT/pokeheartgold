@@ -2,7 +2,7 @@
 #include "global.h"
 #include "intro_movie_internal.h"
 #include "unk_0200ACF0.h"
-#include "unk_0200B150.h"
+#include "oam_manager.h"
 #include "unk_0200FA24.h"
 #include "unk_020215A0.h"
 #include "unk_02022588.h"

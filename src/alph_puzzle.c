@@ -21,7 +21,7 @@
 #include "font.h"
 #include "yes_no_prompt.h"
 #include "vram_transfer_manager.h"
-#include "unk_0200B150.h"
+#include "oam_manager.h"
 #include "unk_02023694.h"
 #include "msgdata/msg/msg_0002.h"
 #include "msgdata/msg.naix"

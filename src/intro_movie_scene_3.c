@@ -3,7 +3,7 @@
 #include "system.h"
 #include "gf_gfx_loader.h"
 #include "unk_0200ACF0.h"
-#include "unk_0200B150.h"
+#include "oam_manager.h"
 #include "unk_0200FA24.h"
 #include "unk_0201F4C4.h"
 #include "unk_020215A0.h"

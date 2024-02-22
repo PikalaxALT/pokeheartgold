@@ -3,7 +3,7 @@
 #include "global.h"
 #include "intro_movie_internal.h"
 #include "system.h"
-#include "unk_0200B150.h"
+#include "oam_manager.h"
 #include "unk_0200FA24.h"
 
 void IntroMovie_Scene5_VBlankCB(void *pVoid);

@@ -11,7 +11,7 @@
 #include "sys_task_api.h"
 #include "system.h"
 #include "title_screen.h"
-#include "unk_0200B150.h"
+#include "oam_manager.h"
 #include "unk_0200FA24.h"
 #include "unk_020215A0.h"
 #include "unk_02022588.h"

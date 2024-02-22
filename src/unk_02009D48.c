@@ -3,7 +3,7 @@
 #include "unk_0200ACF0.h"
 #include "unk_02023694.h"
 #include "unk_02025C44.h"
-#include "unk_0200B150.h"
+#include "oam_manager.h"
 #include "unk_020215A0.h"
 #include "unk_02022588.h"
 

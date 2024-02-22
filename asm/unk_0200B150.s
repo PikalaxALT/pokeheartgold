@@ -1,53 +1,9 @@
 	.include "asm/macros.inc"
 	.include "unk_0200B150.inc"
 	.include "global.inc"
-
-	.bss
-
-_021D0EB0:
-	.space 4
+	.extern _021D0EB0
 
 	.text
-
-	thumb_func_start OamManager_Create
-OamManager_Create: ; 0x0200B150
-	push {r3, r4, lr}
-	sub sp, #0x14
-	add r4, r0, #0
-	cmp r4, #4
-	bge _0200B164
-	mov r0, #4
-	cmp r1, #0x7c
-	ble _0200B164
-	sub r4, r0, r4
-	sub r1, r1, r4
-_0200B164:
-	cmp r2, #1
-	bge _0200B174
-	mov r4, #1
-	cmp r3, #0x1e
-	ble _0200B176
-	sub r2, r4, r2
-	sub r3, r3, r2
-	b _0200B176
-_0200B174:
-	add r4, r2, #0
-_0200B176:
-	ldr r2, [sp, #0x20]
-	str r2, [sp]
-	ldr r2, [sp, #0x24]
-	str r2, [sp, #4]
-	ldr r2, [sp, #0x28]
-	str r2, [sp, #8]
-	ldr r2, [sp, #0x2c]
-	str r2, [sp, #0xc]
-	ldr r2, [sp, #0x30]
-	str r2, [sp, #0x10]
-	add r2, r4, #0
-	bl sub_0200B194
-	add sp, #0x14
-	pop {r3, r4, pc}
-	thumb_func_end OamManager_Create
 
 	thumb_func_start sub_0200B194
 sub_0200B194: ; 0x0200B194
