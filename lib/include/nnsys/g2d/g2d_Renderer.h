@@ -1,6 +1,10 @@
 #ifndef NNSYS_G2D_G2D_RENDERER_H_
 #define NNSYS_G2D_G2D_RENDERER_H_
 
+#include <nitro.h>
+#include <nnsys/g2d/g2d_RendererCore.h>
+#include <nnsys/g2d/fmt/g2d_Cell_data.h>
+
 struct NNSG2dRendererInstance;
 struct NNSG2dRenderSurface;
 
@@ -37,7 +41,7 @@ typedef struct NNSG2dRendererInstance {
     NNSG2dRndCoreInstance rendererCore;
     NNSG2dRenderSurface* pTargetSurfaceList;
     NNSG2dRenderSurface* pCurrentSurface;
-    const NNSG2dPaletteSwapTable* pPaletteSwapTbl;
+    const NNSG2dPaletteData* pPaletteSwapTbl;
     u32 opzHint;
     fx32 spriteZoffsetStep;
     u32 overwriteEnableFlag;
@@ -48,5 +52,9 @@ typedef struct NNSG2dRendererInstance {
     u16 overwritePlttNoOffset;
     u16 pad16_;
 } NNSG2dRendererInstance;
+
+void NNS_G2dInitRenderer(NNSG2dRendererInstance *pRend);
+void NNS_G2dAddRendererTargetSurface(NNSG2dRendererInstance *pRend, NNSG2dRenderSurface *pNew);
+void NNS_G2dInitRenderSurface(NNSG2dRenderSurface *pSurface);
 
 #endif //NNSYS_G2D_G2D_RENDERER_H_

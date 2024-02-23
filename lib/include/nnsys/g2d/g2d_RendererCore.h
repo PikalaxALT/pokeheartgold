@@ -1,6 +1,10 @@
 #ifndef NNSYS_G2D_G2D_RENDERERCORE_H_
 #define NNSYS_G2D_G2D_RENDERERCORE_H_
 
+#include <nitro.h>
+#include <nnsys/g2d/g2d_Vec_data.h>
+#include <nnsys/g2d/fmt/g2d_Cell_data.h>
+
 #define MtxCache_NOT_AVAILABLE                  0xFFFF
 #define MtxCache_NOT_AVAILABLE_ForMemFill       0xFFFFFFFF
 #define NNS_G2D_NUMBER_OF_2DGRAPHICS_ENGINE     2

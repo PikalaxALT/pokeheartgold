@@ -1,6 +1,9 @@
 #ifndef NNSYS_G2D_FMT_G2D_CELL_DATA_H_
 #define NNSYS_G2D_FMT_G2D_CELL_DATA_H_
 
+#include <nitro.h>
+#include <nnsys/g2d/fmt/g2d_Character_data.h>
+
 typedef struct NNSG2dCellOAMAttrData {
     u16 attr0;
     u16 attr1;
