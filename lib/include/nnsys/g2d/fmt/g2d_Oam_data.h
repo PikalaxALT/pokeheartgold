@@ -1,0 +1,6 @@
+#ifndef NNSYS_G2D_FMT_G2D_OAM_DATA_H_
+#define NNSYS_G2D_FMT_G2D_OAM_DATA_H_
+
+#define NNS_G2D_OAM_AFFINE_IDX_NONE                0xFFFE
+
+#endif //NNSYS_G2D_FMT_G2D_OAM_DATA_H_

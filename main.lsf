@@ -32,7 +32,6 @@ Static main
 	Object src/unk_0200A090.o
 	Object src/unk_0200ACF0.o
 	Object src/oam_manager.o
-	Object asm/unk_0200B150.o
 	Object src/brightness.o
 	Object src/msgdata.o
 	Object src/message_format.o

@@ -107,12 +107,12 @@ SpriteList *G2dRenderer_Init(int a0, GF_G2dRenderer *renderer, HeapID heapId) {
     rect.posTopLeft.y = 0;
     rect.sizeView.x = 255 * FX32_ONE;
     rect.sizeView.y = 192 * FX32_ONE;
-    sub_0200B27C(&renderer->renderSurface[0], &rect, 1, &renderer->rendererInstance);
+    sub_0200B27C(&renderer->renderSurface[0], &rect, NNS_G2D_SURFACETYPE_MAIN2D, &renderer->rendererInstance);
     rect.posTopLeft.x = 0;
     rect.posTopLeft.y = 192 * FX32_ONE;
     rect.sizeView.x = 255 * FX32_ONE;
     rect.sizeView.y = 192 * FX32_ONE;
-    sub_0200B27C(&renderer->renderSurface[1], &rect, 2, &renderer->rendererInstance);
+    sub_0200B27C(&renderer->renderSurface[1], &rect, NNS_G2D_SURFACETYPE_SUB2D, &renderer->rendererInstance);
     param.unk_0 = a0;
     param.rendererInstance = &renderer->rendererInstance;
     param.heapId = heapId;
