@@ -1,6 +1,8 @@
 #ifndef NNSYS_G2D_FMT_G2D_ANIM_DATA_H_
 #define NNSYS_G2D_FMT_G2D_ANIM_DATA_H_
 
+#include <nitro.h>
+
 typedef enum NNSG2dAnimationPlayMode {
     NNS_G2D_ANIMATIONPLAYMODE_INVALID = 0x0,
     NNS_G2D_ANIMATIONPLAYMODE_FORWARD,

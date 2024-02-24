@@ -3,8 +3,17 @@
 
 #include "unk_02009D48.h"
 
+typedef struct SpriteTemplateNoScaleRotation {
+    SpriteList *spriteList;                      // 000
+    const struct SpriteResourcesHeader *header;  // 004
+    VecFx32 position;                            // 008
+    u32 priority;                                // 014
+    NNS_G2D_VRAM_TYPE whichScreen;               // 018
+    HeapID heapId;                               // 1C
+} SpriteTemplateNoScaleRotation;
+
 typedef struct SpriteTemplate {
-    void *spriteList;                            // 000
+    SpriteList *spriteList;                      // 000
     const struct SpriteResourcesHeader *header;  // 004
     VecFx32 position;                            // 008
     VecFx32 scale;                               // 014
@@ -14,13 +23,31 @@ typedef struct SpriteTemplate {
     HeapID heapId;                               // 02C
 } SpriteTemplate;
 
-struct SpriteAnimationData {
+typedef struct SpriteAnimationData {
     const NNSG2dCellDataBank *cellBank;
     const NNSG2dCellAnimBankData *animBankData;
     NNSG2dCellAnimation animation;
-};
+} SpriteAnimationData;
 
-#define SPRITE_ANIMATION_DATA_WORD_COUNT  (sizeof(struct SpriteAnimationData)/4)
+typedef struct SpriteVramAnimationData {
+    const NNSG2dCellDataBank *cellBank;
+    const NNSG2dCellAnimBankData *animBankData;
+    NNSG2dCellAnimation animation;
+    u32 cellTransferHandle;
+} SpriteVramAnimationData;
+
+typedef struct SpriteMulticellAnimation {
+    const NNSG2dCellDataBank *cellBank;
+    const NNSG2dCellAnimBankData *animBankData;
+    NNSG2dMultiCellAnimation animation;
+    const NNSG2dMultiCellDataBank *multiDataBank;
+    const NNSG2dMultiCellAnimBankData *multiAnimBankData;
+    // UB: node and cellAnim spill over into Sprite::imageProxy
+    NNSG2dNode *node;
+    NNSG2dCellAnimation *cellAnim;
+} SpriteMulticellAnimation;
+
+#define SPRITE_ANIMATION_DATA_WORD_COUNT  (29)
 
 typedef struct Sprite {
     VecFx32 matrix;                                      // 000
@@ -37,7 +64,7 @@ typedef struct Sprite {
     u8 drawFlag;                                         // 034
     u8 animationFrame;                                   // 035
     fx32 frame;                                          // 038
-    void *unkPtr;                                        // 03c
+    SpriteList *spriteList;                              // 03c
     u32 animationData[SPRITE_ANIMATION_DATA_WORD_COUNT]; // 040, cast to SpriteAnimationData internally
     NNSG2dImageProxy imageProxy;                         // 0b4
     NNSG2dImagePaletteProxy paletteProxy;                // 0d8
@@ -50,6 +77,18 @@ typedef struct Sprite {
     struct Sprite *next;                                 // 100
 } Sprite;
 
+struct SpriteList {
+    Sprite *spriteListInternal;
+    int maxSprites;
+    Sprite **spriteHeap;
+    int unk_00C;
+    Sprite head;
+    NNSG2dRendererInstance *renderer;
+    void *clactDefaultNanrRaw;
+    NNSG2dAnimBankData *clactDefaultNanr;
+    BOOL unk_120;
+};  // size: 0x124
+
 typedef struct UnkImageStruct {
     Sprite *sprite;
     SpriteResourcesHeader *spriteResourcesHeader;
@@ -58,51 +97,57 @@ typedef struct UnkImageStruct {
 } UnkImageStruct;
 
 SpriteList *SpriteList_Create(struct SpriteListParam *param);
-Sprite *CreateSprite(const SpriteTemplate *template);
-void Set2dSpriteAnimActiveFlag(Sprite *sprite, int active);
-void SpriteList_Delete(SpriteList *spriteList);
+BOOL SpriteList_Delete(SpriteList *spriteList);
 void sub_0202457C(SpriteList *spriteList);
+Sprite *CreateSprite(const SpriteTemplate *template);
+Sprite *sub_02024714(const SpriteTemplateNoScaleRotation *template);
 void Sprite_Delete(Sprite *sprite);
 void Sprite_SetMatrix(Sprite *sprite, VecFx32 *pos);
-NNSG2dImagePaletteProxy *sub_02024B34(Sprite *sprite);
-NNS_G2D_VRAM_TYPE Sprite_GetVramType(Sprite *sprite);
-void sub_0202487C(Sprite *sprite, u8 a1);
+void sub_020247E4(Sprite *sprite, VecFx32 *affine);
+void sub_020247F4(Sprite *sprite, VecFx32 *scale);
+void sub_02024804(Sprite *sprite, VecFx32 *scale, u8 affine);
+void sub_02024818(Sprite *sprite, u32 rotation);
+void sub_0202481C(Sprite *sprite, u32 rotation, u8 affine);
 void Set2dSpriteVisibleFlag(Sprite *sprite, int a1);
-void sub_02024868(Sprite *sprite, int);
+void Set2dSpriteAnimActiveFlag(Sprite *sprite, int active);
+void sub_02024868(Sprite *sprite, fx32 frame);
+void sub_0202487C(Sprite *sprite, u8 affine);
+void sub_02024890(Sprite *sprite, u8 a1);
 VecFx32 *Sprite_GetMatrixPtr(Sprite *sprite);
 VecFx32 *sub_020248B0(Sprite *sprite);
-void sub_020247F4(Sprite *sprite, VecFx32 *a1);
-void sub_02024818(Sprite *sprite, u32 a1);
 u16 sub_020248B4(Sprite *sprite);
-void sub_02024890(Sprite *sprite, u8 a1);
-void sub_020247E4(Sprite *sprite, VecFx32 *a1);
-void sub_02024B38(Sprite *sprite, BOOL a1);
-void sub_02024B78(Sprite *sprite, GXOamMode mode);
-GXOamMode sub_02024BAC(Sprite *sprite);
-u32 sub_02024C9C(Sprite *sprite);
+BOOL Get2dSpriteVisibleFlag(Sprite *sprite);
+BOOL sub_020248C0(Sprite *sprite);
 u32 Get2dSpriteAnimSeqNo(Sprite *sprite);
 void Set2dSpriteAnimSeqNo(Sprite *sprite, int seqNo);
 void TryChange2dSpriteAnimSeqNo(Sprite *sprite, int seqNo);
-u16 Get2dSpriteCurrentAnimSeqNo(Sprite *sprite);
 void Sprite_ResetAnimCtrlState(Sprite *sprite);
+u16 Get2dSpriteCurrentAnimSeqNo(Sprite *sprite);
+void Sprite_TickCellOrMulticellAnimation(Sprite *sprite, fx32 tick);
 void Sprite_SetAnimCtrlCurrentFrame(Sprite *sprite, u16 frameNo);
 u16 Sprite_GetAnimCtrlCurrentFrame(Sprite *sprite);
-BOOL Get2dSpriteVisibleFlag(Sprite *sprite);
-void Sprite_SetPalOffset(Sprite *sprite, u8 palOffset);
-void Sprite_TickCellOrMulticellAnimation(Sprite *sprite, fx32 tick);
+void Sprite_SetPriority(Sprite *sprite, u8 priority);
+u8 Sprite_GetPriority(Sprite *sprite);
 void Sprite_SetPalIndex(Sprite *sprite, int palIndex);
 void sub_02024A48(Sprite *sprite, int palIndex);
 int Sprite_GetPalIndex(Sprite *sprite);
+void Sprite_SetPalOffset(Sprite *sprite, u8 palOffset);
 void sub_02024AA8(Sprite *sprite, s32 palette);
 u8 Sprite_GetPalOffset(Sprite *sprite);
-void Sprite_SetPriority(Sprite *sprite, u8 priority);
-u8 Sprite_GetPriority(Sprite *sprite);
 void Sprite_SetDrawPriority(Sprite *sprite, u16 priority);
 u16 Sprite_GetDrawPriority(Sprite *sprite);
+void sub_02024B00(Sprite *sprite, NNSG2dImageProxy *imageProxy);
 NNSG2dImageProxy *sub_02024B1C(Sprite *sprite);
+void sub_02024B20(Sprite *sprite, NNSG2dImagePaletteProxy *plttProxy);
+NNSG2dImagePaletteProxy *sub_02024B34(Sprite *sprite);
+void sub_02024B38(Sprite *sprite, BOOL a1);
+NNS_G2D_VRAM_TYPE Sprite_GetVramType(Sprite *sprite);
 int Sprite_IsCellAnimationRunning(Sprite *sprite);
-NNSG2dCellAnimation *sub_02024CB8(Sprite *sprite);
+void sub_02024B78(Sprite *sprite, GXOamMode mode);
+GXOamMode sub_02024BAC(Sprite *sprite);
 void sub_02024BBC(HeapID heapID);
 void sub_02024BF4(HeapID heapID);
+u32 sub_02024C9C(Sprite *sprite);
+NNSG2dCellAnimation *sub_02024CB8(Sprite *sprite);
 
 #endif //POKEHEARTGOLD_SPRITE_H

@@ -1,6 +1,8 @@
 #ifndef NNSYS_G2D_FMT_G2D_MULTICELL_DATA_H_
 #define NNSYS_G2D_FMT_G2D_MULTICELL_DATA_H_
 
+#include <nitro.h>
+
 typedef struct NNSG2dMultiCellHierarchyData {
     u16 animSequenceIdx;
     s16 posX;

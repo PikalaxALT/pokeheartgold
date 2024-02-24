@@ -98,7 +98,7 @@ void SpriteResourceHeaderList_Destroy(SpriteResourceHeaderList *list) {
     FreeToHeap(list);
 }
 
-SpriteList *G2dRenderer_Init(int a0, GF_G2dRenderer *renderer, HeapID heapId) {
+SpriteList *G2dRenderer_Init(int maxSprites, GF_G2dRenderer *renderer, HeapID heapId) {
     struct SpriteListParam param;
     NNSG2dViewRect rect;
 
@@ -113,7 +113,7 @@ SpriteList *G2dRenderer_Init(int a0, GF_G2dRenderer *renderer, HeapID heapId) {
     rect.sizeView.x = 255 * FX32_ONE;
     rect.sizeView.y = 192 * FX32_ONE;
     sub_0200B27C(&renderer->renderSurface[1], &rect, NNS_G2D_SURFACETYPE_SUB2D, &renderer->rendererInstance);
-    param.unk_0 = a0;
+    param.maxSprites = maxSprites;
     param.rendererInstance = &renderer->rendererInstance;
     param.heapId = heapId;
     return SpriteList_Create(&param);

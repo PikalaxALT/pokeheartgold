@@ -31,18 +31,18 @@ struct ResdatNarcEntry {
     u32 priority;
 };
 
-typedef struct SpriteList SpriteList;
-
 typedef struct GF_G2dRenderer {
     NNSG2dRendererInstance rendererInstance;
     NNSG2dRenderSurface renderSurface[2];
 } GF_G2dRenderer;
 
 struct SpriteListParam {
-    int unk_0;
+    int maxSprites;
     NNSG2dRendererInstance *rendererInstance;
     HeapID heapId;
 };
+
+typedef struct SpriteList SpriteList;
 
 void CreateSpriteResourcesHeader(SpriteResourcesHeader *hdr, int charId, int plttId, int cellId, int cellAnmId, int multiCellId, int multiCellAnmId, int transfer, int priority, struct _2DGfxResMan *charMan, struct _2DGfxResMan *plttMan, struct _2DGfxResMan *cellMan, struct _2DGfxResMan *cellAnmMan, struct _2DGfxResMan *multiCellMan, struct _2DGfxResMan *multiCellAnmMan);
 SpriteResourceHeaderList *SpriteResourceHeaderList_Create(const struct ResdatNarcEntry *resdatNarcEntry, HeapID heapId, struct _2DGfxResMan *charMan, struct _2DGfxResMan *plttMan, struct _2DGfxResMan *cellMan, struct _2DGfxResMan *animMan, struct _2DGfxResMan *mcelMan, struct _2DGfxResMan *manmMan);

@@ -1,7 +1,9 @@
 #ifndef NNSYS_G2D_G2D_CELLANIMATION_H_
 #define NNSYS_G2D_G2D_CELLANIMATION_H_
 
+#include <nnsys/g2d/fmt/g2d_Cell_data.h>
 #include <nnsys/g2d/g2d_Animation.h>
+#include <nnsys/g2d/fmt/g2d_SRTControl_data.h>
 
 typedef NNSG2dAnimBankData NNSG2dCellAnimBankData;
 
@@ -12,5 +14,7 @@ typedef struct NNSG2dCellAnimation{
     u32 cellTransferStateHandle;
     NNSG2dSRTControl srtCtrl;
 } NNSG2dCellAnimation;
+
+void NNS_G2dSetCellAnimationSequence(NNSG2dCellAnimation* pCellAnim, const NNSG2dAnimSequence* pAnimSeq);
 
 #endif //NNSYS_G2D_G2D_CELLANIMATION_H_

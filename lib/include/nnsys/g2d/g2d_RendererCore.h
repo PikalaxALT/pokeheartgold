@@ -73,4 +73,7 @@ typedef struct NNSG2dRndCoreInstance {
     MtxFx43 mtxFor3DGE;
 } NNSG2dRndCoreInstance;
 
+void NNS_G2dSetRndCoreAffineOverwriteMode(NNSG2dRndCoreInstance* pRnd, NNSG2dRendererAffineTypeOverwiteMode mode);
+void NNS_G2dSetRndCoreFlipMode(NNSG2dRndCoreInstance* pRnd, BOOL bFlipH, BOOL bFlipV);
+
 #endif //NNSYS_G2D_G2D_RENDERERCORE_H_

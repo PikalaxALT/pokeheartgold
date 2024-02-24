@@ -26,5 +26,7 @@
 #include <nnsys/g2d/g2d_Sprite.h>
 #include <nnsys/g2d/g2d_CellTransferManager.h>
 #include <nnsys/g2d/g2d_Animation.h>
+#include <nnsys/g2d/g2d_Animation_inline.h>
+#include <nnsys/g2d/g2d_Node.h>
 
 #endif //NNSYS_G2D_H_

@@ -35,4 +35,8 @@ typedef struct NNSG2dAnimController {
     NNSG2dAnimCallBackFunctor callbackFunctor;
 } NNSG2dAnimController;
 
+void NNS_G2dResetAnimCtrlState (
+    NNSG2dAnimController* pAnimCtrl
+);
+
 #endif //NNSYS_G2D_G2D_ANIMATION_H
