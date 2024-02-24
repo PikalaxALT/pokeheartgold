@@ -12,7 +12,7 @@
 #include "trainer_memo.h"
 #include "map_section.h"
 #include "unk_0200CF18.h"
-#include "unk_02023694.h"
+#include "sprite.h"
 #include "unk_02078834.h"
 #include "unk_02016EDC.h"
 #include "constants/items.h"

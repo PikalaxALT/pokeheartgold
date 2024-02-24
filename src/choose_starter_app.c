@@ -12,7 +12,7 @@
 #include "sound.h"
 #include "gf_3d_vramman.h"
 #include "unk_02005D10.h"
-#include "unk_02023694.h"
+#include "sprite.h"
 #include "unk_0200ACF0.h"
 #include "oam_manager.h"
 #include "unk_020215A0.h"

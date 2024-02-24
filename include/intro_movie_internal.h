@@ -5,7 +5,7 @@
 #include "bg_window.h"
 #include "sys_task.h"
 #include "gf_3d_vramman.h"
-#include "unk_02023694.h"
+#include "sprite.h"
 #include "unk_02014DA0.h"
 
 typedef struct IntroMovieScene1Data {

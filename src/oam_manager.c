@@ -1,7 +1,7 @@
 #include "global.h"
 #include "oam_manager.h"
-#include "unk_02023694.h"
-#include "unk_02025C44.h"
+#include "sprite.h"
+#include "render_oam.h"
 
 typedef struct OamManager {
     NNSG2dOamManagerInstance oamManagerMain;
@@ -71,9 +71,9 @@ void OamManager_Free(void) {
 void sub_0200B27C(NNSG2dRenderSurface *surface, NNSG2dViewRect *rect, NNSG2dSurfaceType surfaceType, NNSG2dRendererInstance *instance) {
     GF_ASSERT(sOamManager != NULL);
     if (surfaceType == NNS_G2D_SURFACETYPE_MAIN2D) {
-        sub_02025C54(surface, rect, OamManager_RegisterOam_Main, OamManager_RegisterAffine_Main, sub_02025C98, surfaceType, instance);
+        GF_SetRenderSurfaceRectFuncsTypeRenderer(surface, rect, OamManager_RegisterOam_Main, OamManager_RegisterAffine_Main, GF_DefaultRndCellCullingFunction, surfaceType, instance);
     } else {
-        sub_02025C54(surface, rect, OamManager_RegisterOam_Sub, OamManager_RegisterAffine_Sub, sub_02025C98, surfaceType, instance);
+        GF_SetRenderSurfaceRectFuncsTypeRenderer(surface, rect, OamManager_RegisterOam_Sub, OamManager_RegisterAffine_Sub, GF_DefaultRndCellCullingFunction, surfaceType, instance);
     }
 }
 

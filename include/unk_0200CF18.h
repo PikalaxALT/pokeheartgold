@@ -4,7 +4,7 @@
 #include "filesystem.h"
 #include "unk_02009D48.h"
 #include "save.h"
-#include "unk_02023694.h"
+#include "sprite.h"
 #include "palette.h"
 
 typedef struct UnkStruct_0200D2B4 {

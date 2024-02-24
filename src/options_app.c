@@ -13,7 +13,7 @@
 #include "unk_0200CF18.h"
 #include "unk_0200FA24.h"
 #include "unk_020183F0.h"
-#include "unk_02023694.h"
+#include "sprite.h"
 #include "render_text.h"
 #include "render_window.h"
 #include "sound.h"

@@ -10,7 +10,7 @@
 #include "unk_0200CF18.h"
 #include "unk_0200ACF0.h"
 #include "unk_02020654.h"
-#include "unk_02023694.h"
+#include "sprite.h"
 
 static void SpriteGfxHandler_DeleteSpriteList(SpriteGfxHandler* gfxHandler);
 static void SpriteGfxHandler_DeleteResourceHeaderList(SpriteGfxHandler* gfxHandler);
@@ -239,7 +239,7 @@ Sprite* SpriteRenderer_CreateSprite(SpriteRenderer* renderer, SpriteGfxHandler* 
     return MyCreateSprite(renderer, gfxHandler, a2->resourceSet, a2->x, a2->y, a2->x /* typo? */, a2->animSeqNo, a2->rotation, a2->unk_10, a2->whichScreen, a2->unk_18, a2->unk_1C, a2->unk_20, a2->unk_24);
 }
 
-static Sprite* MyCreateSprite(SpriteRenderer* renderer, SpriteGfxHandler* gfxHandler, int headerIndex, s16 x, s16 y, s16 z, u16 animSeqNo, int priority, int a8, NNS_G2D_VRAM_TYPE whichScreen, int a10, int a11, int a12, int a13) {
+static Sprite* MyCreateSprite(SpriteRenderer* renderer, SpriteGfxHandler* gfxHandler, int headerIndex, s16 x, s16 y, s16 z, u16 animSeqNo, int priority, int palIndex, NNS_G2D_VRAM_TYPE whichScreen, int palMode, int a11, int a12, int a13) {
     Sprite* ret = NULL;
     SpriteTemplate template;
 
@@ -263,14 +263,14 @@ static Sprite* MyCreateSprite(SpriteRenderer* renderer, SpriteGfxHandler* gfxHan
     ret = CreateSprite(&template);
     if (ret != NULL) {
         Set2dSpriteAnimSeqNo(ret, animSeqNo);
-        switch (a10) {
+        switch (palMode) {
         case 0:
-            Sprite_SetPalIndex(ret, a8);
+            Sprite_SetPalIndex(ret, palIndex);
             break;
         case 1:
             break;
         case 2:
-            sub_02024A48(ret, a8);
+            sub_02024A48(ret, palIndex);
             break;
         }
     }

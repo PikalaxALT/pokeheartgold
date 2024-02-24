@@ -1,9 +1,9 @@
 #include <nitro/fs/overlay.h>
 #pragma once
-.public sub_02025C44
-.public sub_02025C54
-.public sub_02025C88
-.public sub_02025C98
+.public GF_InitRendererInstanceWithZoffsetStep
+.public GF_SetRenderSurfaceRectFuncsTypeRenderer
+.public GF_SetRenderSurfaceViewRect
+.public GF_DefaultRndCellCullingFunction
 .public NNS_G2dInitRenderer
 .public NNS_G2dAddRendererTargetSurface
 .public NNS_G2dInitRenderSurface

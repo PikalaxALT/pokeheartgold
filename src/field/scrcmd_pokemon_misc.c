@@ -41,6 +41,7 @@
 #include "unk_02037C94.h"
 #include "sound_02004A44.h"
 #include "constants/map_sections.h"
+#include "unk_02023694.h"
 #include "msgdata/msg.naix"
 // #include "application/zukanlist/zukan_data/zukan_data.naix"
 
@@ -630,7 +631,7 @@ BOOL ScrCmd_699(ScriptContext *ctx) {
     MapObjectManager *mapObjectManager;
     LocalMapObject *playerObj;
     LocalMapObject *curObj;
-    Sprite *sprite;
+    UnkStruct_02023694 *sprite;
     int height;
     VecFx32 vec;
 

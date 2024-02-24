@@ -15,7 +15,7 @@
 #include "unk_0200FA24.h"
 #include "unk_020215A0.h"
 #include "unk_02022588.h"
-#include "unk_02023694.h"
+#include "sprite.h"
 
 BOOL IntroMovie_Init(OVY_MANAGER *man, int *state);
 BOOL IntroMovie_Main(OVY_MANAGER *man, int *state);

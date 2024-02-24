@@ -21,7 +21,7 @@
 #include "unk_0200FA24.h"
 #include "unk_020183F0.h"
 #include "touchscreen.h"
-#include "unk_02023694.h"
+#include "sprite.h"
 #include "unk_0203E348.h"
 #include "vram_transfer_manager.h"
 #include "unk_020210A0.h"

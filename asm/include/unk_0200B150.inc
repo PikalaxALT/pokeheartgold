@@ -11,8 +11,8 @@
 .public sub_02024BBC
 .public sub_02024BF4
 .public GF_AssertFail
-.public sub_02025C54
-.public sub_02025C98
+.public GF_SetRenderSurfaceRectFuncsTypeRenderer
+.public GF_DefaultRndCellCullingFunction
 .public NNS_G2dGetNewOamManagerInstance
 .public NNS_G2dEntryOamManagerOamWithAffineIdx
 .public NNS_G2dEntryOamManagerAffine

@@ -22,7 +22,7 @@
 #include "unk_0200FA24.h"
 #include "yes_no_prompt.h"
 #include "unk_020183F0.h"
-#include "unk_02023694.h"
+#include "sprite.h"
 #include "touchscreen.h"
 #include "bg_window.h"
 #include "constants/sndseq.h"

@@ -1,8 +1,8 @@
 #include "global.h"
 #include "unk_02009D48.h"
 #include "unk_0200ACF0.h"
-#include "unk_02023694.h"
-#include "unk_02025C44.h"
+#include "sprite.h"
+#include "render_oam.h"
 #include "oam_manager.h"
 #include "unk_020215A0.h"
 #include "unk_02022588.h"
@@ -102,7 +102,7 @@ SpriteList *G2dRenderer_Init(int a0, GF_G2dRenderer *renderer, HeapID heapId) {
     struct SpriteListParam param;
     NNSG2dViewRect rect;
 
-    sub_02025C44(&renderer->rendererInstance, -FX32_ONE);
+    GF_InitRendererInstanceWithZoffsetStep(&renderer->rendererInstance, -FX32_ONE);
     rect.posTopLeft.x = 0;
     rect.posTopLeft.y = 0;
     rect.sizeView.x = 255 * FX32_ONE;
@@ -126,7 +126,7 @@ void G2dRenderer_SetMainSurfaceCoords(struct GF_G2dRenderer *a0, fx32 x, fx32 y)
     rect.posTopLeft.y = y;
     rect.sizeView.x = 255 * FX32_ONE;
     rect.sizeView.y = 192 * FX32_ONE;
-    sub_02025C88(&a0->renderSurface[0], &rect);
+    GF_SetRenderSurfaceViewRect(&a0->renderSurface[0], &rect);
 }
 
 void G2dRenderer_SetSubSurfaceCoords(struct GF_G2dRenderer *a0, fx32 x, fx32 y) {
@@ -136,7 +136,7 @@ void G2dRenderer_SetSubSurfaceCoords(struct GF_G2dRenderer *a0, fx32 x, fx32 y) 
     rect.posTopLeft.y = y;
     rect.sizeView.x = 255 * FX32_ONE;
     rect.sizeView.y = 192 * FX32_ONE;
-    sub_02025C88(&a0->renderSurface[1], &rect);
+    GF_SetRenderSurfaceViewRect(&a0->renderSurface[1], &rect);
 }
 
 void sub_02009FE8(NNS_G2D_VRAM_TYPE vram, GXOBJVRamModeChar mode) {

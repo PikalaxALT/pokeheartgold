@@ -1,6 +1,6 @@
 #ifndef POKEHEARTGOLD_BERRY_POTS_APP_INTERNAL_H
 #define POKEHEARTGOLD_BERRY_POTS_APP_INTERNAL_H
-#include "unk_02023694.h"
+#include "sprite.h"
 #include "game_stats.h"
 #include "overlay_16.h"
 #include "unk_0203E348.h"
