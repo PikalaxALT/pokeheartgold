@@ -1,4 +1,13 @@
 #define _IN_MAP_HEADER_C
+#include "map_header.h"
+#include "encounter_tables_narc.h"
+#include "constants/sndseq.h"
+#include "constants/map_sections.h"
+#include "constants/maps.h"
+#include "fielddata/mapmatrix/map_matrix.naix"
+#include "fielddata/script/scr_seq.naix"
+#include "msgdata/msg.naix"
+#include "fielddata/eventdata/zone_event.naix"
 
 static const MAP_HEADER sMapHeaders[] = {
     [MAP_EVERYWHERE] = {

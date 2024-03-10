@@ -19,6 +19,7 @@ typedef struct LocalMapObject LocalMapObject;
 typedef struct FieldMapObject FieldMapObject;
 typedef struct PlayerAvatar PlayerAvatar;
 typedef struct MapObjectManager MapObjectManager;
+typedef struct LandData LandData;
 
 typedef struct FollowMon {
     LocalMapObject *mapObject;
@@ -129,7 +130,8 @@ struct FieldSystem {
     void *unk_44;
     u8 filler48[0xC];
     void *unk54;
-    u8 filler_58[0x8];
+    u8 filler_58[0x4];
+    LandData *landData;
     u32 unk60;
     int unk64;
     struct FieldSystemUnkSub68 *unk68;
