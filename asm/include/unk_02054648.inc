@@ -3,7 +3,7 @@
 .public AllocFromHeapAtEnd
 .public GF_AssertFail
 .public MapMatrix_GetWidth
-.public sub_02054550
+.public LandData_GetDataOfModel
 .public sub_02054774
 .public sub_02054790
 .public sub_02054874

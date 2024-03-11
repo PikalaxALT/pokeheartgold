@@ -4,12 +4,12 @@
 #include "script.h"
 
 struct LandData {
-    u8 unk_0000[225];
-    u16 unk_00E2[0x4000];
+    u8 modelIdToDataNum[225];
+    u16 modelData[0x4000];
 };
 
-void sub_02054514(FieldSystem *fieldSystem, u8 a1);
-void sub_0205453C(FieldSystem *fieldSystem);
-u16 *sub_02054550(int a0, LandData *a1);
+void FieldSystem_CreateLandData(FieldSystem *fieldSystem, u8 numModels);
+void FieldSystem_DeleteLandData(FieldSystem *fieldSystem);
+u16 *LandData_GetDataOfModel(int modelNo, LandData *landData);
 
 #endif //POKEHEARTGOLD_LAND_DATA_H

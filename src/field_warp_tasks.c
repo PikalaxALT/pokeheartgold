@@ -275,7 +275,7 @@ static void sub_02053284(FieldSystem *fieldSystem) {
     fieldSystem->unk18 = fieldSystem->unk74->unk0_00;
     sub_0205489C(&fieldSystem->unk60, fieldSystem->unk74->unk0_08);
     if (fieldSystem->unk74->unk0_10) {
-        sub_02054514(fieldSystem, fieldSystem->unk74->unk0_18);
+        FieldSystem_CreateLandData(fieldSystem, fieldSystem->unk74->unk0_18);
     }
 }
 
@@ -284,7 +284,7 @@ static void sub_02053324(FieldSystem *fieldSystem) {
     fieldSystem->unk60 = 0;
     fieldSystem->unk18 = 7;
     if (fieldSystem->unk74->unk0_10) {
-        sub_0205453C(fieldSystem);
+        FieldSystem_DeleteLandData(fieldSystem);
     }
     fieldSystem->unk74 = NULL;
 }
