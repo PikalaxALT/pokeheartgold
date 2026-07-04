@@ -49,6 +49,7 @@ clean: tidy clean-filesystem clean-tools
 	@$(MAKE) -C lib/syscall clean
 	@$(MAKE) -C sub clean
 	$(RM) $(foreach bn,$(SUPPORTED_ROMS),$(bn)/icon.nbf[pc])
+	$(RM) -r docs/
 
 SBIN_LZ        := $(SBIN)_LZ
 .PHONY: main_lz
@@ -110,4 +111,7 @@ clean_soulsilver:   ; @$(MAKE) GAME_VERSION=SOULSILVER clean
 
 compare:             compare_heartgold
 
-.PHONY: heartgold soulsilver compare compare_heartgold compare_soulsilver clean_heartgold clean_soulsilver
+.PHONY: heartgold soulsilver compare compare_heartgold compare_soulsilver clean_heartgold clean_soulsilver docs
+
+docs:
+	doxygen -q

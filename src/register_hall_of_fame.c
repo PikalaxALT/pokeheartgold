@@ -274,6 +274,8 @@ typedef struct RegisterHofTaskData_IndivMonAnimAndCry {
     BOOL startCry;
 } RegisterHofTaskData_IndivMonAnimAndCry;
 
+typedef RegisterHallOfFameScene (*SceneFunc)(RegisterHallOfFameData *data);
+
 static void RegisterHallOfFame_SetGfxBanks(void);
 static void VBlankTask_RegisterHallOfFame_IndividualMonsCongrats(SysTask *task, void *taskData);
 static void RegisterHallOfFame_ReplaceSpriteChar(const void *pSrc, u32 offset, u32 size);
@@ -634,7 +636,7 @@ static const int sSpotlightColors[8] = {
     RGB(31, 31, 12),
 };
 
-static RegisterHallOfFameScene (*const sSceneFuncs[8])(RegisterHallOfFameData *data) = {
+static const SceneFunc sSceneFuncs[8] = {
     RegisterHallOfFame_WaitFade,
     RegisterHallOfFame_WaitSubproc,
     RegisterHallOfFame_IndivMonsInit,
@@ -878,8 +880,6 @@ BOOL RegisterHallOfFame_Exit(OverlayManager *man, int *state) {
     Heap_Destroy(HEAP_ID_REGISTER_HALL_OF_FAME);
     return TRUE;
 }
-
-static RegisterHallOfFameScene (*const sSceneFuncs[8])(RegisterHallOfFameData *data);
 
 BOOL RegisterHallOfFame_Main(OverlayManager *man, int *state) {
     RegisterHallOfFameData *data = OverlayManager_GetData(man);

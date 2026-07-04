@@ -104,7 +104,6 @@ jobs:
           mkdir -p xmap
           cp build/heartgold.us/*.xMAP xmap/heartgoldus.xMAP
           cp build/soulsilver.us/*.xMAP xmap/soulsilverus.xMAP
-          echo "XMAP_COMMIT_MSG=$( git log --format=%s ${GITHUB_SHA} )" >> $GITHUB_ENV
 
       - name: Update xMAP
         if: ${{ github.event_name == 'push' }}
@@ -112,4 +111,25 @@ jobs:
         with:
           cwd: "./xmap"
           add: "*.xMAP"
-          message: ${{ env.XMAP_COMMIT_MSG }}
+          message: ${{ github.event.head_commit.message }}
+
+      - name: Checkout github.io tree
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/checkout@v6
+        with:
+          path: "gh-pages"
+          ref: "gh-pages"
+
+      - name: Build docs
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          make docs
+          rsync -dr --delete docs gh-pages/docs
+
+      - name: Push new docs
+        if: ${{ github.event_name == 'push' }}
+        uses: EndBug/add-and-commit@v9
+        with:
+          cwd: "./gh-pages"
+          add: "docs/"
+          message: ${{ github.event.head_commit.message }}

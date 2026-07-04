@@ -16,7 +16,15 @@ typedef struct FieldSpriteManager {
 } FieldSpriteManager;
 
 // With these functions, the SpriteResourceHeaderList is owned by the FieldSpriteManager.
+
+/// \fn void FieldSpriteManager_InitWithResDat(FieldSpriteManager *fieldSpriteManager, const ResdatIdList    *resDatIdxs, int numSprites, enum HeapID heapID);
+/// \brief Initialize an existing FieldSpriteManager from a fixed set of resources specified in \a resDatIdxs.
+/// \param fieldSpriteManager this
+/// \param resDatIdxs An array of resource IDs to load from data/resdat.narc, in the order CHAR PLTT CELL ANIM MCEL MANM DEFS.
+/// \param numSprites Number of sprites (resources)
+/// \param heapID ID of the heap from which to allocate sprites
 void FieldSpriteManager_InitWithResDat(FieldSpriteManager *fieldSpriteManager, const ResdatIdList *resDatIdxs, int numSprites, enum HeapID heapID);
+
 void FieldSpriteManager_ReleaseWithResDat(FieldSpriteManager *fieldSpriteManager);
 Sprite *FieldSpriteManager_CreateSprite(FieldSpriteManager *fieldSpriteManager, const UnmanagedSpriteTemplate *unmanagedSpriteTemplate);
 
