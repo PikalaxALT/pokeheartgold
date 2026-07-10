@@ -6,7 +6,20 @@
 #include "sprite_transfer.h"
 #include "unk_0200A090.h"
 
+/// \private
+/// \brief If the object list has an empty space, insert spriteResource there and return TRUE. Otherwise, return FALSE.
+/// \param objList The list to insert the resource into
+/// \param spriteResource The resource to insert
 static BOOL TryAddSpriteResourceToObjList(GF_2DGfxResObjList *objList, SpriteResource *spriteResource);
+
+/// \private \memberof FieldSpriteManager
+/// \brief Add a CELL or ANIM resource
+/// \param fieldSpriteManager this
+/// \param narcId ID of the NARC
+/// \param fileId File ID within the NARC
+/// \param compressed TRUE if the CELL is LZ78-compressed, FALSE otherwise
+/// \param resType either GF_GFX_RES_TYPE_CELL or GF_GFX_RES_TYPE_ANIM, this is not enforced
+/// \param resId Resource ID to bind this cell to
 static void FieldSpriteManager_AddCellOrAnimRes(FieldSpriteManager *fieldSpriteManager, NarcId narcId, int fileId, BOOL compressed, GfGfxResType resType, int resId);
 
 void FieldSpriteManager_InitWithResDat(FieldSpriteManager *fieldSpriteManager, const ResdatIdList *resDatIdxs, int numSprites, enum HeapID heapID) {
