@@ -26,9 +26,9 @@ typedef struct FieldSystemUnkSubCC {
 } FieldSystemUnkSubCC;
 
 struct FieldSystemUnkSubCC_Sub0 {
-    NNSFndAllocator unk0;
-    MapPropAnimation *unk10;
-    MapPropAnimation **unk14;
+    NNSFndAllocator allocator;
+    MapPropAnimation *animHeap;
+    MapPropAnimation **anims;
     FieldSystemUnkSubCC_Sub0 *next;
     void *unk1C;
     u16 unk20;

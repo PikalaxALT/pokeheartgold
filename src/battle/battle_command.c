@@ -2204,9 +2204,7 @@ u32 CalcPrizeMoney(BattleSystem *battleSystem, BattleContext *ctx, int trainerIn
             }
         }
 
-        if (i >= (int)NELEMS(sPrizeMoneyTbl)) {
-            GF_ASSERT(FALSE);
-        }
+        GF_ASSERT(i < (int)NELEMS(sPrizeMoneyTbl));
         if (i >= (int)NELEMS(sPrizeMoneyTbl)) {
             i = 2;
         }
@@ -7511,9 +7509,7 @@ static int BattleSystem_GetBattlerIDBySide(BattleSystem *battleSystem, BattleCon
         break;
     }
 
-    if (battlerID == BATTLER_NONE) {
-        GF_AssertFail();
-    }
+    GF_ASSERT(!(battlerID == BATTLER_NONE));
 
     return battlerID;
 }

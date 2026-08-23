@@ -155,7 +155,7 @@ static void ov03_02256BA8(FieldSystem *fieldSystem, u8 index) {
     u16 modelID = ov03_0225945C[index];
     Field3dRenderObj *renderObj = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, modelID);
     if (renderObj == NULL) {
-        GF_AssertFail();
+        GF_ASSERT(FALSE);
     } else {
         MapPropAnimationManager_AddAnimationToRenderObj(modelID, sub_020669B4(Save_VarsFlags_Get(fieldSystem->saveData), index), 1, &renderObj->renderObj, fieldSystem->mapPropAnimationManager);
     }
@@ -210,9 +210,7 @@ static void ov03_02256C84(MartData *data, u16 *priceOverrides) {
 
 static void ov03_02256CB4(MartData *data, const u16 *items, BOOL flag09A, const struct MartItem *priceOverrides) {
     data->unk270 = ov03_02256BEC(items, (u16 *)priceOverrides, data->martType);
-    if (data->unk270 >= 0xFF) {
-        GF_AssertFail();
-    }
+    GF_ASSERT(!(data->unk270 >= 0xFF));
     data->unk268 = Heap_Alloc(HEAP_ID_FIELD2, data->unk270 * 2);
     if (data->martType == MART_TYPE_3 || data->martType == MART_TYPE_4) {
         ov03_02256C84(data, (u16 *)priceOverrides);
@@ -1030,7 +1028,7 @@ static u16 ov03_022580F8(u16 itemID, const struct MartItem *priceOverrides, u8 u
             return priceOverrides[i].cost;
         }
     }
-    GF_AssertFail();
+    GF_ASSERT(FALSE);
     return 0;
 }
 

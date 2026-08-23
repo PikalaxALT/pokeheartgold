@@ -549,7 +549,7 @@ u32 ov44_02229F74(u32 arg0) {
     case 7:
         return 14;
     default:
-        GF_AssertFail();
+        GF_ASSERT(FALSE);
         return 0;
     }
 }
@@ -1080,7 +1080,7 @@ void ov44_0222AA94(UnkStruct_ov44_022319EC *arg0, UnkStruct_ov44_02232B74 *arg1)
             return;
         }
     }
-    GF_AssertFail();
+    GF_ASSERT(FALSE);
     return;
 }
 
@@ -1091,7 +1091,7 @@ void ov44_0222AAC0(UnkStruct_ov44_022319EC *arg0, UnkStruct_ov44_02232B74 *arg1)
             return;
         }
     }
-    GF_AssertFail();
+    GF_ASSERT(FALSE);
     return;
 }
 
@@ -2270,7 +2270,7 @@ s32 ov44_0222C684(UnkStruct_ov44_022319EC *arg0, s32 arg1) {
         ov44_0222F950(arg0, HEAP_ID_53);
         return arg1;
     }
-    GF_AssertFail();
+    GF_ASSERT(FALSE);
     return arg1;
 }
 

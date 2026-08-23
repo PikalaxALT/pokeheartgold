@@ -200,9 +200,7 @@ static void ov03_02253ED0(ListMenuTemplate listMenuTemplate, u8 x, u8 y, u8 widt
 }
 
 static void ov03_02253F74(FieldSystem *fieldSystem) {
-    if (sCommClubManager) {
-        GF_AssertFail();
-    }
+    GF_ASSERT(sCommClubManager == NULL);
     CommClubManager *commClubManager = Heap_Alloc(HEAP_ID_FIELD1, sizeof(CommClubManager));
     sCommClubManager = commClubManager;
     MI_CpuFill8(commClubManager, 0, sizeof(CommClubManager));
@@ -680,9 +678,7 @@ static void ov03_02254BEC() {
         0
     };
 
-    if (sCommClubManager->commType >= NUM_COMM_TYPES) {
-        GF_AssertFail();
-    }
+    GF_ASSERT(sCommClubManager->commType < NUM_COMM_TYPES);
 
     if (sCommClubManager->commType == COMM_TYPE_8) {
         if (sub_020347A0() > 1) {
