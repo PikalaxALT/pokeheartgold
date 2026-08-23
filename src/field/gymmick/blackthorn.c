@@ -536,7 +536,7 @@ static u8 BlackthornGymmick_CheckWallCollision(FieldSystem *fieldSystem, const u
 }
 
 static u16 BlackthornGymmick_GetMaxRotationExtent(FieldSystem *fieldSystem, const u8 dim, const BlackthornGymXZPoint *const points, const u8 *const extentDat) {
-    u16 ret = 0x4000; // 90º
+    u16 ret = FX_DEG_TO_IDX(FX32_CONST(90));
 
     for (int i = 0; i < dim; ++i) {
         BOOL isBonk = sub_020548C0(fieldSystem, points[i].x, points[i].z);

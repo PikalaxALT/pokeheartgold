@@ -138,19 +138,19 @@ static BOOL Task_CianwoodGymmick_LiftWinchCutscene(TaskManager *taskman) {
 }
 
 static int CianwoodGymmick_RebindAnimationObjectsAndGetCount(FieldSystem *fieldSystem) {
-    UnkStruct_FieldSysC0_SubC *unkC0subC_173 = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 173);
-    UnkStruct_FieldSysC0_SubC *unkC0subC_174 = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 174);
-    UnkStruct_FieldSysC0_SubC *unkC0subC_175 = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 175);
+    Field3dRenderObj *renderObj_173 = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 173);
+    Field3dRenderObj *renderObj_174 = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 174);
+    Field3dRenderObj *renderObj_175 = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 175);
 
     int numPropAnims = MapPropAnimationManager_GetPropAnimationCount(fieldSystem->mapPropAnimationManager, 173);
     for (int i = 0; i < numPropAnims; ++i) {
-        MapPropAnimationManager_RemoveAnimationFromRenderObj(fieldSystem->mapPropAnimationManager, &unkC0subC_173->renderObj, 173, i);
+        MapPropAnimationManager_RemoveAnimationFromRenderObj(fieldSystem->mapPropAnimationManager, &renderObj_173->renderObj, 173, i);
     }
 
     numPropAnims = MapPropAnimationManager_GetPropAnimationCount(fieldSystem->mapPropAnimationManager, 174);
     for (int i = 0; i < numPropAnims; ++i) {
-        MapPropAnimationManager_AddAnimationToRenderObj(174, i, TRUE, &unkC0subC_173->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(174, i, TRUE, &renderObj_173->renderObj, fieldSystem->mapPropAnimationManager);
     }
-    MapPropAnimationManager_AddAnimationToRenderObj(175, 0, TRUE, &unkC0subC_175->renderObj, fieldSystem->mapPropAnimationManager);
+    MapPropAnimationManager_AddAnimationToRenderObj(175, 0, TRUE, &renderObj_175->renderObj, fieldSystem->mapPropAnimationManager);
     return numPropAnims;
 }

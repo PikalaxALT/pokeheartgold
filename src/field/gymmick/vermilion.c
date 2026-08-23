@@ -27,7 +27,7 @@ void GymmickInit_Vermilion(FieldSystem *fieldSystem) {
     localData->fieldSystem = fieldSystem;
 
     if (gymmickUnion->vermilion.gates[0]) {
-        UnkStruct_FieldSysC0_SubC *gate1Render = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 199);
+        Field3dRenderObj *gate1Render = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 199);
         u32 num = MapPropAnimationManager_GetPropAnimationCount(fieldSystem->mapPropAnimationManager, 199);
         for (u8 i = 0; i < num; ++i) {
             MapPropAnimationManager_RemoveAnimationFromRenderObj(fieldSystem->mapPropAnimationManager, &gate1Render->renderObj, 199, i);
@@ -35,7 +35,7 @@ void GymmickInit_Vermilion(FieldSystem *fieldSystem) {
     }
 
     if (gymmickUnion->vermilion.gates[1]) {
-        UnkStruct_FieldSysC0_SubC *gate1Render = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 200);
+        Field3dRenderObj *gate1Render = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 200);
         u32 num = MapPropAnimationManager_GetPropAnimationCount(fieldSystem->mapPropAnimationManager, 200);
         for (u8 i = 0; i < num; ++i) {
             MapPropAnimationManager_RemoveAnimationFromRenderObj(fieldSystem->mapPropAnimationManager, &gate1Render->renderObj, 200, i);
@@ -119,15 +119,15 @@ static BOOL Task_VermilionGymmick_AnimateGateAction(TaskManager *taskman) {
         *pState = taskData->initialState;
         break;
     case 1:
-        MapObject_SetHeldMovement(taskData->gateStopObjects[0], MOVEMENT_UNK_22);
-        MapObject_SetHeldMovement(taskData->gateStopObjects[1], MOVEMENT_UNK_22);
-        MapObject_SetHeldMovement(taskData->gateStopObjects[2], MOVEMENT_UNK_23);
+        MapObject_SetHeldMovement(taskData->gateStopObjects[0], MOVEMENT_RUN_FASTER_LEFT);
+        MapObject_SetHeldMovement(taskData->gateStopObjects[1], MOVEMENT_RUN_FASTER_LEFT);
+        MapObject_SetHeldMovement(taskData->gateStopObjects[2], MOVEMENT_RUN_FASTER_RIGHT);
         *pState = 3;
         break;
     case 2:
-        MapObject_SetHeldMovement(taskData->gateStopObjects[0], MOVEMENT_UNK_23);
-        MapObject_SetHeldMovement(taskData->gateStopObjects[1], MOVEMENT_UNK_23);
-        MapObject_SetHeldMovement(taskData->gateStopObjects[2], MOVEMENT_UNK_22);
+        MapObject_SetHeldMovement(taskData->gateStopObjects[0], MOVEMENT_RUN_FASTER_RIGHT);
+        MapObject_SetHeldMovement(taskData->gateStopObjects[1], MOVEMENT_RUN_FASTER_RIGHT);
+        MapObject_SetHeldMovement(taskData->gateStopObjects[2], MOVEMENT_RUN_FASTER_LEFT);
         *pState = 3;
         break;
     case 3: {
@@ -151,7 +151,7 @@ static BOOL Task_VermilionGymmick_AnimateGateAction(TaskManager *taskman) {
         }
     } break;
     case 4: {
-        UnkStruct_FieldSysC0_SubC *gateRender = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, taskData->modelId);
+        Field3dRenderObj *gateRender = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, taskData->modelId);
         u32 num = MapPropAnimationManager_GetPropAnimationCount(fieldSystem->mapPropAnimationManager, taskData->modelId);
         for (u8 i = 0; i < num; ++i) {
             MapPropAnimationManager_RemoveAnimationFromRenderObj(fieldSystem->mapPropAnimationManager, &gateRender->renderObj, taskData->modelId, i);
@@ -160,7 +160,7 @@ static BOOL Task_VermilionGymmick_AnimateGateAction(TaskManager *taskman) {
         *pState = 6;
     } break;
     case 5: {
-        UnkStruct_FieldSysC0_SubC *gateRender = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, taskData->modelId);
+        Field3dRenderObj *gateRender = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, taskData->modelId);
         u32 num = MapPropAnimationManager_GetPropAnimationCount(fieldSystem->mapPropAnimationManager, taskData->modelId);
         for (u8 i = 0; i < num; ++i) {
             MapPropAnimationManager_AddAnimationToRenderObj(taskData->modelId, i, FALSE, &gateRender->renderObj, fieldSystem->mapPropAnimationManager);

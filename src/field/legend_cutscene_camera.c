@@ -551,14 +551,14 @@ static BOOL Task_LugiaEyeGlimmer(TaskManager *taskman) {
 static BOOL ov02_02251320(TaskManager *taskman) {
     FieldSystem *fieldSystem = TaskManager_GetFieldSystem(taskman);
     u32 *pState = TaskManager_GetStatePtr(taskman);
-    UnkStruct_FieldSysC0_SubC *renderObj;
+    Field3dRenderObj *renderObj;
     u8 i;
     ClearBellCutsceneCamera *cam = fieldSystem->unk4->unk24;
     ClearBellCutscene3dObjectTaskData *taskData = Field3dObjectTask_GetData(cam->draw3dTask);
 
     switch (*pState) {
     case UNUSED_HO_OH_ANIM_TASK_STATE_0:
-        renderObj = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, taskData->birdModelNum);
+        renderObj = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, taskData->birdModelNum);
         for (i = 0; i < 2; ++i) {
             MapPropAnimationManager_AddAnimationToRenderObj(taskData->birdModelNum, i, 1, &renderObj->renderObj, fieldSystem->mapPropAnimationManager);
         }
@@ -570,7 +570,7 @@ static BOOL ov02_02251320(TaskManager *taskman) {
         *pState = UNUSED_HO_OH_ANIM_TASK_STATE_1;
         break;
     case UNUSED_HO_OH_ANIM_TASK_STATE_1:
-        renderObj = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, taskData->birdModelNum);
+        renderObj = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, taskData->birdModelNum);
         if (MapPropAnimationData_IsAnimationLoopFinished(MapPropAnimationManager_GetAnimationData(taskData->birdModelNum, 0, fieldSystem->mapPropAnimationManager))) {
             for (i = 0; i < 2; ++i) {
                 MapPropAnimationManager_RemoveAnimationFromRenderObj(fieldSystem->mapPropAnimationManager, &renderObj->renderObj, taskData->birdModelNum, i);
