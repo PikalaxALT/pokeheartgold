@@ -4,7 +4,6 @@
 
 #include "field_system.h"
 #include "follow_mon.h"
-#include "overlay_01.h"
 #include "overlay_01_022053EC.h"
 #include "overlay_04.h"
 #include "task.h"
@@ -261,28 +260,28 @@ void GymmickInit_Azalea(FieldSystem *fieldSystem) {
     }
     switch (gymmickUnion->azalea.switches) {
     case 0:
-        MapPropAnimationManager_AddAnimationToRenderObj(115, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 115)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(116, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 116)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(122, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 122)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(117, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 117)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(115, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 115)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(116, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 116)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(122, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 122)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(117, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 117)->renderObj, fieldSystem->mapPropAnimationManager);
         break;
     case 1:
-        MapPropAnimationManager_AddAnimationToRenderObj(115, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 115)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(116, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 116)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(122, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 122)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(117, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 117)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(115, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 115)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(116, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 116)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(122, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 122)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(117, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 117)->renderObj, fieldSystem->mapPropAnimationManager);
         break;
     case 2:
-        MapPropAnimationManager_AddAnimationToRenderObj(115, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 115)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(116, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 116)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(122, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 122)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(117, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 117)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(115, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 115)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(116, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 116)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(122, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 122)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(117, 0, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 117)->renderObj, fieldSystem->mapPropAnimationManager);
         break;
     case 3:
-        MapPropAnimationManager_AddAnimationToRenderObj(115, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 115)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(116, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 116)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(122, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 122)->renderObj, fieldSystem->mapPropAnimationManager);
-        MapPropAnimationManager_AddAnimationToRenderObj(117, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 117)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(115, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 115)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(116, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 116)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(122, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 122)->renderObj, fieldSystem->mapPropAnimationManager);
+        MapPropAnimationManager_AddAnimationToRenderObj(117, 1, TRUE, &Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 117)->renderObj, fieldSystem->mapPropAnimationManager);
         break;
     default:
         GF_ASSERT(FALSE);
@@ -291,16 +290,16 @@ void GymmickInit_Azalea(FieldSystem *fieldSystem) {
 
 void FlipAzaleaGymSwitch(FieldSystem *fieldSystem, u8 switchNo) {
     GymmickUnion *gymmickUnion = Save_Gymmick_AssertMagic_GetData(Save_GetGymmickPtr(FieldSystem_GetSaveData(fieldSystem)), GYMMICK_AZALEA);
-    UnkStruct_FieldSysC0_SubC *switch1;
-    UnkStruct_FieldSysC0_SubC *switch2;
+    Field3dRenderObj *switch1;
+    Field3dRenderObj *switch2;
     u8 switchStateBefore;
 
     PlaySE(SEQ_SE_DP_KI_GASYAN);
     if (switchNo == 0) {
         switchStateBefore = (gymmickUnion->azalea.switches >> 0) & 1;
         gymmickUnion->azalea.switches ^= (1 << 0);
-        switch1 = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 116);
-        switch2 = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 117);
+        switch1 = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 116);
+        switch2 = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 117);
         MapPropAnimationManager_RemoveAnimationFromRenderObj(fieldSystem->mapPropAnimationManager, &switch1->renderObj, 116, switchStateBefore);
         MapPropAnimationManager_RemoveAnimationFromRenderObj(fieldSystem->mapPropAnimationManager, &switch2->renderObj, 117, switchStateBefore);
         u8 r0 = (gymmickUnion->azalea.switches >> 0) & 1;
@@ -314,8 +313,8 @@ void FlipAzaleaGymSwitch(FieldSystem *fieldSystem, u8 switchNo) {
     } else if (switchNo == 1) {
         switchStateBefore = (gymmickUnion->azalea.switches >> 1) & 1;
         gymmickUnion->azalea.switches ^= (1 << 1);
-        switch1 = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 115);
-        switch2 = Field3dObjectList_GetRenderObjectByID(fieldSystem->unkC0, 122);
+        switch1 = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 115);
+        switch2 = Field3dObjectList_GetRenderObjectByID(fieldSystem->renderObjManager, 122);
         MapPropAnimationManager_RemoveAnimationFromRenderObj(fieldSystem->mapPropAnimationManager, &switch1->renderObj, 115, switchStateBefore);
         MapPropAnimationManager_RemoveAnimationFromRenderObj(fieldSystem->mapPropAnimationManager, &switch2->renderObj, 122, switchStateBefore);
         u8 switchStateAfter = (gymmickUnion->azalea.switches >> 1) & 1;

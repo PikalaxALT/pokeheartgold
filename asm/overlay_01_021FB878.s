@@ -432,7 +432,7 @@ _021FBB7C:
 	bne _021FBBDA
 	ldr r0, [sp, #0xc]
 	add r1, r4, #0
-	bl ov01_022040A4
+	bl Field3dRenderObjManager_AllocRenderObj
 	add r7, r0, #0
 	ldr r0, [sp, #0x1c]
 	cmp r4, r0
@@ -495,7 +495,7 @@ _021FBBEC:
 	str r0, [r5, #4]
 	ldr r0, [sp, #0xc]
 	mov r1, #0
-	bl ov01_022040A4
+	bl Field3dRenderObjManager_AllocRenderObj
 	ldr r0, [r5, #4]
 	bl NNS_G3dGetTex
 	add r4, r0, #0

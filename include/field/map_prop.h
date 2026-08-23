@@ -10,7 +10,7 @@
 typedef struct MapPropManager MapPropManager;
 typedef struct MapProp MapProp;
 
-MapPropManager *MapPropManager_New(enum HeapID heapID, UnkStruct_FieldSysC0 *unkC0);
+MapPropManager *MapPropManager_New(enum HeapID heapID, Field3dRenderObjManager *unkC0);
 void MapPropManager_Free(MapPropManager *mapPropManager);
 void MapPropManager_Reset(MapPropManager *mapPropManager);
 void MapPropManager_RemoveMapPropByIndex(int modelID, MapPropManager *mapPropManager);
