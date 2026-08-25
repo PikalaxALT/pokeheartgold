@@ -11,7 +11,7 @@
 	ScrDefEnd
 
 scr_seq_P01R0302_002:
-	Compare VAR_UNK_40CB, 4
+	Compare VAR_SCENE_SS_AQUA, 4
 	GoToIfGe _001D
 	End
 
@@ -23,9 +23,9 @@ scr_seq_P01R0302_000:
 	PlaySE SEQ_SE_DP_SELECT
 	LockAll
 	FacePlayer
-	Compare VAR_UNK_40CB, 6
+	Compare VAR_SCENE_SS_AQUA, 6
 	GoToIfGe _005B
-	Compare VAR_UNK_40CB, 4
+	Compare VAR_SCENE_SS_AQUA, 4
 	GoToIfEq _0050
 	NPCMsg msg_0260_P01R0302_00004
 	WaitButton
@@ -41,8 +41,8 @@ _0050:
 	End
 
 _005B:
-	GoToIfSet FLAG_UNK_ABB, _0084
-	GoToIfSet FLAG_UNK_092, _0084
+	GoToIfSet FLAG_DAILY_RECEIVED_PLATE_FROM_AQUA_CAPTAIN, _0084
+	GoToIfSet FLAG_RECEIVED_PLATE_FROM_AQUA_CAPTAIN_THIS_TRIP, _0084
 	CheckBadge BADGE_EARTH, VAR_TEMP_x4002
 	Compare VAR_TEMP_x4002, 1
 	GoToIfEq _008F
@@ -179,8 +179,8 @@ _029C:
 	Compare VAR_SPECIAL_RESULT, 0
 	GoToIfEq _02C3
 	CallStd std_obtain_item_verbose
-	SetFlag FLAG_UNK_ABB
-	SetFlag FLAG_UNK_092
+	SetFlag FLAG_DAILY_RECEIVED_PLATE_FROM_AQUA_CAPTAIN
+	SetFlag FLAG_RECEIVED_PLATE_FROM_AQUA_CAPTAIN_THIS_TRIP
 	CloseMsg
 	ReleaseAll
 	End
@@ -212,7 +212,7 @@ _0305:
 	CloseMsg
 	FadeScreen 6, 1, 0, RGB_BLACK
 	WaitFade
-	SetVar VAR_UNK_40CB, 4
+	SetVar VAR_SCENE_SS_AQUA, 4
 	PlaySE SEQ_SE_DP_KAIDAN2
 	WaitSE SEQ_SE_DP_KAIDAN2
 	HidePerson obj_P01R0302_gsbabygirl1

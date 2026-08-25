@@ -9,9 +9,11 @@ static BOOL Field3dRenderObjManager_IsModelAllocatedByIndex(Field3dRenderObjMana
 static Field3dRenderObj *Field3dRenderObjManager_AllocInternal(Field3dRenderObjManager *renderObjMgr, NNSG3dResFileHeader **resFileHeader, int index);
 static void MapPropAnimation_AdvanceFrame(MapPropAnimation *animation);
 static BOOL MapPropAnimation_IsOnLastFrame(MapPropAnimation *animation);
-static void ov01_022046A4(NNSFndAllocator *pAllocator, NNSG3dAnmObj **pAlloc, void *res);
+static void ov01_022046A4(NNSFndAllocator *pAllocator, NNSG3dAnmObj **pAlloc, void *res, int a3);
 static void *ov01_022046D4(NNSFndAllocator *pAllocator, ResAnim_4004 *anim);
 static void ov01_02204728(NNSG3dAnmObj *alloc, ResAnim_4004 *anim);
+
+// Field3dRenderObjManager
 
 Field3dRenderObjManager *Field3dRenderObjManager_New(enum HeapID heapID, int indexMax, int objectMax, NNSG3dResFileHeader **resFileHeaders) {
     Field3dRenderObjManager *renderObjMgr = Heap_Alloc(heapID, sizeof(Field3dRenderObjManager));
@@ -102,61 +104,63 @@ static Field3dRenderObj *Field3dRenderObjManager_AllocInternal(Field3dRenderObjM
     return object;
 }
 
+// FieldSystemUnkSubC8
+
 FieldSystemUnkSubC8 *ov01_022041C4(enum HeapID heapID) { // FieldSystemUnkSubC8_New
     FieldSystemUnkSubC8 *unkC8 = Heap_Alloc(heapID, sizeof(FieldSystemUnkSubC8));
-    unkC8->unkC = 0;
-    unkC8->unk0 = 0;
-    unkC8->unk4 = 0;
-    unkC8->unk8 = 0;
+    unkC8->numAllocated = 0;
+    unkC8->unk0 = NULL;
+    unkC8->head = NULL;
+    unkC8->tail = NULL;
 }
 
 FieldSystemUnkSubCC_Sub0 *ov01_022041D8(FieldSystemUnkSubC8 *unkC8, enum HeapID heapID, u16 count) {
     FieldSystemUnkSubCC_Sub0 *ret = Heap_Alloc(heapID, sizeof(FieldSystemUnkSubCC_Sub0));
-    ret->unk22 = 0;
-    ret->unk20 = count;
-    ret->unk1C = NULL;
+    ret->numInUse = 0;
+    ret->count = count;
+    ret->allocFunc = NULL;
     HeapExp_FndInitAllocator(&ret->allocator, heapID, 4);
     ret->animHeap = Heap_Alloc(heapID, count * sizeof(MapPropAnimation));
     MI_CpuClearFast((u32 *)(ret->animHeap), count * sizeof(MapPropAnimation));
     ret->anims = Heap_Alloc(heapID, count * sizeof(MapPropAnimation *));
 
     for (int i = 0; i < count; i++) {
-        ret->animHeap[i].unk14 = 0;
+        ret->animHeap[i].active = 0;
         ret->animHeap[i].res = NULL;
         ret->animHeap[i].animObj = NULL;
         ret->anims[i] = &ret->animHeap[i];
     }
     ret->next = NULL;
-    if (unkC8->unk4 == NULL) {
-        unkC8->unk4 = ret;
-        unkC8->unk8 = ret;
+    if (unkC8->head == NULL) {
+        unkC8->head = ret;
+        unkC8->tail = ret;
         unkC8->unk0 = ret;
     } else {
-        unkC8->unk8->next = ret;
-        unkC8->unk8 = ret;
+        unkC8->tail->next = ret;
+        unkC8->tail = ret;
     }
-    unkC8->unkC++;
+    unkC8->numAllocated++;
     return ret;
 }
 
 void ov01_02204278(FieldSystemUnkSubC8 *unkSubC8) { // UnkSubC8_Free
     if (unkSubC8 != NULL) {
-        FieldSystemUnkSubCC_Sub0 *unk4 = unkSubC8->unk4;
-        if (unk4 == NULL) {
+        FieldSystemUnkSubCC_Sub0 *node = unkSubC8->head;
+        if (node == NULL) {
             Heap_Free(unkSubC8);
         } else {
-            for (int i = 0; i < unkSubC8->unkC; i++) {
-                for (int j = 0; j < unk4->unk20; j++) {
-                    MapPropAnimation *animation = &unk4->animHeap[j];
-                    if (animation->unk14 == 1) {
-                        ov01_02204500(unk4, animation);
-                        ov01_0220431C(unk4, animation);
+            for (int i = 0; i < unkSubC8->numAllocated; i++) {
+                for (int j = 0; j < node->count; j++) {
+                    MapPropAnimation *animation = &node->animHeap[j];
+                    if (animation->active == 1) {
+                        ov01_02204500(node, animation);
+                        ov01_0220431C(node, animation);
                     }
                 }
-                Heap_Free(unk4->animHeap);
-                Heap_Free(unk4->anims);
-                FieldSystemUnkSubCC_Sub0 *prev = unk4;
-                unk4 = unk4->next;
+                Heap_Free(node->animHeap);
+                Heap_Free(node->anims);
+                FieldSystemUnkSubCC_Sub0 *prev = node;
+                node = node->next;
                 Heap_Free(prev);
             }
             Heap_Free(unkSubC8);
@@ -165,41 +169,41 @@ void ov01_02204278(FieldSystemUnkSubC8 *unkSubC8) { // UnkSubC8_Free
 }
 
 MapPropAnimation *ov01_022042FC(FieldSystemUnkSubCC_Sub0 *unkCC_Sub0) {
-    u16 index = unkCC_Sub0->unk22;
-    if (unkCC_Sub0->unk22 >= unkCC_Sub0->unk20) {
+    u16 index = unkCC_Sub0->numInUse;
+    if (unkCC_Sub0->numInUse >= unkCC_Sub0->count) {
         GF_ASSERT(FALSE);
         return NULL;
     }
-    unkCC_Sub0->unk22++;
+    unkCC_Sub0->numInUse++;
     return unkCC_Sub0->anims[index];
 }
 
 void ov01_0220431C(FieldSystemUnkSubCC_Sub0 *unkCC_Sub0, MapPropAnimation *animation) {
-    if (unkCC_Sub0->unk22 == 0) {
+    if (unkCC_Sub0->numInUse == 0) {
         GF_ASSERT(FALSE);
     } else {
-        unkCC_Sub0->unk22--;
+        unkCC_Sub0->numInUse--;
         if (animation->res != NULL) {
             Heap_Free(animation->res);
         }
         animation->animObj = NULL;
-        animation->unk14 = 0;
-        unkCC_Sub0->anims[unkCC_Sub0->unk22] = animation;
+        animation->active = 0;
+        unkCC_Sub0->anims[unkCC_Sub0->numInUse] = animation;
     }
 }
 
 static u16 ov01_0220434C(FieldSystemUnkSubCC_Sub0 *unkCC_Sub0) { // FieldSystemUnkSubCC_Sub0_GetCount?
-    return unkCC_Sub0->unk22;
+    return unkCC_Sub0->numInUse;
 }
 
 void ov01_02204350(FieldSystemUnkSubC8 *unkC8) {
     if (unkC8 != NULL) {
-        FieldSystemUnkSubCC_Sub0 *unkCC_Sub0 = unkC8->unk4;
+        FieldSystemUnkSubCC_Sub0 *unkCC_Sub0 = unkC8->head;
         if (unkCC_Sub0 != NULL) {
-            for (int i = 0; i < unkC8->unkC; i++) {
-                for (int j = 0; j < unkCC_Sub0->unk20; j++) {
+            for (int i = 0; i < unkC8->numAllocated; i++) {
+                for (int j = 0; j < unkCC_Sub0->count; j++) {
                     MapPropAnimation *animation = &unkCC_Sub0->animHeap[j];
-                    if (animation->unk14 == 1 && animation->paused != TRUE && animation->looping) {
+                    if (animation->active == 1 && animation->paused != TRUE && animation->looping) {
                         MapPropAnimation_AdvanceFrame(animation);
                         if (animation->loopCount != -1 && MapPropAnimation_IsOnLastFrame(animation)) {
                             if (animation->unk18 + 1 >= animation->loopCount) {
@@ -219,12 +223,12 @@ void ov01_02204350(FieldSystemUnkSubC8 *unkC8) {
 void ov01_022043D8(FieldSystemUnkSubC8 *unkSubC8) {
     int i, j;
     if (unkSubC8 != NULL) {
-        FieldSystemUnkSubCC_Sub0 *unk4 = unkSubC8->unk4;
+        FieldSystemUnkSubCC_Sub0 *unk4 = unkSubC8->head;
         if (unk4 != NULL) {
-            for (i = 0; i < unkSubC8->unkC; i++) {
-                for (j = 0; j < unk4->unk20; j++) {
+            for (i = 0; i < unkSubC8->numAllocated; i++) {
+                for (j = 0; j < unk4->count; j++) {
                     MapPropAnimation *animation = &unk4->animHeap[j];
-                    if (animation->unk14 == 1 && animation->looping) {
+                    if (animation->active == 1 && animation->looping) {
                         animation->paused = TRUE;
                     }
                 }
@@ -236,12 +240,12 @@ void ov01_022043D8(FieldSystemUnkSubC8 *unkSubC8) {
 
 void ov01_02204424(FieldSystemUnkSubC8 *unkSubC8) {
     if (unkSubC8 != NULL) {
-        FieldSystemUnkSubCC_Sub0 *unkCC_Sub0 = unkSubC8->unk4;
+        FieldSystemUnkSubCC_Sub0 *unkCC_Sub0 = unkSubC8->head;
         if (unkCC_Sub0 != NULL) {
-            for (int i = 0; i < unkSubC8->unkC; i++) {
-                for (int j = 0; j < unkCC_Sub0->unk20; j++) {
+            for (int i = 0; i < unkSubC8->numAllocated; i++) {
+                for (int j = 0; j < unkCC_Sub0->count; j++) {
                     MapPropAnimation *animation = &unkCC_Sub0->animHeap[j];
-                    if (animation->unk14 == 1 && animation->looping) {
+                    if (animation->active == 1 && animation->looping) {
                         MapPropAnimation_GoToFirstFrame(animation);
                     }
                 }
@@ -262,21 +266,21 @@ void ov01_02204470(FieldSystemUnkSubCC_Sub0 *unkCC_Sub0, MapPropAnimation *anima
 }
 
 static void ov01_022044B0(FieldSystemUnkSubCC_Sub0 *unkCC_Sub0, MapPropAnimation *animation, void *res, int arg3) {
-    void (*unkFunc)() = unkCC_Sub0->unk1C;
-    if (unkFunc != NULL) {
-        unkFunc(unkCC_Sub0, animation, res, arg3);
+    FieldSystemUnkSubCC_Sub0_AllocFunc *allocFunc = unkCC_Sub0->allocFunc;
+    if (allocFunc != NULL) {
+        allocFunc(&unkCC_Sub0->allocator, &animation->animObj, res, arg3);
         animation->res = res;
     }
 }
 
-static void ov01_022044C4(FieldSystemUnkSubCC_Sub0 *unkCC_Sub0, void *arg1) {
-    unkCC_Sub0->unk1C = arg1;
+static void ov01_022044C4(FieldSystemUnkSubCC_Sub0 *unkCC_Sub0, FieldSystemUnkSubCC_Sub0_AllocFunc *allocator) {
+    unkCC_Sub0->allocFunc = allocator;
 }
 
 void MapPropAnimation_Init(MapPropAnimation *animation, int loopCount, BOOL paused, BOOL reversed) {
     animation->unk18 = 0;
     animation->looping = TRUE;
-    animation->unk14 = 1;
+    animation->active = 1;
     animation->loopCount = loopCount;
     animation->paused = paused;
     animation->reversed = reversed;
@@ -366,7 +370,7 @@ FieldSystemUnkSubCC *ov01_0220460C(FieldSystemUnkSubC8 *unkSubC8) { // UnkCC_Ini
     FieldSystemUnkSubCC *unkCC = Heap_Alloc(HEAP_ID_FIELD1, sizeof(FieldSystemUnkSubCC));
     FieldSystemUnkSubCC_Sub0 *unkCC_Sub0 = ov01_022041D8(unkSubC8, HEAP_ID_FIELD1, 1);
     unkCC->unk0 = unkCC_Sub0;
-    ov01_022044C4(unkCC_Sub0, &ov01_022046A4);
+    ov01_022044C4(unkCC_Sub0, ov01_022046A4);
     return unkCC;
 }
 
@@ -394,7 +398,7 @@ void ov01_02204698(FieldSystemUnkSubCC *unkCC) {
     ov01_0220434C(unkCC->unk0);
 }
 
-static void ov01_022046A4(NNSFndAllocator *pAllocator, NNSG3dAnmObj **pAlloc, void *res) {
+static void ov01_022046A4(NNSFndAllocator *pAllocator, NNSG3dAnmObj **pAlloc, void *res, int a3) {
     void *anim = NNS_G3dGetAnmByIdx(res, 0);
     NNSG3dAnmObj *alloc = ov01_022046D4(pAllocator, anim);
     *pAlloc = alloc;

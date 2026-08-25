@@ -162,7 +162,7 @@
 #define FLAG_GOT_TM11_FROM_RADIO_TOWER_WOMAN            0x8F
 #define FLAG_UNK_090                                    0x90
 #define FLAG_GOT_BRIGHTPOWDER_FROM_MARY                 0x91
-#define FLAG_UNK_092                                    0x92
+#define FLAG_RECEIVED_PLATE_FROM_AQUA_CAPTAIN_THIS_TRIP 0x92
 #define FLAG_UNK_093                                    0x93
 #define FLAG_UNK_094                                    0x94
 #define FLAG_GOT_EEVEE_FROM_BILL                        0x95
@@ -2054,7 +2054,7 @@
 #define FLAG_DAILY_CAUGHT_LAPRAS          0xAB8
 #define FLAG_UNK_AB9                      0xAB9
 #define FLAG_UNK_ABA                      0xABA
-#define FLAG_UNK_ABB                      0xABB
+#define FLAG_DAILY_RECEIVED_PLATE_FROM_AQUA_CAPTAIN 0xABB
 #define FLAG_DAILY_GOT_SHOCK_RIBBON       0xABC
 #define FLAG_DAILY_GOT_LOAN_SHUCKLE_TODAY 0xABD
 #define FLAG_UNK_ABE                      0xABE

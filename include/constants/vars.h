@@ -215,7 +215,7 @@
 #define VAR_UNK_40C8                       0x40C8
 #define VAR_UNK_40C9                       0x40C9
 #define VAR_UNK_40CA                       0x40CA
-#define VAR_UNK_40CB                       0x40CB
+#define VAR_SCENE_SS_AQUA                  0x40CB
 #define VAR_UNK_40CC                       0x40CC
 #define VAR_UNK_40CD                       0x40CD
 #define VAR_UNK_40CE                       0x40CE
