@@ -554,7 +554,7 @@
 #define FLAG_HIDE_KARENS_ROOM_EXIT                                0x214
 #define FLAG_UNK_215                                              0x215
 #define FLAG_UNK_216                                              0x216
-#define FLAG_UNK_217                                              0x217
+#define FLAG_HIDE_SS_AQUA_CAPTAINS_ROOM_GRANDDAUGHTER             0x217
 #define FLAG_UNK_218                                              0x218
 #define FLAG_UNK_219                                              0x219
 #define FLAG_UNK_21A                                              0x21A

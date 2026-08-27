@@ -210,7 +210,7 @@ static void ov03_02256C84(MartData *data, u16 *priceOverrides) {
 
 static void ov03_02256CB4(MartData *data, const u16 *items, BOOL flag09A, const struct MartItem *priceOverrides) {
     data->unk270 = ov03_02256BEC(items, (u16 *)priceOverrides, data->martType);
-    GF_ASSERT(!(data->unk270 >= 0xFF));
+    GF_ASSERT(data->unk270 < 0xFF);
     data->unk268 = Heap_Alloc(HEAP_ID_FIELD2, data->unk270 * 2);
     if (data->martType == MART_TYPE_3 || data->martType == MART_TYPE_4) {
         ov03_02256C84(data, (u16 *)priceOverrides);

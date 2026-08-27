@@ -7509,7 +7509,7 @@ static int BattleSystem_GetBattlerIDBySide(BattleSystem *battleSystem, BattleCon
         break;
     }
 
-    GF_ASSERT(!(battlerID == BATTLER_NONE));
+    GF_ASSERT(battlerID != BATTLER_NONE);
 
     return battlerID;
 }
