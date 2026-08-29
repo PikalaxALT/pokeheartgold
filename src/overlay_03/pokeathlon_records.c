@@ -146,7 +146,7 @@ static BOOL ov03_02258ECC(UnkStruct_02258CFC *data, int index_02259880) {
     if (index == 0) {
         return TRUE;
     }
-    return PokeathlonSave_GetUnkB78_AtIndex(data->pokeathlonSave, index - 1);
+    return PokeathlonSave_CheckReceivedDataCard(data->pokeathlonSave, index - 1);
 }
 
 static const int ov03_0225980C[3] = {
