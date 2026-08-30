@@ -577,3 +577,35 @@ void ov15_021F9F08(BagAppData *appData) {
         pocket->scroll = r1;
     }
 }
+
+void ov15_021FA008(BagAppData *appData) {
+    for (u32 i = 0; i < 165; ++i) {
+        appData->unk_350[i] = String_New(18, HEAP_ID_BAG);
+    }
+}
+
+void ov15_021FA028(BagAppData *appData) {
+    for (u32 i = 0; i < 165; ++i) {
+        String_Delete(appData->unk_350[i]);
+    }
+}
+
+void ov15_021FA044(s16 *a0, u16 *a1, u8 a2) {
+    if (*a0 + *a1 > a2) {
+        *a0 = ((a2 - 1) / 6) * 6;
+    }
+    if (*a0 < 0) {
+        *a0 = 0;
+    }
+}
+
+void ov15_021FA070(s16 *a0, u16 *a1, u8 a2, int a3) {
+}
+
+int ov15_021FA074(BagAppData *appData) {
+    int ret = appData->unk_234->pockets[appData->unk_234->unk64].unk_9 - appData->unk_234->pockets[appData->unk_234->unk64].scroll;
+    if (ret > 6) {
+        ret = 6;
+    }
+    return ret;
+}
