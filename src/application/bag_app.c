@@ -529,3 +529,15 @@ void ov15_021F9DB4(BagAppData *appData) {
         }
     }
 }
+
+void ov15_021F9EA8(BagAppData *appData) {
+    if (appData->unk_234->cursor != NULL) {
+        BagViewPocket *pockets = appData->unk_234->pockets;
+        for (u32 i = 0; i < POCKETS_COUNT; ++i) {
+            if (pockets[i].slots != NULL) {
+                BagCursor_Field_PocketSetPosition(appData->unk_234->cursor, pockets[i].pocketId, pockets[i].position, pockets[i].scroll);
+            }
+        }
+        BagCursor_Field_SetPocket(appData->unk_234->cursor, pockets[appData->unk_234->unk64].pocketId);
+    }
+}

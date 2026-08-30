@@ -15,59 +15,6 @@
 	.extern ov15_021F9D8C
 	.extern ov15_021F9D9C
 
-	thumb_func_start ov15_021F9EA8
-ov15_021F9EA8: ; 0x021F9EA8
-	push {r3, r4, r5, r6, r7, lr}
-	add r6, r0, #0
-	mov r0, #0x8d
-	lsl r0, r0, #2
-	ldr r1, [r6, r0]
-	ldr r0, [r1, #0x6c]
-	cmp r0, #0
-	beq _021F9F06
-	add r0, r1, #4
-	str r0, [sp]
-	mov r4, #0
-	add r5, r0, #0
-	mov r7, #6
-_021F9EC2:
-	ldr r0, [r5]
-	cmp r0, #0
-	beq _021F9EE2
-	mov r0, #0x8d
-	lsl r0, r0, #2
-	ldrh r2, [r5, #4]
-	ldrsh r3, [r5, r7]
-	ldr r0, [r6, r0]
-	lsl r2, r2, #0x18
-	lsl r3, r3, #0x18
-	ldrb r1, [r5, #8]
-	ldr r0, [r0, #0x6c]
-	lsr r2, r2, #0x18
-	lsr r3, r3, #0x18
-	bl BagCursor_Field_PocketSetPosition
-_021F9EE2:
-	add r4, r4, #1
-	add r5, #0xc
-	cmp r4, #8
-	blo _021F9EC2
-	mov r0, #0x8d
-	lsl r0, r0, #2
-	ldr r1, [r6, r0]
-	ldr r0, [r1, #0x6c]
-	add r1, #0x64
-	ldrb r2, [r1]
-	mov r1, #0xc
-	add r3, r2, #0
-	mul r3, r1
-	ldr r1, [sp]
-	add r1, r1, r3
-	ldrb r1, [r1, #8]
-	bl BagCursor_Field_SetPocket
-_021F9F06:
-	pop {r3, r4, r5, r6, r7, pc}
-	thumb_func_end ov15_021F9EA8
-
 	thumb_func_start ov15_021F9F08
 ov15_021F9F08: ; 0x021F9F08
 	push {r4, r5, r6, r7, lr}
