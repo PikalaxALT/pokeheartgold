@@ -60,12 +60,12 @@ enum MartTaskStates {
     TASK_MART_19,
     TASK_MART_20,
     TASK_MART_21,
-    TASK_MART_22,
-    TASK_MART_23,
-    TASK_MART_24,
-    TASK_MART_25,
-    TASK_MART_26,
-    TASK_MART_27
+    TASK_MART_SELLMENU_FADEOUTTO,
+    TASK_MART_SELLMENU_WAITFADEOUT,
+    TASK_MART_SELLMENU_RUN,
+    TASK_MART_SELLMENU_FINISH,
+    TASK_MART_SELLMENU_RETURN,
+    TASK_MART_EXIT
 };
 
 typedef struct UnkMiniStruct {
@@ -131,7 +131,7 @@ u16 ov03_02256A2C(FieldSystem *fieldSystem, MessageFormat *msgFmt, u32 a2);
 u32 ov03_02256B40(int);
 
 BOOL Task_Mart(TaskManager *taskManager);
-int BuyMenu_CheckCanPurchaseItem(MartData *data, u32 unkAmount);
+int MartData_BuyMenu_CheckCanPurchaseItem(MartData *data, u32 unkAmount);
 int ov03_02257978(MartData *data, int itemID);
 u32 ShopMenu_GetItemPrice(MartData *data, u16 itemID);
 void ov03_022581BC(MartData *data);

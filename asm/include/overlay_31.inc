@@ -75,7 +75,7 @@
 .public GX_SetBankForSubOBJ
 .public MI_CpuFill8
 .public _s32_div_f
-.public BuyMenu_CheckCanPurchaseItem
+.public MartData_BuyMenu_CheckCanPurchaseItem
 .public ov03_02257978
 .public ShopMenu_GetItemPrice
 .public ov03_022581BC

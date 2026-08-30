@@ -2516,7 +2516,7 @@ _0225E97A:
 _0225E982:
 	add r1, r0, #0
 	add r0, r5, #0
-	bl BuyMenu_CheckCanPurchaseItem
+	bl MartData_BuyMenu_CheckCanPurchaseItem
 	cmp r0, #2
 	bne _0225E998
 	add r0, r4, #0

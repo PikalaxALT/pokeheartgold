@@ -671,6 +671,7 @@ Overlay OVY_14
 Overlay OVY_15
 {
     After OVY_14
+    Object src/application/bag_app.o
     Object asm/overlay_15.o
 }
 Overlay OVY_16

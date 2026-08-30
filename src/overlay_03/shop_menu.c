@@ -35,10 +35,10 @@ static void MartData_InitCamera(FieldSystem *fieldSystem, MartData *data);
 static void MartData_AddWindows(MartData *data);
 static u8 ov03_02257334(FieldSystem *fieldSystem, MartData *data);
 static void ov03_022573D4(MartData *data, u32 arg1);
-static int BuyMenu_HandleMoveCursor(MartData *data);
-static u8 BuyMenu_PressButton(MartData *data, u32 arg1);
-static u8 BuyMenu_PageLeft(MartData *data);
-static u8 BuyMenu_PageRight(MartData *data);
+static int MartData_BuyMenu_HandleMoveCursor(MartData *data);
+static u8 MartData_BuyMenu_PressButton(MartData *data, u32 arg1);
+static u8 MartData_BuyMenu_PageLeft(MartData *data);
+static u8 MartData_BuyMenu_PageRight(MartData *data);
 static void ov03_02257758(MartData *data, int arg1, u8 arg2);
 static u8 ov03_022577D0(MartData *data);
 static u8 ov03_02257874(MartData *data, u16 itemID);
@@ -58,14 +58,14 @@ static void ov03_02258164(FieldSystem *fieldSystem, MartData *data_unused);
 static u8 ov03_02258170(FieldSystem *fieldSystem, MartData *data);
 static void ov03_02258288(MartData *data);
 static void ov03_02258560(MartData *data, BOOL arg1);
-static void ov03_022586BC(MartData *data, int flag);
+static void ov03_022586BC(MartData *data, BOOL flag);
 static u8 ov03_022586CC(MartData *data, u8 arg1, u8 arg2);
 static u8 ov03_022586E0(MartData *data);
 static void Mart_FadeOut(FieldSystem *fieldSystem_unused, MartData *data);
-static void ov03_02258764(TaskManager *taskManager);
+static void Task_Mart_OpenSellMenu(TaskManager *taskManager);
 static u8 ov03_022587D4(FieldSystem *fieldSystem_unused, MartData *data_unused);
 static void MartData_RestoreBgPriorities(MartData *data);
-static BOOL ov03_0225709C(FieldSystem *fieldSystem_unused, MartData *data);
+static BOOL MartData_ExitShopMenu(FieldSystem *fieldSystem_unused, MartData *data);
 static void ov03_022582C0(MartData *data, int arg1);
 static void ov03_022585A4(MartData *data, u16 itemID);
 static void ov03_02258648(MartData *data, int charID, int paletteID, u16 item);
@@ -75,7 +75,6 @@ static const u16 ov03_0225945C[4] = {
     149,
     152,
     153,
-    0
 };
 
 static const WindowTemplate ov03_022594C6[6] = {
@@ -132,7 +131,7 @@ static const WindowTemplate ov03_022594C6[6] = {
      .height = 4,
      .palette = 12,
      .baseTile = 156,
-     }
+     },
 };
 
 static const WindowTemplate ov03_02259464 = {
@@ -264,7 +263,7 @@ BOOL Task_Mart(TaskManager *taskManager) {
         if (data->buyOrSell == MART_BUY) {
             data->state = TASK_MART_1;
         } else {
-            data->state = TASK_MART_22;
+            data->state = TASK_MART_SELLMENU_FADEOUTTO;
         }
         break;
     case TASK_MART_1:
@@ -277,9 +276,9 @@ BOOL Task_Mart(TaskManager *taskManager) {
         break;
     case TASK_MART_3:
         if (data->queuedButtonPress == -1) {
-            data->state = BuyMenu_HandleMoveCursor(data);
+            data->state = MartData_BuyMenu_HandleMoveCursor(data);
         } else {
-            data->state = BuyMenu_PressButton(data, data->queuedButtonPress);
+            data->state = MartData_BuyMenu_PressButton(data, data->queuedButtonPress);
             data->queuedButtonPress = -1;
         }
         break;
@@ -341,30 +340,30 @@ BOOL Task_Mart(TaskManager *taskManager) {
         data->state = ov03_02258170(fieldSystem, data);
         break;
     case TASK_MART_19:
-        data->state = BuyMenu_PageLeft(data); // Always returns 3.
+        data->state = MartData_BuyMenu_PageLeft(data); // Always returns 3.
         break;
     case TASK_MART_20:
-        data->state = BuyMenu_PageRight(data); // Always returns 3.
+        data->state = MartData_BuyMenu_PageRight(data); // Always returns 3.
         break;
     case TASK_MART_21:
         data->state = ov03_022586E0(data);
         break;
-    case TASK_MART_22:
+    case TASK_MART_SELLMENU_FADEOUTTO:
         Mart_FadeOut(fieldSystem, data); // Always sets state to 23.
         break;
-    case TASK_MART_23:
-        ov03_02258764(taskManager);
+    case TASK_MART_SELLMENU_WAITFADEOUT:
+        Task_Mart_OpenSellMenu(taskManager);
         break;
-    case TASK_MART_26:
+    case TASK_MART_SELLMENU_RETURN:
         data->state = ov03_022587D4(fieldSystem, data);
         break;
-    case TASK_MART_27:
-        return ov03_0225709C(fieldSystem, data);
+    case TASK_MART_EXIT:
+        return MartData_ExitShopMenu(fieldSystem, data);
     }
 
     for (int i = 0; i < 19; i++) {
         if (data->sprites[i]) {
-            Sprite_UpdateAnim(data->sprites[i], 0x1000);
+            Sprite_UpdateAnim(data->sprites[i], FX32_ONE);
         }
     }
     if (data->fieldSpriteManager.spriteList) {
@@ -382,7 +381,7 @@ static void MartData_InitMessageData(MartData *data) {
     data->messageFormat = MessageFormat_New(HEAP_ID_FIELD2);
 }
 
-static BOOL ov03_0225709C(FieldSystem *fieldSystem_unused, MartData *data) {
+static BOOL MartData_ExitShopMenu(FieldSystem *fieldSystem_unused, MartData *data) {
     DestroyMsgData(data->messageData);
     MessageFormat_Delete(data->messageFormat);
     String_Delete(data->string);
@@ -392,8 +391,8 @@ static BOOL ov03_0225709C(FieldSystem *fieldSystem_unused, MartData *data) {
 }
 
 static void MartData_InitCamera(FieldSystem *fieldSystem, MartData *data) {
-    FillBgTilemapRect(data->bgConfig, 3, 0, 0, 18, 32, 6, 0);
-    ScheduleBgTilemapBufferTransfer(data->bgConfig, 3);
+    FillBgTilemapRect(data->bgConfig, GF_BG_LYR_MAIN_3, 0, 0, 18, 32, 6, 0);
+    ScheduleBgTilemapBufferTransfer(data->bgConfig, GF_BG_LYR_MAIN_3);
     MartData_AddWindows(data);
     data->camera = Camera_New(HEAP_ID_FIELD2);
     Camera_Copy(fieldSystem->camera, data->camera);
@@ -547,10 +546,10 @@ static const u8 sMartCursorMoveDests[9][4] = {
     { 3, 8, 4, 7 },
     { 4, 0, 8, 8 },
     { 4, 0, 8, 8 },
-    { 5, 1, 8, 8 }
+    { 5, 1, 8, 8 },
 };
 
-static int BuyMenu_HandleMoveCursor(MartData *data) {
+static int MartData_BuyMenu_HandleMoveCursor(MartData *data) {
     u8 newCursorPos;
     BOOL movedCursor = FALSE;
     if (gSystem.newKeys & PAD_KEY_UP) {
@@ -564,7 +563,7 @@ static int BuyMenu_HandleMoveCursor(MartData *data) {
     } else if (gSystem.newKeys & PAD_KEY_LEFT) {
         newCursorPos = sMartCursorMoveDests[data->cursorPos][2];
         if (newCursorPos == 6) {
-            return BuyMenu_PressButton(data, 6);
+            return MartData_BuyMenu_PressButton(data, 6);
         }
         if (data->cursorPos != 8) {
             data->cursorPos = newCursorPos;
@@ -574,7 +573,7 @@ static int BuyMenu_HandleMoveCursor(MartData *data) {
     } else if (gSystem.newKeys & PAD_KEY_RIGHT) {
         newCursorPos = sMartCursorMoveDests[data->cursorPos][3];
         if (newCursorPos == 7) {
-            return BuyMenu_PressButton(data, 7);
+            return MartData_BuyMenu_PressButton(data, 7);
         }
         if (data->cursorPos != 8) {
             data->cursorPos = newCursorPos;
@@ -592,12 +591,12 @@ static int BuyMenu_HandleMoveCursor(MartData *data) {
         return ov03_022586CC(data, 13, 16);
     }
     if (gSystem.newKeys & PAD_BUTTON_A) {
-        return BuyMenu_PressButton(data, data->cursorPos);
+        return MartData_BuyMenu_PressButton(data, data->cursorPos);
     }
     return TASK_MART_3;
 }
 
-static u8 BuyMenu_PressButton(MartData *data, u32 arg1) {
+static u8 MartData_BuyMenu_PressButton(MartData *data, u32 arg1) {
     switch (arg1) {
     case 0:
     case 1:
@@ -636,7 +635,7 @@ static u8 BuyMenu_PressButton(MartData *data, u32 arg1) {
     return TASK_MART_3;
 }
 
-static u8 BuyMenu_PageLeft(MartData *data) {
+static u8 MartData_BuyMenu_PageLeft(MartData *data) {
     data->pageOffset -= 6;
     ov03_02257758(data, data->pageOffset, data->count);
     data->unk298 = 1;
@@ -644,7 +643,7 @@ static u8 BuyMenu_PageLeft(MartData *data) {
     return TASK_MART_3;
 }
 
-static u8 BuyMenu_PageRight(MartData *data) {
+static u8 MartData_BuyMenu_PageRight(MartData *data) {
     data->pageOffset += 6;
     ov03_02257758(data, data->pageOffset, data->count);
     data->unk298 = 1;
@@ -675,12 +674,12 @@ static void ov03_02257758(MartData *data, int arg1, u8 arg2) {
 
 static u8 ov03_022577D0(MartData *data) {
     ov03_02257184(data);
-    BgFillTilemapBufferAndSchedule(data->bgConfig, 1, 0);
+    BgFillTilemapBufferAndSchedule(data->bgConfig, GF_BG_LYR_MAIN_1, 0);
     Sprite_SetDrawFlag(data->sprites[3], FALSE);
     return TASK_MART_17;
 }
 
-static u32 BuyMenu_GetPlayerBalance(MartData *data, u32 martType) {
+static u32 MartData_BuyMenu_GetPlayerBalance(MartData *data, u32 martType) {
     if (martType == MART_TYPE_POKEATHLON_DAILY || martType == MART_TYPE_DATA_CARDS) {
         return PokeathlonSave_GetAthletePoints(data->pokeathlonSave);
     } else {
@@ -688,7 +687,7 @@ static u32 BuyMenu_GetPlayerBalance(MartData *data, u32 martType) {
     }
 }
 
-int BuyMenu_CheckCanPurchaseItem(MartData *data, u32 unkAmount) {
+int MartData_BuyMenu_CheckCanPurchaseItem(MartData *data, u32 unkAmount) {
     if (data->martType == MART_TYPE_POKEATHLON_DAILY) {
         if (PokeathlonSave_CheckReceivedDailyItemSlot(data->pokeathlonSave, data->cursorPos + data->pageOffset)) {
             return 2;
@@ -705,12 +704,12 @@ static u8 ov03_02257874(MartData *data, u16 itemID) {
     data->spriteDrawn[1] = Sprite_GetDrawFlag(data->sprites[1]);
     Sprite_SetDrawFlag(data->sprites[0], FALSE);
     Sprite_SetDrawFlag(data->sprites[1], FALSE);
-    ov03_022586BC(data, 1);
+    ov03_022586BC(data, TRUE);
     data->item = itemID;
     data->quantity = 1;
     data->cost = ShopMenu_GetItemPrice(data, data->item);
-    u32 balance = BuyMenu_GetPlayerBalance(data, data->martType);
-    if (BuyMenu_CheckCanPurchaseItem(data, balance)) {
+    u32 balance = MartData_BuyMenu_GetPlayerBalance(data, data->martType);
+    if (MartData_BuyMenu_CheckCanPurchaseItem(data, balance)) {
         data->unk298 = 10;
         return TASK_MART_14;
     }
@@ -771,7 +770,7 @@ static u8 ov03_02257A70(MartData *data) {
     ov03_02258560(data, FALSE);
     Sprite_SetDrawFlag(data->sprites[0], data->spriteDrawn[0]);
     Sprite_SetDrawFlag(data->sprites[1], data->spriteDrawn[1]);
-    ov03_022586BC(data, 0);
+    ov03_022586BC(data, FALSE);
     ov03_022582C0(data, 0);
     data->unk298 = 4;
     Sprite_SetDrawFlag(data->sprites[13], TRUE);
@@ -892,7 +891,7 @@ static u8 ov03_02257D90(MartData *data, u32 arg1) {
         ov03_02258560(data, FALSE);
         Sprite_SetDrawFlag(data->sprites[0], data->spriteDrawn[0]);
         Sprite_SetDrawFlag(data->sprites[1], data->spriteDrawn[1]);
-        ov03_022586BC(data, 0);
+        ov03_022586BC(data, FALSE);
         ov03_022582C0(data, 0);
         data->unk298 = 4;
         return TASK_MART_3;
@@ -953,7 +952,7 @@ static u8 ov03_02257F24(MartData *data) {
         ov03_02258560(data, FALSE);
         Sprite_SetDrawFlag(data->sprites[0], data->spriteDrawn[0]);
         Sprite_SetDrawFlag(data->sprites[1], data->spriteDrawn[1]);
-        ov03_022586BC(data, 0);
+        ov03_022586BC(data, FALSE);
         ov03_022582C0(data, 0);
         data->unk298 = 4;
         return TASK_MART_4;
@@ -970,7 +969,7 @@ static u8 ov03_02257FF8(MartData *data) {
         ov03_02258560(data, FALSE);
         Sprite_SetDrawFlag(data->sprites[0], data->spriteDrawn[0]);
         Sprite_SetDrawFlag(data->sprites[1], data->spriteDrawn[1]);
-        ov03_022586BC(data, 0);
+        ov03_022586BC(data, FALSE);
         ov03_022582C0(data, 0);
         data->unk298 = 5;
         return TASK_MART_4;
@@ -987,7 +986,7 @@ static u8 ov03_02258078(MartData *data) {
         ov03_02258560(data, FALSE);
         Sprite_SetDrawFlag(data->sprites[0], data->spriteDrawn[0]);
         Sprite_SetDrawFlag(data->sprites[1], data->spriteDrawn[1]);
-        ov03_022586BC(data, 0);
+        ov03_022586BC(data, FALSE);
         ov03_022582C0(data, 0);
         data->unk298 = 4;
         return TASK_MART_3;
@@ -1029,7 +1028,7 @@ static u8 ov03_02258170(FieldSystem *fieldSystem, MartData *data) {
     Camera_Delete(data->camera);
     Camera_SetStaticPtr(fieldSystem->camera);
     ov03_02258288(data);
-    return TASK_MART_27;
+    return TASK_MART_EXIT;
 }
 
 static const ResdatIdList ov03_0225946C = {
@@ -1039,7 +1038,7 @@ static const ResdatIdList ov03_0225946C = {
     .animRes = NARC_resdat_resdat_00000064_bin,
     .mcelRes = 0xFFFF,
     .manmRes = 0xFFFF,
-    .headerId = NARC_resdat_resdat_00000088_bin
+    .headerId = NARC_resdat_resdat_00000088_bin,
 };
 
 static const UnmanagedSpriteTemplate ov03_022594F8[19] = {
@@ -1252,7 +1251,7 @@ static const UnmanagedSpriteTemplate ov03_022594F8[19] = {
      .pal = 0,
      .vram = NNS_G2D_VRAM_TYPE_2DSUB,
      .paletteMode = 0,
-     }
+     },
 };
 
 void ov03_022581BC(MartData *data) {
@@ -1287,7 +1286,7 @@ enum OV03_02259850_Data {
     OV03_02259850_SPRITE_INDEX,
     OV03_02259850_DATA_1,
     OV03_02259850_DATA_2,
-    OV03_02259850_MAX
+    OV03_02259850_MAX,
 };
 
 static u8 ov03_02259850[15][OV03_02259850_MAX] = {
@@ -1305,7 +1304,7 @@ static u8 ov03_02259850[15][OV03_02259850_MAX] = {
     { 15, 0, 1 },
     { 16, 0, 1 },
     { 17, 0, 1 },
-    { 18, 0, 1 }
+    { 18, 0, 1 },
 };
 
 static void ov03_022582C0(MartData *data, int arg1) {
@@ -1431,7 +1430,7 @@ static void ov03_02258648(MartData *data, int charID, int paletteID, u16 item) {
     SpriteTransfer_ReplacePlttData(plttResObj);
 }
 
-static void ov03_022586BC(MartData *data, int flag) {
+static void ov03_022586BC(MartData *data, BOOL flag) {
     thunk_Sprite_SetPaletteOverride(data->sprites[2], flag);
 }
 
@@ -1471,7 +1470,7 @@ static u8 ov03_022586E0(MartData *data) {
 
 static void Mart_FadeOut(FieldSystem *fieldSystem_unused, MartData *data) {
     FieldMap_FadeScreen(FADE_TYPE_BRIGHTNESS_OUT);
-    data->state = TASK_MART_23;
+    data->state = TASK_MART_SELLMENU_WAITFADEOUT;
 }
 
 static const u8 ov03_022597F0[9] = {
@@ -1486,7 +1485,7 @@ static const u8 ov03_022597F0[9] = {
     0xFF
 };
 
-static void ov03_02258764(TaskManager *taskManager) {
+static void Task_Mart_OpenSellMenu(TaskManager *taskManager) {
     if (IsPaletteFadeFinished()) {
         FieldSystem *fieldSystem = TaskManager_GetFieldSystem(taskManager);
         MartData *data = TaskManager_GetEnvironment(taskManager);
@@ -1494,12 +1493,12 @@ static void ov03_02258764(TaskManager *taskManager) {
         sub_0207789C(data->bagView, fieldSystem->saveData, 2, fieldSystem->bagCursor, &fieldSystem->menuInputState);
         Bag_LaunchApp(fieldSystem, data->bagView);
         TaskManager_Jump(taskManager, Task_Bag_SellMenu, data);
-        data->state = TASK_MART_24;
+        data->state = TASK_MART_SELLMENU_RUN;
     }
 }
 
 static u8 ov03_022587D4(FieldSystem *fieldSystem_unused, MartData *data_unused) {
-    return IsPaletteFadeFinished() == FALSE ? (u8)TASK_MART_26 : (u8)TASK_MART_27;
+    return IsPaletteFadeFinished() == FALSE ? (u8)TASK_MART_SELLMENU_RETURN : (u8)TASK_MART_EXIT;
 }
 
 static int ov03_022587E8(s16 currentQuantity, u16 arg1, s16 modifier) {
