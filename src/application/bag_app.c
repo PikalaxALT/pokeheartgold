@@ -9,9 +9,11 @@
 #include "screen_fade.h"
 #include "sound.h"
 #include "sound_02004A44.h"
+#include "sprite_system.h"
 #include "system.h"
 #include "unk_020210A0.h"
 #include "unk_0203A3B0.h"
+#include "unk_0208805C.h"
 
 typedef struct BagAppData {
     BgConfig *unk_000;
@@ -19,7 +21,9 @@ typedef struct BagAppData {
     BagView *unk_234;
     u8 filler_238[4];
     PlayerProfile *unk_23C;
-    u8 filler_240[0x3D5];
+    u8 filler_240[0xC];
+    SpriteManager *unk_24C;
+    u8 filler_250[0x3C5];
     u8 unk_615;
     u8 filler_616[0x2E];
     int unk_644;
@@ -42,8 +46,8 @@ void ov15_021FEA5C(BagAppData *appData);
 void ov15_021FE874(BagAppData *appData);
 void ov15_021F9F08(BagAppData *appData);
 void ov15_021FF29C(BagAppData *appData, int a1);
-void ov15_021FA044(s16 *a0, s16 *a1, u8 a2);
-void ov15_021FA070(s16 *a0, s16 *a1, u8 a2, int a3);
+void ov15_021FA044(s16 *a0, u16 *a1, u8 a2);
+void ov15_021FA070(s16 *a0, u16 *a1, u8 a2, int a3);
 void ov15_021FF850(BagAppData *appData);
 int ov15_021FA074(BagAppData *appData);
 void ov15_021FD574(BagAppData *appData, int a1, int a2, int a3);
@@ -57,6 +61,42 @@ void ov15_021FA170(BagAppData *appData);
 void ov15_021FF1E0(BagAppData *appData);
 void ov15_021FD93C(BagAppData *appData);
 void ov15_021F995C(void *cbArg);
+int ov15_021FA1BC(BagAppData *appData);
+BOOL ov15_021FA93C(BagAppData *appData);
+int ov15_021FAE48(BagAppData *appData);
+int ov15_021FB5AC(BagAppData *appData);
+int ov15_021FBD50(BagAppData *appData);
+int ov15_021FBF98(BagAppData *appData);
+int ov15_021FBFC0(BagAppData *appData);
+int ov15_021FBFF8(BagAppData *appData);
+int ov15_021FC01C(BagAppData *appData);
+int ov15_021FC140(BagAppData *appData);
+int ov15_021FC164(BagAppData *appData);
+int ov15_021FB700(BagAppData *appData);
+int ov15_021FB820(BagAppData *appData);
+int ov15_021FC41C(BagAppData *appData);
+int ov15_021FC784(BagAppData *appData);
+int ov15_021FC7EC(BagAppData *appData);
+int ov15_021FCD80(BagAppData *appData);
+int ov15_021FCDE4(BagAppData *appData);
+int ov15_021FCFC8(BagAppData *appData);
+int ov15_021FD058(BagAppData *appData);
+int ov15_021FD0E8(BagAppData *appData);
+int ov15_021FD10C(BagAppData *appData);
+int ov15_021FD24C(BagAppData *appData);
+int ov15_021FD2FC(BagAppData *appData);
+int ov15_021FD3AC(BagAppData *appData);
+int ov15_021FC2E0(BagAppData *appData);
+int ov15_021FA4F8(BagAppData *appData);
+int ov15_021FB604(BagAppData *appData);
+int ov15_021FB654(BagAppData *appData);
+int ov15_021FA578(BagAppData *appData, int a1);
+int ov15_021FB060(BagAppData *appData);
+int ov15_021FAFFC(BagAppData *appData);
+int ov15_021FCB64(BagAppData *appData);
+int ov15_021FD850(BagAppData *appData);
+int ov15_021FF8D4(BagAppData *appData);
+int ov15_021FDC88(BagAppData *appData);
 
 BOOL Bag_Init(OverlayManager *man, int *state) {
     Main_SetVBlankIntrCB(NULL, NULL);
@@ -121,5 +161,158 @@ BOOL Bag_Init(OverlayManager *man, int *state) {
     return TRUE;
 }
 
-BOOL Bag_Main(OverlayManager *man, int *state);
+BOOL Bag_Main(OverlayManager *man, int *state) {
+    BagAppData *appData = OverlayManager_GetData(man);
+
+    switch (*state) {
+    case 0:
+        if (IsPaletteFadeFinished() == TRUE) {
+            switch (appData->unk_234->unk65) {
+            case 2:
+                *state = 16;
+                break;
+            case 1:
+                *state = 14;
+                break;
+            case 3:
+                *state = 26;
+                break;
+            default:
+                *state = 1;
+                break;
+            }
+        }
+        break;
+    case 1:
+        *state = ov15_021FA1BC(appData);
+        break;
+    case 2:
+        if (ov15_021FA93C(appData) == TRUE) {
+            if (appData->unk_234->unk65 == 2) {
+                *state = 16;
+            } else if (appData->unk_234->unk65 == 1) {
+                *state = 14;
+            } else if (appData->unk_234->unk65 == 3) {
+                *state = 26;
+            } else {
+                *state = 1;
+            }
+        }
+        break;
+    case 3:
+        *state = ov15_021FAE48(appData);
+        break;
+    case 4:
+        *state = ov15_021FB5AC(appData);
+        break;
+    case 5:
+        *state = ov15_021FBD50(appData);
+        break;
+    case 6:
+        *state = ov15_021FBF98(appData);
+        break;
+    case 7:
+        *state = ov15_021FBFC0(appData);
+        break;
+    case 8:
+        *state = ov15_021FBFF8(appData);
+        break;
+    case 9:
+        *state = ov15_021FC01C(appData);
+        break;
+    case 10:
+        *state = ov15_021FC140(appData);
+        break;
+    case 11:
+        *state = ov15_021FC164(appData);
+        break;
+    case 12:
+        *state = ov15_021FB700(appData);
+        break;
+    case 13:
+        *state = ov15_021FB820(appData);
+        break;
+    case 14:
+        *state = ov15_021FC41C(appData);
+        break;
+    case 15:
+        *state = ov15_021FC784(appData);
+        break;
+    case 16:
+        *state = ov15_021FC7EC(appData);
+        break;
+    case 17:
+        *state = ov15_021FCD80(appData);
+        break;
+    case 18:
+        *state = ov15_021FCDE4(appData);
+        break;
+    case 19:
+        *state = ov15_021FCFC8(appData);
+        break;
+    case 20:
+        *state = ov15_021FD058(appData);
+        break;
+    case 21:
+        *state = ov15_021FD0E8(appData);
+        break;
+    case 22:
+        *state = ov15_021FD10C(appData);
+        break;
+    case 23:
+        *state = ov15_021FD24C(appData);
+        break;
+    case 24:
+        *state = ov15_021FD2FC(appData);
+        break;
+    case 26:
+        *state = ov15_021FD3AC(appData);
+        break;
+    case 25:
+        *state = ov15_021FC2E0(appData);
+        break;
+    case 27:
+        *state = ov15_021FA4F8(appData);
+        break;
+    case 28:
+        *state = ov15_021FB604(appData);
+        break;
+    case 29:
+        *state = ov15_021FB654(appData);
+        break;
+    case 30:
+        *state = ov15_021FA578(appData, 1);
+        break;
+    case 31:
+        *state = ov15_021FA578(appData, -1);
+        break;
+    case 32:
+        *state = ov15_021FB060(appData);
+        break;
+    case 33:
+        *state = ov15_021FAFFC(appData);
+        break;
+    case 34:
+        *state = ov15_021FCB64(appData);
+        break;
+    case 35:
+        *state = ov15_021FD850(appData);
+        break;
+    case 36:
+        sub_020880CC(1, HEAP_ID_6);
+        *state = 37;
+        break;
+    case 37:
+        if (IsPaletteFadeFinished() == TRUE) {
+            return TRUE;
+        }
+        break;
+    }
+
+    ov15_021FF8D4(appData);
+    SpriteSystem_DrawSprites(appData->unk_24C);
+    ov15_021FDC88(appData);
+    return FALSE;
+}
+
 BOOL Bag_Exit(OverlayManager *man, int *state);
