@@ -4,6 +4,7 @@
 
 #include "constants/flags.h"
 
+#include "application/bag_app.h"
 #include "application/pokegear/pokegear_main.h"
 #include "application/view_rankings.h"
 #include "battle/battle_022378C0.h"
@@ -34,7 +35,6 @@
 #include "overlay_111.h"
 #include "overlay_113.h"
 #include "overlay_14.h"
-#include "overlay_15.h"
 #include "overlay_16.h"
 #include "overlay_18.h"
 #include "overlay_37.h"

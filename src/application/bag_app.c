@@ -1,16 +1,18 @@
 #include "global.h"
 
+#include "application/bag_app_internal.h"
+
+#include "bag.h"
 #include "bag_types_def.h"
 #include "bg_window.h"
 #include "gf_gfx_planes.h"
 #include "message_format.h"
 #include "message_printer.h"
 #include "msgdata.h"
-#include "overlay_15.h"
 #include "player_data.h"
 #include "render_text.h"
+#include "roamer.h"
 #include "screen_fade.h"
-#include "sound.h"
 #include "sound_02004A44.h"
 #include "sprite_system.h"
 #include "system.h"
@@ -19,70 +21,40 @@
 #include "unk_0208805C.h"
 #include "vram_transfer_manager.h"
 
-typedef struct BagAppData {
-    BgConfig *unk_000;
-    u8 filler_004[0x230];
-    BagView *unk_234;
-    u8 filler_238[4];
-    PlayerProfile *unk_23C;
-    u8 filler_240[4];
-    NARC *unk_244;
-    u8 filler_248[4];
-    SpriteManager *unk_24C;
-    u8 filler_250[0x9C];
-    MessagePrinter *unk_2EC;
-    MsgData *unk_2F0;
-    MessageFormat *unk_2F4;
-    MsgData *unk_2F8;
-    MsgData *unk_2FC;
-    u8 filler_300[0x2E4];
-    String *unk_5E4;
-    u8 filler_5E8[0x2C];
-    u8 unk_614;
-    u8 unk_615;
-    u8 filler_616[0x2E];
-    int unk_644;
-    u8 filler_648[0x44];
-    void *unk_68C;
-    void *unk_690;
-    u8 filler_694[0x2B8];
-} BagAppData; // size: 0x94C
-
 void BagApp_GetSaveStructPtrs(BagAppData *appData);
-void ov15_021F9DB4(BagAppData *appData);
-void ov15_021F9CBC(BagAppData *appData);
-void ov15_021FA008(BagAppData *appData);
-void ov15_021F9D28(BagAppData *appData);
-void ov15_021FA620(BagAppData *appData);
-void ov15_021F9984();
+RoamerSaveData *BagApp_GetSaveRoamers(BagAppData *appData);
+void BagApp_SetRepelStepCount(BagAppData *appData, u8 repelSteps);
+void BagApp_SetFlute(BagAppData *appData, u8 flute);
+void ov15_021F995C(void *cbArg);
+void ov15_021F9984(void);
 void ov15_021F99A4(BgConfig *bgConfig);
+void ov15_021F9A8C(BgConfig *bgConfig);
 void ov15_021F9AE4(BagAppData *appData);
-void ov15_021FE020(BagAppData *appData);
-void ov15_021FE4C8(BagAppData *appData);
-void ov15_021FE528(BagAppData *appData);
-void ov15_021FEA5C(BagAppData *appData);
-void ov15_021FE874(BagAppData *appData);
+void ov15_021F9CBC(BagAppData *appData);
+void ov15_021F9D28(BagAppData *appData);
+void ov15_021F9DB4(BagAppData *appData);
+void ov15_021F9EA8(BagAppData *appData);
 void ov15_021F9F08(BagAppData *appData);
-void ov15_021FF29C(BagAppData *appData, int a1);
+void ov15_021FA008(BagAppData *appData);
+void ov15_021FA028(BagAppData *appData);
 void ov15_021FA044(s16 *a0, u16 *a1, u8 a2);
 void ov15_021FA070(s16 *a0, u16 *a1, u8 a2, int a3);
-void ov15_021FF850(BagAppData *appData);
 int ov15_021FA074(BagAppData *appData);
-void ov15_021FD574(BagAppData *appData, int a1, int a2, int a3);
-void ov15_021FF364(BagAppData *appData, s16 a1, int a2, int a3);
-void ov15_02200030(BagAppData *appData, u8 pocket);
-void ov15_021FD404(BagAppData *appData, int a1, u8 pocket);
-void ov15_021FF6BC(BagAppData *appData, u8 a1, s16 a2, int a3);
-void ov15_02200140(BagAppData *appData, BagViewPocket *pocket, int a2, int a3);
-void ov15_021FFECC(BagAppData *appData, int a1);
+void ov15_021FA0D8(BagAppData *appData);
 void ov15_021FA170(BagAppData *appData);
-void ov15_021FF1E0(BagAppData *appData);
-void ov15_021FD93C(BagAppData *appData);
-void ov15_021F995C(void *cbArg);
 int ov15_021FA1BC(BagAppData *appData);
+int ov15_021FA4F8(BagAppData *appData);
+int ov15_021FA578(BagAppData *appData, int a1);
+void ov15_021FA620(BagAppData *appData);
 BOOL ov15_021FA93C(BagAppData *appData);
 int ov15_021FAE48(BagAppData *appData);
+int ov15_021FAFFC(BagAppData *appData);
+int ov15_021FB060(BagAppData *appData);
 int ov15_021FB5AC(BagAppData *appData);
+int ov15_021FB604(BagAppData *appData);
+int ov15_021FB654(BagAppData *appData);
+int ov15_021FB700(BagAppData *appData);
+int ov15_021FB820(BagAppData *appData);
 int ov15_021FBD50(BagAppData *appData);
 int ov15_021FBF98(BagAppData *appData);
 int ov15_021FBFC0(BagAppData *appData);
@@ -90,11 +62,11 @@ int ov15_021FBFF8(BagAppData *appData);
 int ov15_021FC01C(BagAppData *appData);
 int ov15_021FC140(BagAppData *appData);
 int ov15_021FC164(BagAppData *appData);
-int ov15_021FB700(BagAppData *appData);
-int ov15_021FB820(BagAppData *appData);
+int ov15_021FC2E0(BagAppData *appData);
 int ov15_021FC41C(BagAppData *appData);
 int ov15_021FC784(BagAppData *appData);
 int ov15_021FC7EC(BagAppData *appData);
+int ov15_021FCB64(BagAppData *appData);
 int ov15_021FCD80(BagAppData *appData);
 int ov15_021FCDE4(BagAppData *appData);
 int ov15_021FCFC8(BagAppData *appData);
@@ -104,27 +76,12 @@ int ov15_021FD10C(BagAppData *appData);
 int ov15_021FD24C(BagAppData *appData);
 int ov15_021FD2FC(BagAppData *appData);
 int ov15_021FD3AC(BagAppData *appData);
-int ov15_021FC2E0(BagAppData *appData);
-int ov15_021FA4F8(BagAppData *appData);
-int ov15_021FB604(BagAppData *appData);
-int ov15_021FB654(BagAppData *appData);
-int ov15_021FA578(BagAppData *appData, int a1);
-int ov15_021FB060(BagAppData *appData);
-int ov15_021FAFFC(BagAppData *appData);
-int ov15_021FCB64(BagAppData *appData);
+void ov15_021FD404(BagAppData *appData, int a1, u8 pocket);
+void ov15_021FD574(BagAppData *appData, int a1, int a2, int a3);
 int ov15_021FD850(BagAppData *appData);
-int ov15_021FF8D4(BagAppData *appData);
-int ov15_021FDC88(BagAppData *appData);
+void ov15_021FD93C(BagAppData *appData);
 void ov15_021FDC6C(BagAppData *appData);
-void ov15_021FF894(BagAppData *appData);
-void ov15_021FA0D8(BagAppData *appData);
-void ov15_021F9EA8(BagAppData *appData);
-void ov15_021FE154(BagAppData *appData);
-void ov15_021F9A8C(BgConfig *bgConfig);
-void ov15_021FEB64(BagAppData *appData);
-void ov15_021FE504(BagAppData *appData);
-void ov15_021FE8A4(BagAppData *appData);
-void ov15_021FA028(BagAppData *appData);
+int ov15_021FDC88(BagAppData *appData);
 
 BOOL Bag_Init(OverlayManager *man, int *state) {
     Main_SetVBlankIntrCB(NULL, NULL);
@@ -137,7 +94,7 @@ BOOL Bag_Init(OverlayManager *man, int *state) {
     G2S_BlendNone();
 
     Heap_Create(HEAP_ID_3, HEAP_ID_6, 0x42000);
-    BagAppData *appData = OverlayManager_CreateAndGetData(man, 0x94C, HEAP_ID_6);
+    BagAppData *appData = OverlayManager_CreateAndGetData(man, sizeof(BagAppData), HEAP_ID_6);
     memset(appData, 0, sizeof(BagAppData));
     appData->unk_234 = OverlayManager_GetArgs(man);
     BagApp_GetSaveStructPtrs(appData);
@@ -375,4 +332,82 @@ BOOL Bag_Exit(OverlayManager *man, int *state) {
     Main_SetVBlankIntrCB(NULL, NULL);
     Heap_Destroy(HEAP_ID_6);
     return TRUE;
+}
+
+void BagApp_GetSaveStructPtrs(BagAppData *appData) {
+    appData->unk_238 = Save_Bag_Get(appData->unk_234->saveData);
+    appData->unk_23C = Save_PlayerData_GetProfile(appData->unk_234->saveData);
+    appData->unk_240 = Save_PlayerData_GetOptionsAddr(appData->unk_234->saveData);
+}
+
+RoamerSaveData *BagApp_GetSaveRoamers(BagAppData *appData) {
+    return Save_Roamers_Get(appData->unk_234->saveData);
+}
+
+void BagApp_SetRepelStepCount(BagAppData *appData, u8 repelSteps) {
+    *RoamerSave_GetRepelAddr(BagApp_GetSaveRoamers(appData)) = repelSteps;
+}
+
+void BagApp_SetFlute(BagAppData *appData, u8 flute) {
+    RoamerSave_SetFlute(BagApp_GetSaveRoamers(appData), flute);
+}
+
+void ov15_021F995C(void *cbArg) {
+    BagAppData *appData = cbArg;
+
+    DoScheduledBgGpuUpdates(appData->unk_000);
+    GF_RunVramTransferTasks();
+    SpriteSystem_TransferOam();
+    OS_SetIrqCheckFlag(OS_IE_V_BLANK);
+}
+
+void ov15_021F9984(void) {
+    extern const GraphicsBanks ov15_02200618;
+    GraphicsBanks sp0 = ov15_02200618;
+
+    GfGfx_SetBanks(&sp0);
+}
+
+void ov15_021F99A4(BgConfig *bgConfig) {
+    extern const GraphicsModes ov15_02200518;
+    GraphicsModes sp4 = ov15_02200518;
+    SetBothScreensModesAndDisable(&sp4);
+
+    extern const BgTemplate ov15_022006CC;
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_MAIN_1, &ov15_022006CC, GF_BG_TYPE_TEXT);
+    extern const BgTemplate ov15_022006E8;
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_MAIN_2, &ov15_022006E8, GF_BG_TYPE_TEXT);
+    extern const BgTemplate ov15_02200704;
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_MAIN_3, &ov15_02200704, GF_BG_TYPE_TEXT);
+    BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_MAIN_1);
+    BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_MAIN_3);
+    BG_ClearCharDataRange(GF_BG_LYR_MAIN_1, 0x20, 0x000, HEAP_ID_6);
+
+    extern const BgTemplate ov15_02200720;
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_0, &ov15_02200720, GF_BG_TYPE_TEXT);
+    extern const BgTemplate ov15_0220073C;
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_1, &ov15_0220073C, GF_BG_TYPE_TEXT);
+    extern const BgTemplate ov15_02200758;
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_2, &ov15_02200758, GF_BG_TYPE_TEXT);
+    extern const BgTemplate ov15_02200774;
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_3, &ov15_02200774, GF_BG_TYPE_TEXT);
+    BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_SUB_0);
+    BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_SUB_3);
+    BG_ClearCharDataRange(GF_BG_LYR_SUB_0, 0x20, 0x000, HEAP_ID_6);
+    BG_ClearCharDataRange(GF_BG_LYR_SUB_3, 0x20, 0x000, HEAP_ID_6);
+
+    G2_SetBlendAlpha(GX_PLANEMASK_NONE, GX_PLANEMASK_BG3, 0, 0);
+}
+
+void ov15_021F9A8C(BgConfig *bgConfig) {
+    GfGfx_EngineATogglePlanes(GX_PLANEMASK_ALL, GF_PLANE_TOGGLE_OFF);
+    GfGfx_EngineBTogglePlanes(GX_PLANEMASK_ALL & ~GX_PLANEMASK_BG2, GF_PLANE_TOGGLE_OFF);
+    FreeBgTilemapBuffer(bgConfig, GF_BG_LYR_SUB_3);
+    FreeBgTilemapBuffer(bgConfig, GF_BG_LYR_SUB_2);
+    FreeBgTilemapBuffer(bgConfig, GF_BG_LYR_SUB_1);
+    FreeBgTilemapBuffer(bgConfig, GF_BG_LYR_SUB_0);
+    FreeBgTilemapBuffer(bgConfig, GF_BG_LYR_MAIN_3);
+    FreeBgTilemapBuffer(bgConfig, GF_BG_LYR_MAIN_2);
+    FreeBgTilemapBuffer(bgConfig, GF_BG_LYR_MAIN_1);
+    Heap_FreeExplicit(HEAP_ID_6, bgConfig);
 }
