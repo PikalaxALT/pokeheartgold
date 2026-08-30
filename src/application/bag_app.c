@@ -130,16 +130,16 @@ BOOL Bag_Init(OverlayManager *man, int *state) {
     ov15_021F9F08(appData);
     ov15_021FF29C(appData, 0);
 
-    ov15_021FA044(&appData->unk_234->pockets[appData->unk_234->unk64].unk_6, &appData->unk_234->pockets[appData->unk_234->unk64].unk_4, appData->unk_234->pockets[appData->unk_234->unk64].unk_9);
-    ov15_021FA070(&appData->unk_234->pockets[appData->unk_234->unk64].unk_6, &appData->unk_234->pockets[appData->unk_234->unk64].unk_4, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, 6);
+    ov15_021FA044(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9);
+    ov15_021FA070(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, 6);
     ov15_021FF850(appData);
     ov15_021FD574(appData, 0, ov15_021FA074(appData), 0);
-    ov15_021FF364(appData, appData->unk_234->pockets[appData->unk_234->unk64].unk_6, -1, 0);
+    ov15_021FF364(appData, appData->unk_234->pockets[appData->unk_234->unk64].scroll, -1, 0);
     ov15_02200030(appData, appData->unk_234->unk64);
     ov15_021FD404(appData, 1, appData->unk_234->unk64);
-    ov15_021FF6BC(appData, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, appData->unk_234->pockets[appData->unk_234->unk64].unk_6, 0);
+    ov15_021FF6BC(appData, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, appData->unk_234->pockets[appData->unk_234->unk64].scroll, 0);
     ov15_02200140(appData, &appData->unk_234->pockets[appData->unk_234->unk64], ov15_021FA074(appData), 1);
-    appData->unk_644 = appData->unk_234->pockets[appData->unk_234->unk64].unk_4 + 8;
+    appData->unk_644 = appData->unk_234->pockets[appData->unk_234->unk64].position + 8;
     ov15_021FFECC(appData, appData->unk_644);
     ov15_021FA170(appData);
     if (appData->unk_234->unk65 == 4 || appData->unk_234->unk65 == 5) {
@@ -462,7 +462,7 @@ void ov15_021F9CBC(BagAppData *appData) {
 
 void ov15_021F9D28(BagAppData *appData) {
     appData->unk_614 = 0;
-    for (u8 i = 0; i < 8; ++i) {
+    for (u8 i = 0; i < POCKETS_COUNT; ++i) {
         if (appData->unk_234->pockets[i].slots != NULL) {
             ++appData->unk_614;
         }
@@ -484,4 +484,48 @@ void ov15_021F9D8C(MsgData *msgData, String *dest, s32 strno) {
 
 void ov15_021F9D9C(MsgData *msgData, String *dest, u16 itemId) {
     ReadMsgDataIntoString(msgData, TMHMGetMove(itemId), dest);
+}
+
+void ov15_021F9DB4(BagAppData *appData) {
+    appData->unk_234->unk64 = 0;
+    BagViewPocket *pockets = appData->unk_234->pockets;
+    if (appData->unk_234->cursor == NULL) {
+        for (u16 i = 0; i < POCKETS_COUNT; ++i) {
+            if (pockets[i].slots != NULL) {
+                pockets[i].position = 0;
+                pockets[i].scroll = 0;
+            }
+        }
+        for (u16 i = 0; i < POCKETS_COUNT; ++i) {
+            if (pockets[i].slots != NULL) {
+                appData->unk_234->unk64 = i;
+                break;
+            }
+        }
+    } else {
+        for (u16 i = 0; i < POCKETS_COUNT; ++i) {
+            if (pockets[i].slots != NULL) {
+                u8 position;
+                u8 scroll;
+                BagCursor_Field_PocketGetPosition(appData->unk_234->cursor, pockets[i].pocketId, &position, &scroll);
+                pockets[i].position = position;
+                pockets[i].scroll = scroll;
+            }
+        }
+        u16 pocket = BagCursor_Field_GetPocket(appData->unk_234->cursor);
+        if (pockets[pocket].slots == NULL) {
+            for (u16 i = 0; i < POCKETS_COUNT; ++i) {
+                if (pockets[i].slots != NULL) {
+                    pocket = i;
+                    break;
+                }
+            }
+        }
+        for (u16 i = 0; i < POCKETS_COUNT; ++i) {
+            if (pockets[i].slots != NULL && pocket == pockets[i].pocketId) {
+                appData->unk_234->unk64 = i;
+                break;
+            }
+        }
+    }
 }
