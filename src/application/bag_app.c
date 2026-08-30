@@ -3,6 +3,9 @@
 #include "bag_types_def.h"
 #include "bg_window.h"
 #include "gf_gfx_planes.h"
+#include "message_format.h"
+#include "message_printer.h"
+#include "msgdata.h"
 #include "overlay_15.h"
 #include "player_data.h"
 #include "render_text.h"
@@ -14,6 +17,7 @@
 #include "unk_020210A0.h"
 #include "unk_0203A3B0.h"
 #include "unk_0208805C.h"
+#include "vram_transfer_manager.h"
 
 typedef struct BagAppData {
     BgConfig *unk_000;
@@ -21,13 +25,27 @@ typedef struct BagAppData {
     BagView *unk_234;
     u8 filler_238[4];
     PlayerProfile *unk_23C;
-    u8 filler_240[0xC];
+    u8 filler_240[4];
+    NARC *unk_244;
+    u8 filler_248[4];
     SpriteManager *unk_24C;
-    u8 filler_250[0x3C5];
+    u8 filler_250[0x9C];
+    MessagePrinter *unk_2EC;
+    MsgData *unk_2F0;
+    MessageFormat *unk_2F4;
+    MsgData *unk_2F8;
+    MsgData *unk_2FC;
+    u8 filler_300[0x2E4];
+    String *unk_5E4;
+    u8 filler_5E8[0x2C];
+    u8 unk_614;
     u8 unk_615;
     u8 filler_616[0x2E];
     int unk_644;
-    u8 filler_648[0x304];
+    u8 filler_648[0x44];
+    void *unk_68C;
+    void *unk_690;
+    u8 filler_694[0x2B8];
 } BagAppData; // size: 0x94C
 
 void BagApp_GetSaveStructPtrs(BagAppData *appData);
@@ -97,6 +115,16 @@ int ov15_021FCB64(BagAppData *appData);
 int ov15_021FD850(BagAppData *appData);
 int ov15_021FF8D4(BagAppData *appData);
 int ov15_021FDC88(BagAppData *appData);
+void ov15_021FDC6C(BagAppData *appData);
+void ov15_021FF894(BagAppData *appData);
+void ov15_021FA0D8(BagAppData *appData);
+void ov15_021F9EA8(BagAppData *appData);
+void ov15_021FE154(BagAppData *appData);
+void ov15_021F9A8C(BgConfig *bgConfig);
+void ov15_021FEB64(BagAppData *appData);
+void ov15_021FE504(BagAppData *appData);
+void ov15_021FE8A4(BagAppData *appData);
+void ov15_021FA028(BagAppData *appData);
 
 BOOL Bag_Init(OverlayManager *man, int *state) {
     Main_SetVBlankIntrCB(NULL, NULL);
@@ -315,4 +343,36 @@ BOOL Bag_Main(OverlayManager *man, int *state) {
     return FALSE;
 }
 
-BOOL Bag_Exit(OverlayManager *man, int *state);
+BOOL Bag_Exit(OverlayManager *man, int *state) {
+    { // scope guard here to prevent use after free
+        BagAppData *appData = OverlayManager_GetData(man);
+
+        ov15_021FDC6C(appData);
+        ov15_021FF894(appData);
+        Heap_Free(appData->unk_68C);
+        Heap_Free(appData->unk_690);
+        ov15_021FA0D8(appData);
+        ov15_021F9EA8(appData);
+        ov15_021FE154(appData);
+        ov15_021F9A8C(appData->unk_000);
+        sub_02021238();
+        GF_DestroyVramTransferManager();
+        ov15_021FEB64(appData);
+        ov15_021FE504(appData);
+        ov15_021FE8A4(appData);
+        ov15_021FA028(appData);
+        String_Delete(appData->unk_5E4);
+        DestroyMsgData(appData->unk_2FC);
+        DestroyMsgData(appData->unk_2F8);
+        DestroyMsgData(appData->unk_2F0);
+        MessagePrinter_Delete(appData->unk_2EC);
+        MessageFormat_Delete(appData->unk_2F4);
+        NARC_Delete(appData->unk_244);
+    }
+    OverlayManager_FreeData(man);
+    // possible UB: a vblank intr here results in use after free
+    sub_02004B10();
+    Main_SetVBlankIntrCB(NULL, NULL);
+    Heap_Destroy(HEAP_ID_6);
+    return TRUE;
+}
