@@ -1,6 +1,7 @@
 #include "global.h"
 
 #include "application/bag_app_internal.h"
+#include "msgdata/msg.naix"
 
 #include "bag.h"
 #include "bag_types_def.h"
@@ -33,8 +34,12 @@ void ov15_021F9984(void);
 void ov15_021F99A4(BgConfig *bgConfig);
 void ov15_021F9A8C(BgConfig *bgConfig);
 void ov15_021F9AE4(BagAppData *appData);
+void ov15_021F9C78(BagAppData *appData, BOOL a1);
 void ov15_021F9CBC(BagAppData *appData);
 void ov15_021F9D28(BagAppData *appData);
+u16 ov15_021F9D60(BagAppData *appData, int a1, BOOL a2);
+void ov15_021F9D8C(MsgData *msgData, String *dest, s32 strno);
+void ov15_021F9D9C(MsgData *msgData, String *dest, u16 itemId);
 void ov15_021F9DB4(BagAppData *appData);
 void ov15_021F9EA8(BagAppData *appData);
 void ov15_021F9F08(BagAppData *appData);
@@ -436,4 +441,47 @@ void ov15_021F9AE4(BagAppData *appData) {
     appData->unk_690 = GfGfxLoader_GetPlttData(NARC_a_0_1_5, 41, &appData->unk_698, HEAP_ID_BAG);
     GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 8, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_8_OFFSET, 0x80, HEAP_ID_BAG);
     LoadUserFrameGfx2(appData->unk_000, GF_BG_LYR_SUB_0, 0x3E2, 12, Options_GetFrame(appData->unk_240), HEAP_ID_BAG);
+}
+
+void ov15_021F9C78(BagAppData *appData, BOOL a1) {
+    if (a1 == TRUE) {
+        GfGfxLoader_LoadScrnData(NARC_a_0_1_5, 54, appData->unk_000, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
+    } else {
+        GfGfxLoader_LoadScrnData(NARC_a_0_1_5, 9, appData->unk_000, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
+    }
+}
+
+void ov15_021F9CBC(BagAppData *appData) {
+    appData->unk_2F0 = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, NARC_msg_msg_0010_bin, HEAP_ID_BAG);
+    appData->unk_2EC = MessagePrinter_New(1, 2, 0, HEAP_ID_BAG);
+    appData->unk_2F4 = MessageFormat_New(HEAP_ID_BAG);
+    appData->unk_2F8 = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, NARC_msg_msg_0222_bin, HEAP_ID_BAG);
+    appData->unk_2FC = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, NARC_msg_msg_0750_bin, HEAP_ID_BAG);
+    appData->unk_5E4 = String_New(256, HEAP_ID_BAG);
+}
+
+void ov15_021F9D28(BagAppData *appData) {
+    appData->unk_614 = 0;
+    for (u8 i = 0; i < 8; ++i) {
+        if (appData->unk_234->pockets[i].slots != NULL) {
+            ++appData->unk_614;
+        }
+    }
+}
+
+u16 ov15_021F9D60(BagAppData *appData, int a1, BOOL a2) {
+    BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+    if (a2 == FALSE) {
+        return pocket->slots[a1].id;
+    } else {
+        return pocket->slots[a1].quantity;
+    }
+}
+
+void ov15_021F9D8C(MsgData *msgData, String *dest, s32 strno) {
+    ReadMsgDataIntoString(msgData, strno, dest);
+}
+
+void ov15_021F9D9C(MsgData *msgData, String *dest, u16 itemId) {
+    ReadMsgDataIntoString(msgData, TMHMGetMove(itemId), dest);
 }
