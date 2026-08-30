@@ -37,7 +37,9 @@ typedef struct BagAppData {
     u8 filler_648[0x44];
     void *unk_68C;
     void *unk_690;
-    u8 filler_694[0x2B8];
+    NNSG2dPaletteData *unk_694;
+    NNSG2dPaletteData *unk_698;
+    u8 filler_69C[0x2B0];
 } BagAppData; // size: 0x94C
 
 void ov15_021FE020(BagAppData *appData);
