@@ -38,8 +38,8 @@ void ov15_021F9C78(BagAppData *appData, BOOL a1);
 void ov15_021F9CBC(BagAppData *appData);
 void ov15_021F9D28(BagAppData *appData);
 u16 ov15_021F9D60(BagAppData *appData, int a1, BOOL a2);
-void ov15_021F9D8C(MsgData *msgData, String *dest, s32 strno);
-void ov15_021F9D9C(MsgData *msgData, String *dest, u16 itemId);
+void ov15_021F9D8C(MsgData *msgData, String *dest, u16 itemId, enum HeapID heapID);
+void ov15_021F9D9C(MsgData *msgData, String *dest, u16 itemId, enum HeapID heapID);
 void ov15_021F9DB4(BagAppData *appData);
 void ov15_021F9EA8(BagAppData *appData);
 void ov15_021F9F08(BagAppData *appData);
@@ -478,11 +478,11 @@ u16 ov15_021F9D60(BagAppData *appData, int a1, BOOL a2) {
     }
 }
 
-void ov15_021F9D8C(MsgData *msgData, String *dest, s32 strno) {
-    ReadMsgDataIntoString(msgData, strno, dest);
+void ov15_021F9D8C(MsgData *msgData, String *dest, u16 itemId, enum HeapID heapID) {
+    ReadMsgDataIntoString(msgData, itemId, dest);
 }
 
-void ov15_021F9D9C(MsgData *msgData, String *dest, u16 itemId) {
+void ov15_021F9D9C(MsgData *msgData, String *dest, u16 itemId, enum HeapID heapID) {
     ReadMsgDataIntoString(msgData, TMHMGetMove(itemId), dest);
 }
 
@@ -539,5 +539,41 @@ void ov15_021F9EA8(BagAppData *appData) {
             }
         }
         BagCursor_Field_SetPocket(appData->unk_234->cursor, pockets[appData->unk_234->unk64].pocketId);
+    }
+}
+
+void ov15_021F9F08(BagAppData *appData) {
+    extern const u8 ov15_022008B0[8];
+
+    u32 i;
+    BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+
+    if (pocket->pocketId == POCKET_TMHMS) {
+        for (i = 0; i < ov15_022008B0[pocket->pocketId]; ++i) {
+            if (pocket->slots[i].id == ITEM_NONE || pocket->slots[i].quantity == 0) {
+                break;
+            }
+            ov15_021F9D9C(appData->unk_2FC, appData->unk_350[i], pocket->slots[i].id, HEAP_ID_BAG);
+            appData->unk_6A4[i] = pocket->slots[i].id;
+        }
+        pocket->unk_9 = i;
+    } else {
+        for (i = 0; i < ov15_022008B0[pocket->pocketId]; ++i) {
+            if (pocket->slots[i].id == ITEM_NONE || pocket->slots[i].quantity == 0) {
+                break;
+            }
+            ov15_021F9D8C(appData->unk_2F8, appData->unk_350[i], pocket->slots[i].id, HEAP_ID_BAG);
+            appData->unk_6A4[i] = pocket->slots[i].id;
+        }
+        pocket->unk_9 = i;
+    }
+    int r1;
+    if (pocket->unk_9 == 0) {
+        r1 = 0;
+    } else {
+        r1 = ((pocket->unk_9 - 1) / 6) * 6;
+    }
+    if (pocket->scroll > r1) {
+        pocket->scroll = r1;
     }
 }
