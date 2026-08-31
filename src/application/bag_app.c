@@ -48,7 +48,11 @@ void ov15_021FA028(BagAppData *appData);
 void ov15_021FA044(s16 *a0, u16 *a1, u8 a2);
 void ov15_021FA070(s16 *a0, u16 *a1, u8 a2, int a3);
 int ov15_021FA074(BagAppData *appData);
+int ov15_021FA098(BagAppData *appData);
 void ov15_021FA0D8(BagAppData *appData);
+void ov15_021FA0E4(BagAppData *appData, int a1);
+BOOL ov15_021FA104(BagAppData *appData, int a1);
+u16 ov15_021FA12C(BagAppData *appData);
 void ov15_021FA170(BagAppData *appData);
 int ov15_021FA1BC(BagAppData *appData);
 int ov15_021FA4F8(BagAppData *appData);
@@ -90,6 +94,8 @@ int ov15_021FD850(BagAppData *appData);
 void ov15_021FD93C(BagAppData *appData);
 void ov15_021FDC6C(BagAppData *appData);
 int ov15_021FDC88(BagAppData *appData);
+
+extern const u8 ov15_022008B0[8];
 
 BOOL Bag_Init(OverlayManager *man, int *state) {
     Main_SetVBlankIntrCB(NULL, NULL);
@@ -543,8 +549,6 @@ void ov15_021F9EA8(BagAppData *appData) {
 }
 
 void ov15_021F9F08(BagAppData *appData) {
-    extern const u8 ov15_022008B0[8];
-
     u32 i;
     BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
 
@@ -608,4 +612,43 @@ int ov15_021FA074(BagAppData *appData) {
         ret = 6;
     }
     return ret;
+}
+
+int ov15_021FA098(BagAppData *appData) {
+    int r3 = appData->unk_234->pockets[appData->unk_234->unk64].scroll;
+    int r4 = appData->unk_672;
+    if ((r4 / 6) * 6 == r3) {
+        return r4 % 6;
+    } else {
+        return -1;
+    }
+}
+
+void ov15_021FA0D8(BagAppData *appData) {
+    appData->unk_348 = 0;
+}
+
+void ov15_021FA0E4(BagAppData *appData, int a1) {
+    if (a1 >= 8 && a1 < 14) {
+        appData->unk_234->pockets[appData->unk_234->unk64].position = a1 - 8;
+    }
+}
+
+BOOL ov15_021FA104(BagAppData *appData, int a1) {
+    if (a1 == 14 || a1 == 15) {
+        return FALSE;
+    }
+    if (a1 <= 7 && appData->unk_644 >= 8 && appData->unk_644 <= 13) {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+u16 ov15_021FA12C(BagAppData *appData) {
+    BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+    u32 r3 = pocket->scroll + appData->unk_644 - 8;
+    if (ov15_022008B0[appData->unk_234->unk64] <= r3) {
+        return ITEM_NONE;
+    }
+    return pocket->slots[r3].id;
 }

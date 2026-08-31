@@ -27,7 +27,9 @@ typedef struct BagAppData {
     MessageFormat *unk_2F4;
     MsgData *unk_2F8;
     MsgData *unk_2FC;
-    u8 filler_300[0x50];
+    u8 filler_300[0x48];
+    int unk_348;
+    u8 filler_34C[4];
     String *unk_350[165];
     String *unk_5E4;
     u8 filler_5E8[0x2C];
@@ -35,7 +37,9 @@ typedef struct BagAppData {
     u8 unk_615;
     u8 filler_616[0x2E];
     int unk_644;
-    u8 filler_648[0x44];
+    u8 filler_648[0x2A];
+    u8 unk_672;
+    u8 filler_673[0x19];
     void *unk_68C;
     void *unk_690;
     NNSG2dPaletteData *unk_694;
