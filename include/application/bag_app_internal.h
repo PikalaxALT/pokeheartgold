@@ -13,7 +13,7 @@
 
 typedef struct BagAppData {
     BgConfig *unk_000;
-    u8 filler_004[0x230];
+    Window unk_004[35];
     BagView *unk_234;
     Bag *unk_238;
     PlayerProfile *unk_23C;

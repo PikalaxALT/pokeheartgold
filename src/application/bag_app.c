@@ -94,6 +94,9 @@ int ov15_021FD850(BagAppData *appData);
 void ov15_021FD93C(BagAppData *appData);
 void ov15_021FDC6C(BagAppData *appData);
 int ov15_021FDC88(BagAppData *appData);
+void ov15_021FECA0(BagAppData *appData, Window *window, u16 itemId);
+void ov15_021FECC4(BagAppData *appData, Window *window);
+void ov15_021FECD8(BagAppData *appData, Window *window, int a2);
 
 extern const u8 ov15_022008B0[8];
 
@@ -651,4 +654,19 @@ u16 ov15_021FA12C(BagAppData *appData) {
         return ITEM_NONE;
     }
     return pocket->slots[r3].id;
+}
+
+void ov15_021FA170(BagAppData *appData) {
+    if (appData->unk_644 >= 8 && appData->unk_644 <= 13) {
+        u16 itemId = ov15_021FA12C(appData);
+        if (itemId != ITEM_NONE) {
+            ov15_021FECA0(appData, &appData->unk_004[0], itemId);
+        } else {
+            ov15_021FECC4(appData, &appData->unk_004[0]);
+        }
+    } else if (appData->unk_644 >= 0 && appData->unk_644 <= 7) {
+        ov15_021FECD8(appData, &appData->unk_004[0], appData->unk_644);
+    } else {
+        ov15_021FECC4(appData, &appData->unk_004[0]);
+    }
 }
