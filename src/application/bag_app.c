@@ -870,3 +870,36 @@ BOOL ov15_021FA650(BagAppData *appData) {
     }
     return FALSE;
 }
+
+int ov15_021FA68C(BagAppData *appData, u32 a1) {
+    for (int i = 0; i < 8; ++i) {
+        if (appData->unk_234->pockets[i].pocketId == a1 && appData->unk_234->pockets[i].slots != NULL) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int ov15_021FA6C0(BagAppData *appData, int a1, int a2) {
+    for (int i = 0; i < 8; ++i) {
+        a1 += a2;
+        if (a1 < 0) {
+            a1 = 7;
+        } else if (a1 == 8) {
+            a1 = 0;
+        }
+        if (ov15_021FA68C(appData, a1) != -1) {
+            break;
+        }
+    }
+
+    return a1;
+}
+
+void ov15_021FA6F4(BagAppData *appData, BagViewPocket *pocket) {
+    ov15_021FD574(appData, 0, ov15_021FA074(appData), 0);
+    ov15_021FF364(appData, pocket->scroll, -1, 0);
+    ov15_021FF6BC(appData, pocket->unk_9, pocket->scroll, 0);
+    ov15_02200140(appData, pocket, ov15_021FA074(appData), 1);
+}
