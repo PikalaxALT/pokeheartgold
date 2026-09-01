@@ -11,6 +11,47 @@
 #include "player_data.h"
 #include "sprite_system.h"
 
+typedef enum BagAppState {
+    BAG_APP_STATE_0,
+    BAG_APP_STATE_1,
+    BAG_APP_STATE_2,
+    BAG_APP_STATE_3,
+    BAG_APP_STATE_4,
+    BAG_APP_STATE_5,
+    BAG_APP_STATE_6,
+    BAG_APP_STATE_7,
+    BAG_APP_STATE_8,
+    BAG_APP_STATE_9,
+    BAG_APP_STATE_10,
+    BAG_APP_STATE_11,
+    BAG_APP_STATE_12,
+    BAG_APP_STATE_13,
+    BAG_APP_STATE_14,
+    BAG_APP_STATE_15,
+    BAG_APP_STATE_16,
+    BAG_APP_STATE_17,
+    BAG_APP_STATE_18,
+    BAG_APP_STATE_19,
+    BAG_APP_STATE_20,
+    BAG_APP_STATE_21,
+    BAG_APP_STATE_22,
+    BAG_APP_STATE_23,
+    BAG_APP_STATE_24,
+    BAG_APP_STATE_25,
+    BAG_APP_STATE_26,
+    BAG_APP_STATE_27,
+    BAG_APP_STATE_28,
+    BAG_APP_STATE_29,
+    BAG_APP_STATE_30,
+    BAG_APP_STATE_31,
+    BAG_APP_STATE_32,
+    BAG_APP_STATE_33,
+    BAG_APP_STATE_34,
+    BAG_APP_STATE_35,
+    BAG_APP_STATE_36,
+    BAG_APP_STATE_37,
+} BagAppState;
+
 typedef struct BagAppData {
     BgConfig *unk_000;
     Window unk_004[35];
