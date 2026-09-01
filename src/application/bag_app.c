@@ -59,14 +59,18 @@ BagAppState ov15_021FA1BC(BagAppData *appData);
 BagAppState ov15_021FA4F8(BagAppData *appData);
 BagAppState ov15_021FA578(BagAppData *appData, int a1);
 void ov15_021FA620(BagAppData *appData);
+BOOL ov15_021FA650(BagAppData *appData);
 int ov15_021FA68C(BagAppData *appData, u32 a1);
 int ov15_021FA6C0(BagAppData *appData, int a1, int a2);
+void ov15_021FA6F4(BagAppData *appData, BagViewPocket *pocket);
 BagAppState ov15_021FA73C(BagAppData *appData, int a1, u8 *a2, int a3, int a4, int a5);
 BOOL ov15_021FA93C(BagAppData *appData);
 u32 ov15_021FAC2C(BagAppData *appData, int a1);
+void ov15_021FAD80(BagAppData *appData, BagViewPocket *pocket);
 BagAppState ov15_021FAE48(BagAppData *appData);
 BagAppState ov15_021FAFFC(BagAppData *appData);
 BagAppState ov15_021FB060(BagAppData *appData);
+void ov15_021FB14C(BagAppData *appData);
 BagAppState ov15_021FB5AC(BagAppData *appData);
 BagAppState ov15_021FB604(BagAppData *appData);
 BagAppState ov15_021FB654(BagAppData *appData);
@@ -797,4 +801,72 @@ BagAppState ov15_021FA1BC(BagAppData *appData) {
     }
 
     return BAG_APP_STATE_1;
+}
+
+BagAppState ov15_021FA4F8(BagAppData *appData) {
+    BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+
+    ov15_021FD574(appData, 2, 0, 0);
+    ov15_021FF4EC(appData, pocket->scroll, appData->unk_644 - 8);
+    ov15_022002B4(appData, appData->unk_644 - 8);
+    ov15_021FB14C(appData);
+    appData->unk_234->itemId = pocket->slots[pocket->scroll + appData->unk_644 - 8].id;
+    appData->unk_682 = pocket->slots[pocket->scroll + appData->unk_644 - 8].quantity;
+    return BAG_APP_STATE_4;
+}
+
+BagAppState ov15_021FA578(BagAppData *appData, int a1) {
+    BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+
+    if (a1 > 0) {
+        if (pocket->scroll + 6 < pocket->unk_9) {
+            pocket->scroll += 6;
+        } else {
+            pocket->scroll = 0;
+        }
+    } else {
+        if (pocket->scroll - 6 >= 0) {
+            pocket->scroll -= 6;
+        } else {
+            pocket->scroll = ((pocket->unk_9 - 1) / 6) * 6;
+        }
+    }
+
+    if (appData->unk_671 == 1) {
+        ov15_021FAD80(appData, pocket);
+        ov15_021FFF34(appData, appData->unk_66C);
+        return BAG_APP_STATE_3;
+    }
+
+    ov15_021FA6F4(appData, pocket);
+    ov15_021FA170(appData);
+    switch (appData->unk_234->unk65) {
+    case 2:
+        return BAG_APP_STATE_16;
+    case 1:
+        return BAG_APP_STATE_14;
+    case 3:
+        return BAG_APP_STATE_26;
+    default:
+        return BAG_APP_STATE_1;
+    }
+}
+
+void ov15_021FA620(BagAppData *appData) {
+    appData->unk_617 = (90 - (appData->unk_614 * 10)) / (appData->unk_614 + 1) + 6;
+    appData->unk_618 = appData->unk_617 + 4;
+}
+
+BOOL ov15_021FA650(BagAppData *appData) {
+    static int ov15_02201480 = 0;
+    static int ov15_02201300 = 1;
+
+    if (gSystem.newKeys & PAD_BUTTON_DEBUG) {
+        ++ov15_02201480;
+        if (ov15_02201480 >= ov15_02201300) {
+            ov15_02201480 = 0;
+        }
+        ov15_021FD574(appData, 1, ov15_02201300, ov15_02201480);
+    }
+    return FALSE;
 }
