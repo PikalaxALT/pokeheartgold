@@ -98,7 +98,8 @@ typedef struct BagAppData {
     NNSG2dPaletteData *unk_698;
     u8 filler_69C[8];
     u16 unk_6A4[165];
-    u8 filler_7EE[0x15E];
+    u8 filler_7EE[0x1A];
+    u8 unk_808[0x144];
 } BagAppData; // size: 0x94C
 
 void ov15_021FE020(BagAppData *appData);
