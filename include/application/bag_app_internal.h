@@ -52,6 +52,19 @@ typedef enum BagAppState {
     BAG_APP_STATE_37,
 } BagAppState;
 
+typedef struct BagAppData_Sub619 {
+    u8 unk_0;
+    u8 unk_1;
+    u8 unk_2;
+    u8 unk_3;
+    u8 unk_4;
+    u8 unk_5;
+    u8 unk_6;
+    u8 unk_7_0 : 4;
+    u8 unk_7_4 : 3;
+    u8 unk_7_7 : 1;
+} BagAppData_Sub619;
+
 typedef struct BagAppData {
     BgConfig *unk_000;
     Window unk_004[35];
@@ -79,10 +92,8 @@ typedef struct BagAppData {
     u8 unk_616;
     u8 unk_617;
     u8 unk_618;
-    u8 unk_619;
-    u8 unk_61A;
-    u8 unk_61B;
-    u8 filler_61C[0x28];
+    BagAppData_Sub619 unk_619;
+    u8 filler_624[0x20];
     int unk_644;
     u8 filler_648[0x24];
     int unk_66C;
@@ -119,6 +130,8 @@ void ov15_021FF6BC(BagAppData *appData, u8 a1, s16 a2, int a3);
 void ov15_021FF850(BagAppData *appData);
 void ov15_021FF894(BagAppData *appData);
 int ov15_021FF8D4(BagAppData *appData);
+void ov15_021FF950(BagAppData *appData);
+void ov15_021FF964(BagAppData *appData);
 void ov15_021FFECC(BagAppData *appData, int a1);
 void ov15_021FFF34(BagAppData *appData, int a1);
 void ov15_02200030(BagAppData *appData, u8 pocket);
