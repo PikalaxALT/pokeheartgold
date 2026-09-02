@@ -66,7 +66,7 @@ void ov15_021FA6F4(BagAppData *appData, BagViewPocket *pocket);
 BagAppState ov15_021FA73C(BagAppData *appData, int a1, u8 *a2, int a3, int a4, int a5);
 BOOL ov15_021FA93C(BagAppData *appData);
 BOOL ov15_021FAA18(BagAppData *appData);
-void ov15_021FAB34(BagAppData *appData);
+BOOL ov15_021FAB34(BagAppData *appData);
 u32 ov15_021FAC2C(BagAppData *appData, int a1);
 int ov15_021FAC40(BagAppData *appData);
 void ov15_021FAD80(BagAppData *appData, BagViewPocket *pocket);
@@ -1073,6 +1073,37 @@ BOOL ov15_021FAA18(BagAppData *appData) {
             r4->unk_4 = 4;
         }
         ov15_021FF950(appData);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+BOOL ov15_021FAB34(BagAppData *appData) {
+    BagAppData_Sub619 *r4 = &appData->unk_619;
+
+    switch (r4->unk_2) {
+    case 0:
+        r4->unk_3 = 0;
+        ++r4->unk_2;
+        break;
+    case 1:
+        if (r4->unk_3 < 8) {
+            ++r4->unk_3;
+        } else {
+            appData->unk_234->unk64 = r4->unk_0;
+            ov15_021F9F08(appData);
+            ov15_021FF364(appData, appData->unk_234->pockets[appData->unk_234->unk64].scroll, -1, 0);
+            ov15_021FD574(appData, 0, ov15_021FA074(appData), 0);
+            ov15_02200030(appData, appData->unk_234->unk64);
+            ov15_021FD404(appData, 1, appData->unk_234->unk64);
+            ov15_021FA044(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9);
+            ov15_021FA070(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, 6);
+            ++r4->unk_2;
+            return TRUE;
+        }
+        break;
+    case 2:
         return TRUE;
     }
 
