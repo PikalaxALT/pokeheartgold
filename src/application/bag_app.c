@@ -1022,3 +1022,59 @@ BOOL ov15_021FA93C(BagAppData *appData) {
     ov15_021FF964(appData);
     return FALSE;
 }
+
+BOOL ov15_021FAA18(BagAppData *appData) {
+    BagAppData_Sub619 *r4 = &appData->unk_619;
+
+    if (gSystem.newKeys & PAD_KEY_LEFT) {
+        if (appData->unk_614 == 1) {
+            return TRUE;
+        }
+        PlaySE(SEQ_SE_DP_SELECT);
+        appData->unk_234->unk64 = r4->unk_0;
+        if (r4->unk_0 != 0) {
+            --r4->unk_0;
+            --appData->unk_670;
+        } else {
+            r4->unk_0 = appData->unk_614 - 1;
+            appData->unk_670 = appData->unk_614 - 1;
+        }
+        r4->unk_2 = 0;
+        r4->unk_1 = 0;
+        r4->unk_7_4 = 1;
+        r4->unk_7_0 = 1;
+        r4->unk_7_7 = 0;
+        if (r4->unk_4 != 3) {
+            r4->unk_4 = 4;
+        }
+        ov15_021FF950(appData);
+        return TRUE;
+    }
+
+    if (gSystem.newKeys & PAD_KEY_RIGHT) {
+        if (appData->unk_614 == 1) {
+            return TRUE;
+        }
+        PlaySE(SEQ_SE_DP_SELECT);
+        appData->unk_234->unk64 = r4->unk_0;
+        if (r4->unk_0 + 1 < appData->unk_614) {
+            ++r4->unk_0;
+            ++appData->unk_670;
+        } else {
+            r4->unk_0 = 0;
+            appData->unk_670 = 0;
+        }
+        r4->unk_2 = 0;
+        r4->unk_1 = 1;
+        r4->unk_7_4 = 1;
+        r4->unk_7_0 = 1;
+        r4->unk_7_7 = 0;
+        if (r4->unk_4 != 3) {
+            r4->unk_4 = 4;
+        }
+        ov15_021FF950(appData);
+        return TRUE;
+    }
+
+    return FALSE;
+}
