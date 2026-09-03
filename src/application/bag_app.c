@@ -69,10 +69,12 @@ BOOL ov15_021FAA18(BagAppData *appData);
 BOOL ov15_021FAB34(BagAppData *appData);
 u32 ov15_021FAC2C(BagAppData *appData, int a1);
 int ov15_021FAC40(BagAppData *appData);
+void ov15_021FAC48(BagAppData *appData);
 void ov15_021FAD80(BagAppData *appData, BagViewPocket *pocket);
 BagAppState ov15_021FAE48(BagAppData *appData);
 BagAppState ov15_021FAFFC(BagAppData *appData);
 BagAppState ov15_021FB060(BagAppData *appData);
+void ov15_021FB114(BagAppData *appData);
 void ov15_021FB14C(BagAppData *appData);
 BagAppState ov15_021FB5AC(BagAppData *appData);
 BagAppState ov15_021FB604(BagAppData *appData);
@@ -995,26 +997,27 @@ BOOL ov15_021FA93C(BagAppData *appData) {
     if (!System_GetTouchHeld()) {
         r4->unk_7_4 = 1;
     }
-    int r6 = ov15_021FAC40(appData);
-    if (r6 == -1 || r6 != r4->unk_0) {
+    // this function always returns -1
+    int negative_one = ov15_021FAC40(appData);
+    if (negative_one == -1 || negative_one != r4->unk_0) {
         r4->unk_7_0 = 1;
     }
-    if (!ov15_021FAA18(appData) && r4->unk_7_4 == 1 && r6 != -1) {
+    if (!ov15_021FAA18(appData) && r4->unk_7_4 == 1 && negative_one != -1) {
         appData->unk_234->unk64 = r4->unk_0;
-        if (r4->unk_0 > (u8)r6) {
+        if (r4->unk_0 > (u8)negative_one) {
             r4->unk_1 = 0;
             r4->unk_2 = 0;
-        } else if (r4->unk_0 < (u8)r6) {
+        } else if (r4->unk_0 < (u8)negative_one) {
             r4->unk_1 = 1;
             r4->unk_2 = 0;
         } else {
             r4->unk_1 = 2;
         }
-        r4->unk_0 = (u8)r6;
+        r4->unk_0 = (u8)negative_one;
         r4->unk_7_0 = 0;
         r4->unk_7_4 = 0;
         r4->unk_4 = 0;
-        appData->unk_670 = r6;
+        appData->unk_670 = negative_one;
         ov15_021FF950(appData);
         ov15_021FDAF4(&appData->unk_808, appData->unk_670 + 1, 7);
     }
@@ -1108,4 +1111,40 @@ BOOL ov15_021FAB34(BagAppData *appData) {
     }
 
     return FALSE;
+}
+
+u32 ov15_021FAC2C(BagAppData *appData, int a1) {
+    extern const TouchscreenHitbox *ov15_02201314[];
+
+    return TouchscreenHitbox_FindRectAtTouchNew(ov15_02201314[a1]);
+}
+
+int ov15_021FAC40(BagAppData *appData) {
+    // This might have been a debug function
+    return -1;
+}
+
+void ov15_021FAC48(BagAppData *appData) {
+    {
+        BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+        appData->unk_671 = 1;
+        appData->unk_672 = pocket->scroll + appData->unk_644 - 8;
+    }
+    ov15_021FED60(appData);
+    ov15_021FB114(appData);
+    ov15_02200294(appData);
+    ov15_021FF560(appData);
+    ov15_021FF7AC(&appData->unk_004[24]);
+    ov15_021FED58(appData);
+
+    {
+        BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+        ov15_021FD574(appData, 1, ov15_021FA074(appData), appData->unk_644 - 8);
+        ov15_021FF364(appData, pocket->scroll, appData->unk_644 - 8, 1);
+        ov15_021FF6BC(appData, pocket->unk_9, pocket->scroll, 0);
+        ov15_02200140(appData, pocket, ov15_021FA074(appData), 0);
+        ov15_022001C4(appData, pocket, pocket->scroll + appData->unk_644 - 8);
+        ov15_021FFECC(appData, appData->unk_644);
+        appData->unk_66C = appData->unk_644 - 8;
+    }
 }
