@@ -9,6 +9,7 @@
 #include "font.h"
 #include "gf_gfx_loader.h"
 #include "gf_gfx_planes.h"
+#include "list_menu_items.h"
 #include "message_format.h"
 #include "message_printer.h"
 #include "msgdata.h"
@@ -70,7 +71,9 @@ BOOL ov15_021FAB34(BagAppData *appData);
 u32 ov15_021FAC2C(BagAppData *appData, int a1);
 int ov15_021FAC40(BagAppData *appData);
 void ov15_021FAC48(BagAppData *appData);
+int ov15_021FAD28(int a0);
 void ov15_021FAD80(BagAppData *appData, BagViewPocket *pocket);
+int ov15_021FADE8(BagAppData *appData, int a1);
 BagAppState ov15_021FAE48(BagAppData *appData);
 BagAppState ov15_021FAFFC(BagAppData *appData);
 BagAppState ov15_021FB060(BagAppData *appData);
@@ -1147,4 +1150,61 @@ void ov15_021FAC48(BagAppData *appData) {
         ov15_021FFECC(appData, appData->unk_644);
         appData->unk_66C = appData->unk_644 - 8;
     }
+}
+
+extern const u8 ov15_02200584[][4];
+
+int ov15_021FAD28(int a0) {
+    if (gSystem.newKeys & PAD_KEY_UP) {
+        return ov15_02200584[a0][0] - 8;
+    }
+    if (gSystem.newKeys & PAD_KEY_DOWN) {
+        return ov15_02200584[a0][1] - 8;
+    }
+    if (gSystem.newKeys & PAD_KEY_LEFT) {
+        return ov15_02200584[a0][2] - 8;
+    }
+    if (gSystem.newKeys & PAD_KEY_RIGHT) {
+        return ov15_02200584[a0][3] - 8;
+    }
+
+    return a0;
+}
+
+void ov15_021FAD80(BagAppData *appData, BagViewPocket *pocket) {
+    ov15_021FD574(appData, 1, ov15_021FA074(appData), ov15_021FA098(appData));
+    ov15_021FF364(appData, pocket->scroll, ov15_021FA098(appData), 1);
+    ov15_022001C4(appData, pocket, appData->unk_672);
+    ov15_021FF6BC(appData, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, appData->unk_234->pockets[appData->unk_234->unk64].scroll, 0);
+}
+
+int ov15_021FADE8(BagAppData *appData, int a1) {
+    int ret = LIST_NOTHING_CHOSEN;
+
+    switch (a1) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        if (ov15_021FA074(appData) > a1) {
+            ret = appData->unk_66C;
+            PlaySE(SEQ_SE_DP_SELECT);
+        } else {
+            PlaySE(SEQ_SE_DP_BOX03);
+        }
+        break;
+    case 6:
+        ret = 14;
+        break;
+    case 7:
+        ret = 15;
+        break;
+    case 8:
+        ret = LIST_CANCEL;
+        break;
+    }
+
+    return ret;
 }
