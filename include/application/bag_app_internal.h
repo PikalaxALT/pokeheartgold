@@ -65,7 +65,11 @@ typedef struct BagAppData_Sub619 {
     u8 unk_7_7 : 1;
 } BagAppData_Sub619;
 
-typedef struct BagAppData {
+typedef struct BagAppData BagAppData;
+
+typedef BagAppState (*BagAppDataUnkFunc7F0)(BagAppData *);
+
+struct BagAppData {
     BgConfig *unk_000;
     Window unk_004[35];
     BagView *unk_234;
@@ -111,9 +115,10 @@ typedef struct BagAppData {
     NNSG2dPaletteData *unk_698;
     u8 filler_69C[8];
     u16 unk_6A4[165];
-    u8 filler_7EE[0x1A];
+    BagAppDataUnkFunc7F0 unk_7F0[5];
+    u8 filler_804[4];
     u8 unk_808[0x144];
-} BagAppData; // size: 0x94C
+}; // size: 0x94C
 
 void ov15_021FE020(BagAppData *appData);
 void ov15_021FE154(BagAppData *appData);
@@ -124,6 +129,7 @@ void ov15_021FE874(BagAppData *appData);
 void ov15_021FE8A4(BagAppData *appData);
 void ov15_021FEA5C(BagAppData *appData);
 void ov15_021FEB64(BagAppData *appData);
+void ov15_021FEB84(BagAppData *appData, u8 *a1, int a2);
 void ov15_021FECA0(BagAppData *appData, Window *window, u16 itemId);
 void ov15_021FECC4(BagAppData *appData, Window *window);
 void ov15_021FECD8(BagAppData *appData, Window *window, int a2);

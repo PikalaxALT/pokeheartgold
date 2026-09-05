@@ -6,6 +6,7 @@
 #include "bag.h"
 #include "bag_types_def.h"
 #include "bg_window.h"
+#include "field_use_item.h"
 #include "font.h"
 #include "gf_gfx_loader.h"
 #include "gf_gfx_planes.h"
@@ -79,6 +80,7 @@ BagAppState ov15_021FAFFC(BagAppData *appData);
 BagAppState ov15_021FB060(BagAppData *appData);
 void ov15_021FB114(BagAppData *appData);
 void ov15_021FB14C(BagAppData *appData);
+void ov15_021FB380(BagAppData *appData, u8 *a1);
 BagAppState ov15_021FB5AC(BagAppData *appData);
 BagAppState ov15_021FB604(BagAppData *appData);
 BagAppState ov15_021FB654(BagAppData *appData);
@@ -105,6 +107,7 @@ BagAppState ov15_021FD10C(BagAppData *appData);
 BagAppState ov15_021FD24C(BagAppData *appData);
 BagAppState ov15_021FD2FC(BagAppData *appData);
 BagAppState ov15_021FD3AC(BagAppData *appData);
+BOOL ov15_021FD3F0(u8 pocket, u16 itemId);
 void ov15_021FD404(BagAppData *appData, int a1, u8 pocket);
 void ov15_021FD574(BagAppData *appData, int a1, int a2, int a3);
 void ov15_021FD774(BagAppData *appData, int a1);
@@ -1307,4 +1310,66 @@ void ov15_021FB114(BagAppData *appData) {
     if (appData->unk_671 != 0) {
         ManagedSprite_SetPositionXY(appData->unk_250, 177, 16 * (pocket->position - 1) + 16);
     }
+}
+
+extern BagAppDataUnkFunc7F0 ov15_02201368[];
+
+void ov15_021FB14C(BagAppData *appData) {
+    int i; // forward decl required to match
+    u8 sp0[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+    ItemData *r7 = LoadItemDataOrGfx(appData->unk_234->itemId, ITEMNARC_PARAM, HEAP_ID_BAG);
+    u8 r5 = appData->unk_234->pockets[appData->unk_234->unk64].pocketId;
+    for (i = 0; i < 5; ++i) {
+        appData->unk_7F0[i] = NULL;
+    }
+    if (appData->unk_234->unk65 == 0) {
+        if (appData->unk_234->unk76_1 == 2 || appData->unk_234->unk76_1 == 3) {
+            if (appData->unk_234->pockets[appData->unk_234->unk64].pocketId == POCKET_MAIL) {
+                sp0[0] = 2;
+            }
+        } else if ((ItemFieldUseFunc)GetItemAttr_PreloadedItemData(r7, ITEMATTR_FIELDUSEFUNC) != NULL) {
+            if (appData->unk_234->itemId == ITEM_BICYCLE && appData->unk_234->unk76_0 == TRUE) {
+                sp0[0] = 1;
+            } else if (appData->unk_234->pockets[appData->unk_234->unk64].pocketId == POCKET_MAIL) {
+                sp0[0] = 2;
+            } else if (appData->unk_234->itemId == ITEM_POFFIN_CASE) {
+                sp0[0] = 4;
+            } else if (appData->unk_234->pockets[appData->unk_234->unk64].pocketId == POCKET_BERRIES && Leftover_CanPlantBerry(appData->unk_234->checkUseData) == TRUE) {
+                sp0[0] = 3;
+            } else if (appData->unk_234->itemId == ITEM_GB_SOUNDS && SoundSys_GetGBSoundsState() == TRUE) {
+                sp0[0] = 15;
+            } else {
+                sp0[0] = 0;
+            }
+        }
+        if (!GetItemAttr_PreloadedItemData(r7, ITEMATTR_PREVENT_TOSS)) {
+            if (ItemIdIsNotJohtoBall(appData->unk_234->itemId) == TRUE) {
+                sp0[2] = 8;
+            }
+            if (r5 != POCKET_TMHMS) {
+                sp0[1] = 5;
+            }
+        }
+        if (GetItemAttr_PreloadedItemData(r7, ITEMATTR_SELECTABLE)) {
+            if (appData->unk_234->itemId == Bag_GetRegisteredItem1(appData->unk_238) || appData->unk_234->itemId == Bag_GetRegisteredItem2(appData->unk_238)) {
+                sp0[1] = 7;
+            } else {
+                sp0[1] = 6;
+            }
+        }
+    } else if (appData->unk_234->unk65 == 6 && ov15_021FD3F0(r5, appData->unk_234->itemId) == TRUE) {
+        sp0[0] = 14;
+    }
+    if (appData->unk_234->unk65 != 6 && r5 != POCKET_TMHMS && r5 != POCKET_BERRIES) {
+        sp0[3] = 12;
+    }
+    sp0[4] = 11;
+    for (i = 0; i < 5; ++i) {
+        if (sp0[i] != 0xFF) {
+            appData->unk_7F0[i] = ov15_02201368[sp0[i]];
+        }
+    }
+    ov15_021FEB84(appData, sp0, 5);
+    ov15_021FB380(appData, sp0);
+    Heap_Free(r7);
 }
