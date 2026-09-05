@@ -116,9 +116,6 @@ void ov15_021FDAF4(void *a0, int a1, int a2);
 void ov15_021FDC6C(BagAppData *appData);
 int ov15_021FDC88(BagAppData *appData);
 void ov15_021FDF88(BagAppData *appData);
-void ov15_021FECA0(BagAppData *appData, Window *window, u16 itemId);
-void ov15_021FECC4(BagAppData *appData, Window *window);
-void ov15_021FECD8(BagAppData *appData, Window *window, int a2);
 
 extern const u8 ov15_022008B0[8];
 
@@ -1215,7 +1212,6 @@ BagAppState ov15_021FAE48(BagAppData *appData) {
     u16 r1 = ov15_021FAD28(appData->unk_66C);
     if (appData->unk_66C != r1) {
         if (r1 == 6 || r1 == 7) {
-            // six seven
             r4 = ov15_021FADE8(appData, r1);
         } else {
             appData->unk_66C = r1;
@@ -1229,7 +1225,6 @@ BagAppState ov15_021FAE48(BagAppData *appData) {
             r4 = ov15_021FADE8(appData, r6);
             ov15_021FFF34(appData, r6);
         } else if (r6 == 6 || r6 == 7) {
-            // six seven
             r4 = ov15_021FADE8(appData, r6);
         } else {
             appData->unk_66C = r6;
@@ -1274,4 +1269,42 @@ BagAppState ov15_021FAE48(BagAppData *appData) {
     }
 
     return BAG_APP_STATE_3;
+}
+
+BagAppState ov15_021FAFFC(BagAppData *appData) {
+    BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+    u16 r2 = pocket->scroll + appData->unk_66C;
+    if (appData->unk_672 != r2) {
+        MoveItemSlotInList(pocket->slots, appData->unk_672, r2, appData->unk_234->unk64, HEAP_ID_BAG);
+        ov15_021F9F08(appData);
+        appData->unk_644 = appData->unk_66C + 8;
+        ov15_021FA0E4(appData, appData->unk_644);
+    }
+    return ov15_021FB060(appData);
+}
+
+BagAppState ov15_021FB060(BagAppData *appData) {
+    appData->unk_348 = 0;
+    appData->unk_671 = 0;
+    appData->unk_672 = 0;
+    appData->unk_674 = 0;
+    ov15_021FB114(appData);
+    ov15_021F9F08(appData);
+    BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+    ov15_021FD574(appData, 0, ov15_021FA074(appData), 0);
+    ov15_021FF364(appData, pocket->scroll, -1, 0);
+    ov15_02200030(appData, appData->unk_234->unk64);
+    ov15_021FD404(appData, 1, appData->unk_234->unk64);
+    ov15_021FF6BC(appData, pocket->unk_9, pocket->scroll, 0);
+    ov15_02200140(appData, pocket, ov15_021FA074(appData), 1);
+    ov15_021FED24(appData);
+    ov15_021FFECC(appData, appData->unk_644);
+    return BAG_APP_STATE_1;
+}
+
+void ov15_021FB114(BagAppData *appData) {
+    BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+    if (appData->unk_671 != 0) {
+        ManagedSprite_SetPositionXY(appData->unk_250, 177, 16 * (pocket->position - 1) + 16);
+    }
 }
