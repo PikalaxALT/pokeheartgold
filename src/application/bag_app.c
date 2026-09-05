@@ -1373,3 +1373,15 @@ void ov15_021FB14C(BagAppData *appData) {
     ov15_021FB380(appData, sp0);
     Heap_Free(r7);
 }
+
+extern u8 ov15_02201468[];
+
+void ov15_021FB380(BagAppData *appData, u8 *a1) {
+    appData->unk_66C = 0;
+    ov15_021FFECC(appData, ov15_02201468[appData->unk_66C]);
+    ov15_0220023C(appData, a1);
+    ov15_021FF758(&appData->unk_004[24], &appData->unk_300, a1[0]);
+    ov15_021FF758(&appData->unk_004[25], &appData->unk_300, a1[1]);
+    ov15_021FF758(&appData->unk_004[26], &appData->unk_300, a1[2]);
+    ov15_021FF758(&appData->unk_004[27], &appData->unk_300, a1[3]);
+}

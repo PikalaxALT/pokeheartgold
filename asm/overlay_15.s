@@ -29,59 +29,6 @@
 	.extern ov15_021FAD28
 	.extern ov15_021FADE8
 
-	thumb_func_start ov15_021FB380
-ov15_021FB380: ; 0x021FB380
-	push {r3, r4, r5, lr}
-	add r4, r1, #0
-	ldr r1, _021FB3E8 ; =0x0000066C
-	add r5, r0, #0
-	mov r2, #0
-	str r2, [r5, r1]
-	ldr r2, [r5, r1]
-	ldr r1, _021FB3EC ; =ov15_02201468
-	ldrb r1, [r1, r2]
-	bl ov15_021FFECC
-	add r0, r5, #0
-	add r1, r4, #0
-	bl ov15_0220023C
-	mov r0, #0x61
-	mov r1, #3
-	lsl r0, r0, #2
-	lsl r1, r1, #8
-	ldrb r2, [r4]
-	add r0, r5, r0
-	add r1, r5, r1
-	bl ov15_021FF758
-	mov r0, #0x65
-	mov r1, #3
-	lsl r0, r0, #2
-	lsl r1, r1, #8
-	ldrb r2, [r4, #1]
-	add r0, r5, r0
-	add r1, r5, r1
-	bl ov15_021FF758
-	mov r0, #0x69
-	mov r1, #3
-	lsl r0, r0, #2
-	lsl r1, r1, #8
-	ldrb r2, [r4, #2]
-	add r0, r5, r0
-	add r1, r5, r1
-	bl ov15_021FF758
-	mov r0, #0x6d
-	mov r1, #3
-	lsl r0, r0, #2
-	lsl r1, r1, #8
-	ldrb r2, [r4, #3]
-	add r0, r5, r0
-	add r1, r5, r1
-	bl ov15_021FF758
-	pop {r3, r4, r5, pc}
-	.balign 4, 0
-_021FB3E8: .word 0x0000066C
-_021FB3EC: .word ov15_02201468
-	thumb_func_end ov15_021FB380
-
 	thumb_func_start ov15_021FB3F0
 ov15_021FB3F0: ; 0x021FB3F0
 	push {r4, r5, r6, lr}
