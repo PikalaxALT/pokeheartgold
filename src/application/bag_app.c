@@ -1208,3 +1208,70 @@ int ov15_021FADE8(BagAppData *appData, int a1) {
 
     return ret;
 }
+
+BagAppState ov15_021FAE48(BagAppData *appData) {
+    u32 r4 = LIST_NOTHING_CHOSEN;
+    BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+    u16 r1 = ov15_021FAD28(appData->unk_66C);
+    if (appData->unk_66C != r1) {
+        if (r1 == 6 || r1 == 7) {
+            // six seven
+            r4 = ov15_021FADE8(appData, r1);
+        } else {
+            appData->unk_66C = r1;
+            ov15_021FFF34(appData, appData->unk_66C);
+            PlaySE(SEQ_SE_DP_SELECT);
+        }
+    }
+    u32 r6 = ov15_021FAC2C(appData, 2);
+    if (r6 != TOUCH_MENU_NO_INPUT) {
+        if (r6 == 8) {
+            r4 = ov15_021FADE8(appData, r6);
+            ov15_021FFF34(appData, r6);
+        } else if (r6 == 6 || r6 == 7) {
+            // six seven
+            r4 = ov15_021FADE8(appData, r6);
+        } else {
+            appData->unk_66C = r6;
+            if (ov15_021FA074(appData) > r6) {
+                r4 = ov15_021FADE8(appData, r6);
+            } else {
+                PlaySE(SEQ_SE_DP_BOX03);
+            }
+            ov15_021FFF34(appData, appData->unk_66C);
+        }
+    } else if (gSystem.newKeys & PAD_BUTTON_A) {
+        r4 = ov15_021FADE8(appData, appData->unk_66C);
+    } else if (gSystem.newKeys & PAD_BUTTON_B) {
+        r4 = LIST_CANCEL;
+    }
+    switch (r4) {
+    case LIST_NOTHING_CHOSEN:
+        break;
+    case LIST_CANCEL:
+        PlaySE(SEQ_SE_GS_GEARCANCEL);
+        pocket->scroll = appData->unk_672 / 6 * 6;
+        return ov15_021FD7D0(appData, 19, 9, 8, 32);
+    case 14:
+        if (pocket->unk_9 > 6) {
+            PlaySE(SEQ_SE_DP_SELECT);
+            return ov15_021FD7D0(appData, 17, 9, 8, 31);
+        }
+        break;
+    case 15:
+        if (pocket->unk_9 > 6) {
+            PlaySE(SEQ_SE_DP_SELECT);
+            return ov15_021FD7D0(appData, 18, 9, 8, 30);
+        }
+        break;
+    default:
+        PlaySE(SEQ_SE_DP_SELECT);
+        if (appData->unk_672 == pocket->scroll + appData->unk_66C) {
+            return ov15_021FD810(appData, 20, 41, 33);
+        } else {
+            return ov15_021FD810(appData, 20, 42, 33);
+        }
+    }
+
+    return BAG_APP_STATE_3;
+}
