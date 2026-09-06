@@ -65,10 +65,11 @@ BOOL ov15_021FA650(BagAppData *appData);
 int ov15_021FA68C(BagAppData *appData, u32 a1);
 int ov15_021FA6C0(BagAppData *appData, int a1, int a2);
 void ov15_021FA6F4(BagAppData *appData, BagViewPocket *pocket);
-BagAppState ov15_021FA73C(BagAppData *appData, int a1, u8 *a2, int a3, int a4, int a5);
+BagAppState ov15_021FA73C(BagAppData *appData, int a1, u8 *a2, int a3, int a4, MenuInputState a5);
 BOOL ov15_021FA93C(BagAppData *appData);
 BOOL ov15_021FAA18(BagAppData *appData);
 BOOL ov15_021FAB34(BagAppData *appData);
+int ov15_021FB3F0(BagAppData *appData);
 u32 ov15_021FAC2C(BagAppData *appData, int a1);
 int ov15_021FAC40(BagAppData *appData);
 void ov15_021FAC48(BagAppData *appData);
@@ -110,7 +111,7 @@ BagAppState ov15_021FD3AC(BagAppData *appData);
 BOOL ov15_021FD3F0(u8 pocket, u16 itemId);
 void ov15_021FD404(BagAppData *appData, int a1, u8 pocket);
 void ov15_021FD574(BagAppData *appData, int a1, int a2, int a3);
-void ov15_021FD774(BagAppData *appData, int a1);
+void ov15_021FD774(BagAppData *appData, MenuInputState a1);
 BagAppState ov15_021FD7D0(BagAppData *appData, int a1, int a2, int a3, int a4);
 BagAppState ov15_021FD810(BagAppData *appData, int a1, int a2, int a3);
 BagAppState ov15_021FD850(BagAppData *appData);
@@ -708,7 +709,7 @@ BagAppState ov15_021FA1BC(BagAppData *appData) {
         int movement = ov15_02200640[appData->unk_644][2];
         if (movement == 14) {
             u8 spC;
-            return ov15_021FA73C(appData, 14, &spC, 1, 2, 0);
+            return ov15_021FA73C(appData, 14, &spC, 1, 2, MENU_INPUT_STATE_BUTTONS);
         } else if (appData->unk_644 == 16) {
         } else if (appData->unk_644 >= 0 && appData->unk_644 < 8) {
             int new_dest = ov15_021FA6C0(appData, appData->unk_644, -1);
@@ -724,7 +725,7 @@ BagAppState ov15_021FA1BC(BagAppData *appData) {
         int movement = ov15_02200640[appData->unk_644][3];
         if (movement == 15) {
             u8 spB;
-            return ov15_021FA73C(appData, 15, &spB, 1, 2, 0);
+            return ov15_021FA73C(appData, 15, &spB, 1, 2, MENU_INPUT_STATE_BUTTONS);
         } else if (appData->unk_644 == 16) {
         } else if (appData->unk_644 >= 0 && appData->unk_644 < 8) {
             int new_dest = ov15_021FA6C0(appData, appData->unk_644, 1);
@@ -741,18 +742,18 @@ BagAppState ov15_021FA1BC(BagAppData *appData) {
         if (appData->unk_644 >= 0 && appData->unk_644 < 8) {
             appData->unk_644 = ov15_021FA6C0(appData, appData->unk_234->unk64, -1);
             ov15_021FFECC(appData, appData->unk_644);
-            return ov15_021FA73C(appData, appData->unk_644, &spA, 1, 2, 0);
+            return ov15_021FA73C(appData, appData->unk_644, &spA, 1, 2, MENU_INPUT_STATE_BUTTONS);
         } else {
-            return ov15_021FA73C(appData, ov15_021FA6C0(appData, appData->unk_234->unk64, -1), &spA, 1, 2, 0);
+            return ov15_021FA73C(appData, ov15_021FA6C0(appData, appData->unk_234->unk64, -1), &spA, 1, 2, MENU_INPUT_STATE_BUTTONS);
         }
     } else if (gSystem.newKeys & PAD_BUTTON_R) {
         u8 sp9;
         if (appData->unk_644 >= 0 && appData->unk_644 < 8) {
             appData->unk_644 = ov15_021FA6C0(appData, appData->unk_234->unk64, 1);
             ov15_021FFECC(appData, appData->unk_644);
-            return ov15_021FA73C(appData, appData->unk_644, &sp9, 1, 2, 0);
+            return ov15_021FA73C(appData, appData->unk_644, &sp9, 1, 2, MENU_INPUT_STATE_BUTTONS);
         } else {
-            return ov15_021FA73C(appData, ov15_021FA6C0(appData, appData->unk_234->unk64, 1), &sp9, 1, 2, 0);
+            return ov15_021FA73C(appData, ov15_021FA6C0(appData, appData->unk_234->unk64, 1), &sp9, 1, 2, MENU_INPUT_STATE_BUTTONS);
         }
     }
 
@@ -784,12 +785,12 @@ BagAppState ov15_021FA1BC(BagAppData *appData) {
                 }
             }
         }
-        BagAppState r0 = ov15_021FA73C(appData, r4, &sp8, 1, 2, 1);
+        BagAppState r0 = ov15_021FA73C(appData, r4, &sp8, 1, 2, MENU_INPUT_STATE_TOUCH);
         if (r0 != BAG_APP_STATE_1) {
             return r0;
         }
     } else if (gSystem.newKeys & PAD_BUTTON_A) {
-        BagAppState r4 = ov15_021FA73C(appData, appData->unk_644, &sp8, 1, 2, 0);
+        BagAppState r4 = ov15_021FA73C(appData, appData->unk_644, &sp8, 1, 2, MENU_INPUT_STATE_BUTTONS);
         if (appData->unk_644 >= 8 && appData->unk_644 <= 13) {
             ov15_021FA0E4(appData, appData->unk_644);
         }
@@ -797,8 +798,8 @@ BagAppState ov15_021FA1BC(BagAppData *appData) {
             return r4;
         }
     } else if (gSystem.newKeys & PAD_BUTTON_B) {
-        BagAppState r4 = ov15_021FA73C(appData, 16, &sp8, 1, 2, 0);
-        ov15_021FD774(appData, 0);
+        BagAppState r4 = ov15_021FA73C(appData, 16, &sp8, 1, 2, MENU_INPUT_STATE_BUTTONS);
+        ov15_021FD774(appData, MENU_INPUT_STATE_BUTTONS);
         if (appData->unk_644 >= 8 && appData->unk_644 <= 13) {
             ov15_021FA0E4(appData, appData->unk_644);
         }
@@ -915,7 +916,7 @@ void ov15_021FA6F4(BagAppData *appData, BagViewPocket *pocket) {
     ov15_02200140(appData, pocket, ov15_021FA074(appData), 1);
 }
 
-BagAppState ov15_021FA73C(BagAppData *appData, int a1, u8 *a2, int a3, int a4, int a5) {
+BagAppState ov15_021FA73C(BagAppData *appData, int a1, u8 *a2, int a3, int a4, MenuInputState a5) {
     BagAppState r6 = BAG_APP_STATE_1;
     switch (a1) {
     case 0:
@@ -1384,4 +1385,51 @@ void ov15_021FB380(BagAppData *appData, u8 *a1) {
     ov15_021FF758(&appData->unk_004[25], &appData->unk_300, a1[1]);
     ov15_021FF758(&appData->unk_004[26], &appData->unk_300, a1[2]);
     ov15_021FF758(&appData->unk_004[27], &appData->unk_300, a1[3]);
+}
+
+extern const u8 ov15_02200528[][4];
+
+int ov15_021FB3F0(BagAppData *appData) {
+    int r4 = appData->unk_66C;
+    if (gSystem.newKeys & PAD_KEY_UP) {
+        r4 = ov15_02200528[r4][0];
+    } else if (gSystem.newKeys & PAD_KEY_DOWN) {
+        r4 = ov15_02200528[r4][1];
+    } else if (gSystem.newKeys & PAD_KEY_LEFT) {
+        r4 = ov15_02200528[r4][2];
+    } else if (gSystem.newKeys & PAD_KEY_RIGHT) {
+        r4 = ov15_02200528[r4][3];
+    }
+    if (r4 != appData->unk_66C) {
+        appData->unk_66C = r4;
+        ov15_021FFECC(appData, ov15_02201468[r4]);
+        PlaySE(SEQ_SE_DP_SELECT);
+        return LIST_NOTHING_CHOSEN;
+    }
+    u32 r6 = ov15_021FAC2C(appData, 1);
+    if (r6 != TOUCH_MENU_NO_INPUT) {
+        ov15_021FD774(appData, MENU_INPUT_STATE_TOUCH);
+        appData->unk_66C = r6;
+        ov15_021FFECC(appData, ov15_02201468[r6]);
+        if (r6 == 4) {
+            PlaySE(SEQ_SE_GS_GEARCANCEL);
+            return LIST_CANCEL;
+        } else if (appData->unk_7F0[r6] != NULL) {
+            PlaySE(SEQ_SE_DP_SELECT);
+            return r6;
+        }
+    } else if (gSystem.newKeys & PAD_BUTTON_A) {
+        if (appData->unk_7F0[r4] != NULL) {
+            PlaySE(SEQ_SE_DP_SELECT);
+            ov15_021FD774(appData, MENU_INPUT_STATE_BUTTONS);
+            return r4;
+        } else if (r4 == 4) {
+            PlaySE(SEQ_SE_DP_SELECT);
+            return LIST_CANCEL;
+        }
+    } else if (gSystem.newKeys & PAD_BUTTON_B) {
+        PlaySE(SEQ_SE_GS_GEARCANCEL);
+        return LIST_CANCEL;
+    }
+    return LIST_NOTHING_CHOSEN;
 }
