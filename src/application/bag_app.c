@@ -86,8 +86,12 @@ void ov15_021FB518(BagAppData *appData);
 BagAppState ov15_021FB5AC(BagAppData *appData);
 BagAppState ov15_021FB604(BagAppData *appData);
 BagAppState ov15_021FB654(BagAppData *appData);
+BagAppState ov15_021FB680(BagAppData *appData);
 BagAppState ov15_021FB700(BagAppData *appData);
 BagAppState ov15_021FB820(BagAppData *appData);
+BagAppState ov15_021FBC6C(BagAppData *appData);
+BagAppState ov15_021FBC8C(BagAppData *appData);
+BagAppState ov15_021FBCAC(BagAppData *appData);
 BagAppState ov15_021FBD50(BagAppData *appData);
 BagAppState ov15_021FBF98(BagAppData *appData);
 BagAppState ov15_021FBFC0(BagAppData *appData);
@@ -95,7 +99,11 @@ BagAppState ov15_021FBFF8(BagAppData *appData);
 BagAppState ov15_021FC01C(BagAppData *appData);
 BagAppState ov15_021FC140(BagAppData *appData);
 BagAppState ov15_021FC164(BagAppData *appData);
+BagAppState ov15_021FC224(BagAppData *appData);
 BagAppState ov15_021FC2E0(BagAppData *appData);
+BagAppState ov15_021FC37C(BagAppData *appData);
+BagAppState ov15_021FC3E0(BagAppData *appData);
+BagAppState ov15_021FC3EC(BagAppData *appData);
 BagAppState ov15_021FC41C(BagAppData *appData);
 BagAppState ov15_021FC784(BagAppData *appData);
 BagAppState ov15_021FC7EC(BagAppData *appData);
@@ -109,6 +117,7 @@ BagAppState ov15_021FD10C(BagAppData *appData);
 BagAppState ov15_021FD24C(BagAppData *appData);
 BagAppState ov15_021FD2FC(BagAppData *appData);
 BagAppState ov15_021FD3AC(BagAppData *appData);
+BagAppState ov15_021FD3C0(BagAppData *appData);
 BOOL ov15_021FD3F0(u8 pocket, u16 itemId);
 void ov15_021FD404(BagAppData *appData, int a1, u8 pocket);
 void ov15_021FD574(BagAppData *appData, int a1, int a2, int a3);
@@ -1461,4 +1470,21 @@ BagAppState ov15_021FB5AC(BagAppData *appData) {
     }
 
     return BAG_APP_STATE_4;
+}
+
+BagAppState ov15_021FB604(BagAppData *appData) {
+    ov15_02200294(appData);
+    ov15_021FF560(appData);
+    ov15_021FF7AC(&appData->unk_004[24]);
+    ov15_02200140(appData, &appData->unk_234->pockets[appData->unk_234->unk64], ov15_021FA074(appData), 0);
+    ov15_021FE868(appData);
+    ov15_021FED3C(appData);
+    ov15_021FB518(appData);
+    return BAG_APP_STATE_1;
+}
+
+BagAppState ov15_021FB654(BagAppData *appData) {
+    ov15_02200294(appData);
+    ov15_021FF7AC(&appData->unk_004[24]);
+    return appData->unk_7F0[appData->unk_948](appData);
 }

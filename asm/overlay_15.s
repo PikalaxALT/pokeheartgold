@@ -28,65 +28,6 @@
 	.extern ov15_021FAC48
 	.extern ov15_021FB518
 
-	thumb_func_start ov15_021FB604
-ov15_021FB604: ; 0x021FB604
-	push {r3, r4, r5, lr}
-	add r5, r0, #0
-	bl ov15_02200294
-	add r0, r5, #0
-	bl ov15_021FF560
-	mov r0, #0x61
-	lsl r0, r0, #2
-	add r0, r5, r0
-	bl ov15_021FF7AC
-	mov r0, #0x8d
-	lsl r0, r0, #2
-	ldr r4, [r5, r0]
-	add r0, r5, #0
-	bl ov15_021FA074
-	add r1, r4, #4
-	add r4, #0x64
-	add r2, r0, #0
-	ldrb r4, [r4]
-	mov r3, #0xc
-	add r0, r5, #0
-	mul r3, r4
-	add r1, r1, r3
-	mov r3, #0
-	bl ov15_02200140
-	add r0, r5, #0
-	bl ov15_021FE868
-	add r0, r5, #0
-	bl ov15_021FED3C
-	add r0, r5, #0
-	bl ov15_021FB518
-	mov r0, #1
-	pop {r3, r4, r5, pc}
-	thumb_func_end ov15_021FB604
-
-	thumb_func_start ov15_021FB654
-ov15_021FB654: ; 0x021FB654
-	push {r4, lr}
-	add r4, r0, #0
-	bl ov15_02200294
-	mov r0, #0x61
-	lsl r0, r0, #2
-	add r0, r4, r0
-	bl ov15_021FF7AC
-	ldr r1, _021FB67C ; =0x00000948
-	add r0, r4, #0
-	ldr r1, [r4, r1]
-	lsl r1, r1, #2
-	add r2, r4, r1
-	mov r1, #0x7f
-	lsl r1, r1, #4
-	ldr r1, [r2, r1]
-	blx r1
-	pop {r4, pc}
-	nop
-_021FB67C: .word 0x00000948
-	thumb_func_end ov15_021FB654
-
 	thumb_func_start ov15_021FB680
 ov15_021FB680: ; 0x021FB680
 	push {r3, r4, lr}
