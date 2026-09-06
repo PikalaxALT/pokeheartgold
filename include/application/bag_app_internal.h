@@ -117,7 +117,8 @@ struct BagAppData {
     u16 unk_6A4[165];
     BagAppDataUnkFunc7F0 unk_7F0[5];
     u8 filler_804[4];
-    u8 unk_808[0x144];
+    u8 unk_808[0x140];
+    int unk_948;
 }; // size: 0x94C
 
 void ov15_021FE020(BagAppData *appData);

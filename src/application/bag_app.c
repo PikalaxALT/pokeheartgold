@@ -82,6 +82,7 @@ BagAppState ov15_021FB060(BagAppData *appData);
 void ov15_021FB114(BagAppData *appData);
 void ov15_021FB14C(BagAppData *appData);
 void ov15_021FB380(BagAppData *appData, u8 *a1);
+void ov15_021FB518(BagAppData *appData);
 BagAppState ov15_021FB5AC(BagAppData *appData);
 BagAppState ov15_021FB604(BagAppData *appData);
 BagAppState ov15_021FB654(BagAppData *appData);
@@ -112,7 +113,7 @@ BOOL ov15_021FD3F0(u8 pocket, u16 itemId);
 void ov15_021FD404(BagAppData *appData, int a1, u8 pocket);
 void ov15_021FD574(BagAppData *appData, int a1, int a2, int a3);
 void ov15_021FD774(BagAppData *appData, MenuInputState a1);
-BagAppState ov15_021FD7D0(BagAppData *appData, int a1, int a2, int a3, int a4);
+BagAppState ov15_021FD7D0(BagAppData *appData, u8 a1, int a2, int a3, int a4);
 BagAppState ov15_021FD810(BagAppData *appData, int a1, int a2, int a3);
 BagAppState ov15_021FD850(BagAppData *appData);
 void ov15_021FD93C(BagAppData *appData);
@@ -1432,4 +1433,32 @@ int ov15_021FB3F0(BagAppData *appData) {
         return LIST_CANCEL;
     }
     return LIST_NOTHING_CHOSEN;
+}
+
+void ov15_021FB518(BagAppData *appData) {
+    ov15_021F9F08(appData);
+    BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+    ov15_021FD574(appData, 0, ov15_021FA074(appData), 0);
+    ov15_021FF364(appData, pocket->scroll, -1, 0);
+    ov15_02200030(appData, appData->unk_234->unk64);
+    ov15_021FD404(appData, 1, appData->unk_234->unk64);
+    ov15_021FF6BC(appData, pocket->unk_9, pocket->scroll, 0);
+    ov15_02200140(appData, pocket, ov15_021FA074(appData), 0);
+    ov15_021FFECC(appData, appData->unk_644);
+    ov15_021F9C78(appData, TRUE);
+}
+
+BagAppState ov15_021FB5AC(BagAppData *appData) {
+    u32 r1 = ov15_021FB3F0(appData);
+    switch (r1) {
+    case LIST_NOTHING_CHOSEN:
+        break;
+    case LIST_CANCEL:
+        return ov15_021FD7D0(appData, 19, 9, 8, 28);
+    default:
+        appData->unk_948 = r1;
+        return ov15_021FD7D0(appData, r1 + 28, 9, 8, 29);
+    }
+
+    return BAG_APP_STATE_4;
 }
