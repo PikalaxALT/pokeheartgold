@@ -5,6 +5,7 @@
 
 #include "bag.h"
 #include "bag_types_def.h"
+#include "bag_view.h"
 #include "bg_window.h"
 #include "field_use_item.h"
 #include "font.h"
@@ -88,6 +89,7 @@ BagAppState ov15_021FB604(BagAppData *appData);
 BagAppState ov15_021FB654(BagAppData *appData);
 BagAppState ov15_021FB680(BagAppData *appData);
 BagAppState ov15_021FB700(BagAppData *appData);
+BagAppState ov15_021FB784(BagAppData *appData);
 BagAppState ov15_021FB820(BagAppData *appData);
 BagAppState ov15_021FBC6C(BagAppData *appData);
 BagAppState ov15_021FBC8C(BagAppData *appData);
@@ -122,6 +124,7 @@ BOOL ov15_021FD3F0(u8 pocket, u16 itemId);
 void ov15_021FD404(BagAppData *appData, int a1, u8 pocket);
 void ov15_021FD574(BagAppData *appData, int a1, int a2, int a3);
 void ov15_021FD774(BagAppData *appData, MenuInputState a1);
+void ov15_021FD788(BagAppData *appData, int a1);
 BagAppState ov15_021FD7D0(BagAppData *appData, u8 a1, int a2, int a3, int a4);
 BagAppState ov15_021FD810(BagAppData *appData, int a1, int a2, int a3);
 BagAppState ov15_021FD850(BagAppData *appData);
@@ -1487,4 +1490,19 @@ BagAppState ov15_021FB654(BagAppData *appData) {
     ov15_02200294(appData);
     ov15_021FF7AC(&appData->unk_004[24]);
     return appData->unk_7F0[appData->unk_948](appData);
+}
+
+BagAppState ov15_021FB680(BagAppData *appData) {
+    ov15_021FD788(appData, 0);
+    ov15_021FFF24(appData);
+    ItemCheckUseFunc func = GetItemFieldUseFunc(USE_ITEM_TASK_CHECK, GetItemAttr(appData->unk_234->itemId, ITEMATTR_FIELDUSEFUNC, HEAP_ID_BAG));
+    if (func != NULL) {
+        ItemUseError result = func(appData->unk_234->checkUseData);
+        if (result != ITEMUSEERROR_OKAY) {
+            GetItemUseErrorMessage(appData->unk_23C, appData->unk_5E4, appData->unk_234->itemId, result, HEAP_ID_BAG);
+            appData->unk_616 = ov15_021FEF48(appData, 0);
+            return BAG_APP_STATE_12;
+        }
+    }
+    return ov15_021FB784(appData);
 }
