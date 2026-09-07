@@ -29,171 +29,6 @@
 	.extern ov15_021FB518
 	.extern ov15_021FB680
 
-	thumb_func_start BagApp_TryUseItemInPlace
-BagApp_TryUseItemInPlace: ; 0x021FB9D8
-	push {r3, r4, r5, lr}
-	mov r2, #0xbd
-	add r4, r0, #0
-	lsl r2, r2, #2
-	ldr r0, [r4, r2]
-	sub r2, #0xb8
-	add r5, r1, #0
-	ldr r2, [r4, r2]
-	mov r1, #0
-	bl BufferPlayersName
-	mov r0, #0xbd
-	lsl r0, r0, #2
-	ldr r0, [r4, r0]
-	mov r1, #1
-	add r2, r5, #0
-	bl BufferItemName
-	cmp r5, #ITEM_BLACK_FLUTE
-	bne _021FBA20
-	mov r0, #0x2f
-	lsl r0, r0, #4
-	ldr r0, [r4, r0]
-	mov r1, #msg_0010_00065
-	bl NewString_ReadMsgData
-	add r5, r0, #0
-	add r0, r4, #0
-	mov r1, #1
-	bl BagApp_SetFlute
-	mov r0, #0x1a
-	mov r1, #0
-	lsl r0, r0, #6
-	strh r1, [r4, r0]
-	b _021FBA7A
-_021FBA20:
-	cmp r5, #ITEM_WHITE_FLUTE
-	bne _021FBA44
-	mov r0, #0x2f
-	lsl r0, r0, #4
-	ldr r0, [r4, r0]
-	mov r1, #msg_0010_00064
-	bl NewString_ReadMsgData
-	add r5, r0, #0
-	add r0, r4, #0
-	mov r1, #2
-	bl BagApp_SetFlute
-	mov r0, #0x1a
-	mov r1, #0
-	lsl r0, r0, #6
-	strh r1, [r4, r0]
-	b _021FBA7A
-_021FBA44:
-	cmp r5, #ITEM_MAX_REPEL
-	beq _021FBA50
-	cmp r5, #ITEM_SUPER_REPEL
-	beq _021FBA50
-	cmp r5, #ITEM_REPEL
-	bne _021FBA5C
-_021FBA50:
-	add r0, r4, #0
-	add r1, r5, #0
-	bl BagApp_TryUseRepel
-	add r5, r0, #0
-	b _021FBA7A
-_021FBA5C:
-	ldr r0, _021FBA94 ; =ITEM_GB_SOUNDS
-	cmp r5, r0
-	bne _021FBA76
-	add r0, r4, #0
-	add r1, r5, #0
-	bl BagApp_ToggleGBSounds
-	add r5, r0, #0
-	mov r0, #0x1a
-	mov r1, #0
-	lsl r0, r0, #6
-	strh r1, [r4, r0]
-	b _021FBA7A
-_021FBA76:
-	mov r0, #0
-	pop {r3, r4, r5, pc}
-_021FBA7A:
-	mov r0, #0xbd
-	ldr r1, _021FBA98 ; =0x000005E4
-	lsl r0, r0, #2
-	ldr r0, [r4, r0]
-	ldr r1, [r4, r1]
-	add r2, r5, #0
-	bl StringExpandPlaceholders
-	add r0, r5, #0
-	bl String_Delete
-	mov r0, #1
-	pop {r3, r4, r5, pc}
-	.balign 4, 0
-_021FBA94: .word ITEM_GB_SOUNDS
-_021FBA98: .word 0x000005E4
-	thumb_func_end BagApp_TryUseItemInPlace
-
-	thumb_func_start BagApp_TryUseRepel
-BagApp_TryUseRepel: ; 0x021FBA9C
-	push {r3, r4, r5, lr}
-	add r4, r0, #0
-	add r5, r1, #0
-	bl BagApp_GetSaveRoamers
-	bl RoamerSave_RepelNotInUse
-	cmp r0, #0
-	bne _021FBAC4
-	mov r0, #0x1a
-	mov r1, #0
-	lsl r0, r0, #6
-	strh r1, [r4, r0]
-	mov r0, #0x2f
-	lsl r0, r0, #4
-	ldr r0, [r4, r0]
-	mov r1, #msg_0010_00063
-	bl NewString_ReadMsgData
-	pop {r3, r4, r5, pc}
-_021FBAC4:
-	add r0, r5, #0
-	mov r1, #2
-	mov r2, #6
-	bl GetItemAttr
-	add r1, r0, #0
-	lsl r1, r1, #0x18
-	add r0, r4, #0
-	lsr r1, r1, #0x18
-	bl BagApp_SetRepelStepCount
-	mov r0, #0x680>>6
-	mov r1, #1
-	lsl r0, r0, #6
-	strh r1, [r4, r0]
-	sub r0, #0x680-SEQ_SE_DP_CARD2
-	bl PlaySE
-	mov r0, #0x2f
-	lsl r0, r0, #4
-	ldr r0, [r4, r0]
-	mov r1, #msg_0010_00062
-	bl NewString_ReadMsgData
-	pop {r3, r4, r5, pc}
-	.balign 4, 0
-	thumb_func_end BagApp_TryUseRepel
-
-	thumb_func_start BagApp_ToggleGBSounds
-BagApp_ToggleGBSounds: ; 0x021FBAF8
-	push {r4, lr}
-	add r4, r0, #0
-	bl SoundSys_GetGBSoundsState
-	cmp r0, #1
-	bne _021FBB16
-	bl SoundSys_ToggleGBSounds
-	mov r0, #0x2f
-	lsl r0, r0, #4
-	ldr r0, [r4, r0]
-	mov r1, #msg_0010_00105
-	bl NewString_ReadMsgData
-	pop {r4, pc}
-_021FBB16:
-	bl SoundSys_ToggleGBSounds
-	mov r0, #0x2f
-	lsl r0, r0, #4
-	ldr r0, [r4, r0]
-	mov r1, #msg_0010_00104
-	bl NewString_ReadMsgData
-	pop {r4, pc}
-	thumb_func_end BagApp_ToggleGBSounds
-
 	thumb_func_start ov15_021FBB28
 ov15_021FBB28: ; 0x021FBB28
 	push {r3, r4, lr}
@@ -275,7 +110,7 @@ ov15_021FBBB0: ; 0x021FBBB0
 	b _021FBC56
 _021FBBC2:
 	mov r1, #0
-	bl ov15_021FEF48
+	bl BagApp_PrintMessage
 	ldr r1, _021FBC60 ; =0x00000616
 	strb r0, [r5, r1]
 	mov r0, #1
@@ -815,7 +650,7 @@ ov15_021FBFF8: ; 0x021FBFF8
 	cmp r0, #0
 	bne _021FC012
 	add r0, r4, #0
-	bl ov15_021FF004
+	bl BagApp_CreateYesNoPrompt
 	mov r0, #9
 	pop {r4, pc}
 _021FC012:
@@ -843,7 +678,7 @@ ov15_021FC01C: ; 0x021FC01C
 	b _021FC12E
 _021FC03A:
 	add r0, r5, #0
-	bl ov15_021FF058
+	bl BagApp_DestroyYesNoPrompt
 	mov r0, #0x2f
 	lsl r0, r0, #4
 	ldr r0, [r5, r0]
@@ -903,7 +738,7 @@ _021FC082:
 	bl FillWindowPixelBuffer
 	add r0, r5, #0
 	mov r1, #0
-	bl ov15_021FEF48
+	bl BagApp_PrintMessage
 	ldr r1, _021FC13C ; =0x00000616
 	add sp, #8
 	strb r0, [r5, r1]
@@ -911,7 +746,7 @@ _021FC082:
 	pop {r3, r4, r5, pc}
 _021FC0CE:
 	add r0, r5, #0
-	bl ov15_021FF058
+	bl BagApp_DestroyYesNoPrompt
 	add r0, r5, #0
 	add r0, #0x34
 	mov r1, #1
@@ -1101,7 +936,7 @@ ov15_021FC224: ; 0x021FC224
 	bl String_Delete
 	add r0, r5, #0
 	mov r1, #0
-	bl ov15_021FEF48
+	bl BagApp_PrintMessage
 	add r0, r5, #0
 	bl ov15_02200294
 	add r0, r5, #0
@@ -1686,7 +1521,7 @@ _021FC72C:
 	bl String_Delete
 	add r0, r5, #0
 	mov r1, #0
-	bl ov15_021FEF48
+	bl BagApp_PrintMessage
 	ldr r1, _021FC780 ; =0x00000616
 	add sp, #0x10
 	strb r0, [r5, r1]
@@ -2331,7 +2166,7 @@ _021FCC32:
 	bl String_Delete
 	add r0, r4, #0
 	mov r1, #0
-	bl ov15_021FEF48
+	bl BagApp_PrintMessage
 	ldr r1, _021FCD7C ; =0x00000616
 	add sp, #8
 	strb r0, [r4, r1]
@@ -2395,7 +2230,7 @@ _021FCC7C:
 	bl String_Delete
 	add r0, r4, #0
 	mov r1, #1
-	bl ov15_021FEF48
+	bl BagApp_PrintMessage
 	ldr r1, _021FCD7C ; =0x00000616
 	add sp, #8
 	strb r0, [r4, r1]
@@ -2440,7 +2275,7 @@ _021FCD0C:
 	bl String_Delete
 	add r0, r4, #0
 	mov r1, #1
-	bl ov15_021FEF48
+	bl BagApp_PrintMessage
 	ldr r1, _021FCD7C ; =0x00000616
 	strb r0, [r4, r1]
 	mov r0, #0x11
@@ -2784,7 +2619,7 @@ ov15_021FCFC8: ; 0x021FCFC8
 	bl String_Delete
 	add r0, r5, #0
 	mov r1, #1
-	bl ov15_021FEF48
+	bl BagApp_PrintMessage
 	ldr r1, _021FD054 ; =0x00000616
 	strb r0, [r5, r1]
 	add r0, r5, #0
@@ -2874,7 +2709,7 @@ ov15_021FD0E8: ; 0x021FD0E8
 	cmp r0, #0
 	bne _021FD102
 	add r0, r4, #0
-	bl ov15_021FF004
+	bl BagApp_CreateYesNoPrompt
 	mov r0, #0x16
 	pop {r4, pc}
 _021FD102:
@@ -2902,7 +2737,7 @@ ov15_021FD10C: ; 0x021FD10C
 	b _021FD234
 _021FD12A:
 	add r0, r4, #0
-	bl ov15_021FF058
+	bl BagApp_DestroyYesNoPrompt
 	mov r0, #0x2f
 	lsl r0, r0, #4
 	ldr r0, [r4, r0]
@@ -2961,7 +2796,7 @@ _021FD172:
 	bl String_Delete
 	add r0, r4, #0
 	mov r1, #0
-	bl ov15_021FEF48
+	bl BagApp_PrintMessage
 	ldr r1, _021FD244 ; =0x00000616
 	add sp, #8
 	strb r0, [r4, r1]
@@ -2969,7 +2804,7 @@ _021FD172:
 	pop {r3, r4, r5, pc}
 _021FD1BA:
 	add r0, r4, #0
-	bl ov15_021FF058
+	bl BagApp_DestroyYesNoPrompt
 	ldr r0, _021FD248 ; =0x00000684
 	mov r1, #0
 	str r1, [r4, r0]
@@ -6628,7 +6463,7 @@ _021FEEFE:
 	bl String_Delete
 	add r0, r5, #0
 	mov r1, #0
-	bl ov15_021FEF48
+	bl BagApp_PrintMessage
 	ldr r1, _021FEF44 ; =0x00000616
 	strb r0, [r5, r1]
 	add sp, #8
@@ -6638,8 +6473,8 @@ _021FEF40: .word 0x000005E4
 _021FEF44: .word 0x00000616
 	thumb_func_end ov15_021FEEA4
 
-	thumb_func_start ov15_021FEF48
-ov15_021FEF48: ; 0x021FEF48
+	thumb_func_start BagApp_PrintMessage
+BagApp_PrintMessage: ; 0x021FEF48
 	push {r4, r5, lr}
 	sub sp, #0xc
 	add r5, r0, #0
@@ -6681,7 +6516,7 @@ _021FEF6C:
 	mov r3, #0
 	str r3, [sp]
 	str r0, [sp, #4]
-	ldr r0, _021FEFBC ; =ov15_021FEFC4
+	ldr r0, _021FEFBC ; =BagApp_PrintMessageCallback
 	ldr r2, _021FEFC0 ; =0x000005E4
 	str r0, [sp, #8]
 	ldr r2, [r5, r2]
@@ -6692,12 +6527,12 @@ _021FEF6C:
 	pop {r4, r5, pc}
 	nop
 _021FEFB8: .word 0x000003E2
-_021FEFBC: .word ov15_021FEFC4
+_021FEFBC: .word BagApp_PrintMessageCallback
 _021FEFC0: .word 0x000005E4
-	thumb_func_end ov15_021FEF48
+	thumb_func_end BagApp_PrintMessage
 
-	thumb_func_start ov15_021FEFC4
-ov15_021FEFC4: ; 0x021FEFC4
+	thumb_func_start BagApp_PrintMessageCallback
+BagApp_PrintMessageCallback: ; 0x021FEFC4
 	push {r3, lr}
 	cmp r1, #4
 	bhi _021FEFFC
@@ -6732,10 +6567,10 @@ _021FEFFC:
 	pop {r3, pc}
 	.balign 4, 0
 _021FF000: .word SEQ_SE_DP_PC_LOGIN
-	thumb_func_end ov15_021FEFC4
+	thumb_func_end BagApp_PrintMessageCallback
 
-	thumb_func_start ov15_021FF004
-ov15_021FF004: ; 0x021FF004
+	thumb_func_start BagApp_CreateYesNoPrompt
+BagApp_CreateYesNoPrompt: ; 0x021FF004
 	push {r3, r4, lr}
 	sub sp, #0x14
 	add r4, r0, #0
@@ -6775,10 +6610,10 @@ ov15_021FF004: ; 0x021FF004
 	pop {r3, r4, pc}
 	nop
 _021FF054: .word 0x00000804
-	thumb_func_end ov15_021FF004
+	thumb_func_end BagApp_CreateYesNoPrompt
 
-	thumb_func_start ov15_021FF058
-ov15_021FF058: ; 0x021FF058
+	thumb_func_start BagApp_DestroyYesNoPrompt
+BagApp_DestroyYesNoPrompt: ; 0x021FF058
 	ldr r1, _021FF060 ; =0x00000804
 	ldr r3, _021FF064 ; =YesNoPrompt_Destroy
 	ldr r0, [r0, r1]
@@ -6786,7 +6621,7 @@ ov15_021FF058: ; 0x021FF058
 	.balign 4, 0
 _021FF060: .word 0x00000804
 _021FF064: .word YesNoPrompt_Destroy
-	thumb_func_end ov15_021FF058
+	thumb_func_end BagApp_DestroyYesNoPrompt
 
 	thumb_func_start ov15_021FF068
 ov15_021FF068: ; 0x021FF068
@@ -9554,53 +9389,36 @@ ov15_02200684:
 	.byte 0xFF, 0x00, 0x00, 0x00
 	.size ov15_02200684,.-ov15_02200684
 
-	; file boundary
-
 	.global ov15_022006CC
 ov15_022006CC: ; 0x022006CC
-	.byte 0x00, 0x00, 0x00, 0x00
-	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x1F, 0x00
-	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	.word 0x00000000, 0x00000000, 0x00000800, 0x00000000
+	.byte 0x01, 0x00, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00
+	.word 0x00000000
+
+	.word 0x00000000, 0x00000000, 0x00000800, 0x00000000
+	.byte 0x01, 0x00, 0x1E, 0x02, 0x00, 0x01, 0x00, 0x00
+	.word 0x00000000
+
+	.word 0x00000000, 0x00000000, 0x00000800, 0x00000000
+	.byte 0x01, 0x00, 0x1D, 0x02, 0x00, 0x02, 0x00, 0x00
+	.word 0x00000000
+
+	.word 0x00000000, 0x00000000, 0x00000800, 0x00000000
+	.byte 0x01, 0x00, 0x1F, 0x04, 0x00, 0x00, 0x00, 0x00
+	.word 0x00000000
+
+	.word 0x00000000, 0x00000000, 0x00000800, 0x00000000
+	.byte 0x01, 0x00, 0x1E, 0x00, 0x00, 0x02, 0x00, 0x00
+	.word 0x00000000
+
+	.word 0x00000000, 0x00000000, 0x00000800, 0x00000000
+	.byte 0x01, 0x00, 0x1D, 0x00, 0x00, 0x03, 0x00, 0x00
+	.word 0x00000000
+
+	.word 0x00000000, 0x00000000, 0x00000800, 0x00000000
+	.byte 0x01, 0x00, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00
+	.word 0x00000000
 	.size ov15_022006CC,.-ov15_022006CC
-
-	.global ov15_022006E8
-ov15_022006E8: ; 0x022006E8
-	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-	.byte 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x1E, 0x02, 0x00, 0x01, 0x00, 0x00
-	.byte 0x00, 0x00, 0x00, 0x00
-	.size ov15_022006E8,.-ov15_022006E8
-
-	.global ov15_02200704
-ov15_02200704: ; 0x02200704
-	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00
-	.byte 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x1D, 0x02, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-	.size ov15_02200704,.-ov15_02200704
-
-	.global ov15_02200720
-ov15_02200720: ; 0x02200720
-	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-	.byte 0x01, 0x00, 0x1F, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-	.size ov15_02200720,.-ov15_02200720
-
-	.global ov15_0220073C
-ov15_0220073C: ; 0x0220073C
-	.byte 0x00, 0x00, 0x00, 0x00
-	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x1E, 0x00
-	.byte 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-	.size ov15_0220073C,.-ov15_0220073C
-
-	.global ov15_02200758
-ov15_02200758: ; 0x02200758
-	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-	.byte 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x1D, 0x00, 0x00, 0x03, 0x00, 0x00
-	.byte 0x00, 0x00, 0x00, 0x00
-	.size ov15_02200758,.-ov15_02200758
-
-	.global ov15_02200774
-ov15_02200774: ; 0x02200774
-	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00
-	.byte 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-	.size ov15_02200774,.-ov15_02200774
 
 	.global ov15_02200790
 ov15_02200790: ; 0x02200790
@@ -9626,7 +9444,14 @@ ov15_02200790: ; 0x02200790
 
 	.global ov15_022008B0
 ov15_022008B0: ; 0x022008B0
-	.byte 165, 40, 24, 101, 64, 12, 30, 50
+	.byte NUM_BAG_ITEMS
+	.byte NUM_BAG_MEDICINE
+	.byte NUM_BAG_BALLS
+	.byte NUM_BAG_TMS_HMS
+	.byte NUM_BAG_BERRIES
+	.byte NUM_BAG_MAIL
+	.byte NUM_BAG_BATTLE_ITEMS
+	.byte NUM_BAG_KEY_ITEMS
 	.size ov15_022008B0,.-ov15_022008B0
 
 	.global ov15_022008B8
@@ -9634,9 +9459,18 @@ ov15_022008B8:
 	.word Bag_Init, Bag_Main, Bag_Exit, 0xFFFFFFFF
 	.size ov15_022008B8,.-ov15_022008B8
 
+	; file boundary
+
 	.global ov15_022008C8
 ov15_022008C8: ; 0x022008C8
-	.byte 165, 40, 24, 101, 64, 12, 30, 50
+	.byte NUM_BAG_ITEMS
+	.byte NUM_BAG_MEDICINE
+	.byte NUM_BAG_BALLS
+	.byte NUM_BAG_TMS_HMS
+	.byte NUM_BAG_BERRIES
+	.byte NUM_BAG_MAIL
+	.byte NUM_BAG_BATTLE_ITEMS
+	.byte NUM_BAG_KEY_ITEMS
 	.size ov15_022008C8,.-ov15_022008C8
 
 	.global ov15_022008D0
@@ -9990,8 +9824,6 @@ ov15_022013A8: ; 0x022013A8
 	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 	.byte 0x01, 0x10, 0x13, 0x10, 0x0E, 0x10, 0x01, 0x00, 0x02, 0x00, 0x00, 0x10, 0x0F, 0x10, 0x05, 0x00
 	.size ov15_022013A8,.-ov15_022013A8
-
-	; file boundary
 
 	.global ov15_02201468
 ov15_02201468: ; 0x02201468

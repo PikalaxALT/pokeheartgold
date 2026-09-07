@@ -96,6 +96,8 @@ BagAppState ov15_021FB784(BagAppData *appData);
 BagAppState ov15_021FB820(BagAppData *appData);
 BagAppState ov15_021FB830(BagAppData *appData);
 BOOL BagApp_TryUseItemInPlace(BagAppData *appData, u16 itemId);
+String *BagApp_TryUseRepel(BagAppData *appData, u16 itemId);
+String *BagApp_ToggleGBSounds(BagAppData *appData, u16 itemId);
 BagAppState ov15_021FBBB0(BagAppData *appData);
 BagAppState ov15_021FBC6C(BagAppData *appData);
 BagAppState ov15_021FBC8C(BagAppData *appData);
@@ -432,24 +434,18 @@ void ov15_021F99A4(BgConfig *bgConfig) {
     GraphicsModes sp4 = ov15_02200518;
     SetBothScreensModesAndDisable(&sp4);
 
-    extern const BgTemplate ov15_022006CC;
-    InitBgFromTemplate(bgConfig, GF_BG_LYR_MAIN_1, &ov15_022006CC, GF_BG_TYPE_TEXT);
-    extern const BgTemplate ov15_022006E8;
-    InitBgFromTemplate(bgConfig, GF_BG_LYR_MAIN_2, &ov15_022006E8, GF_BG_TYPE_TEXT);
-    extern const BgTemplate ov15_02200704;
-    InitBgFromTemplate(bgConfig, GF_BG_LYR_MAIN_3, &ov15_02200704, GF_BG_TYPE_TEXT);
+    extern const BgTemplate ov15_022006CC[7];
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_MAIN_1, &ov15_022006CC[0], GF_BG_TYPE_TEXT);
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_MAIN_2, &ov15_022006CC[1], GF_BG_TYPE_TEXT);
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_MAIN_3, &ov15_022006CC[2], GF_BG_TYPE_TEXT);
     BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_MAIN_1);
     BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_MAIN_3);
     BG_ClearCharDataRange(GF_BG_LYR_MAIN_1, 0x20, 0x000, HEAP_ID_BAG);
 
-    extern const BgTemplate ov15_02200720;
-    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_0, &ov15_02200720, GF_BG_TYPE_TEXT);
-    extern const BgTemplate ov15_0220073C;
-    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_1, &ov15_0220073C, GF_BG_TYPE_TEXT);
-    extern const BgTemplate ov15_02200758;
-    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_2, &ov15_02200758, GF_BG_TYPE_TEXT);
-    extern const BgTemplate ov15_02200774;
-    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_3, &ov15_02200774, GF_BG_TYPE_TEXT);
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_0, &ov15_022006CC[3], GF_BG_TYPE_TEXT);
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_1, &ov15_022006CC[4], GF_BG_TYPE_TEXT);
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_2, &ov15_022006CC[5], GF_BG_TYPE_TEXT);
+    InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_3, &ov15_022006CC[6], GF_BG_TYPE_TEXT);
     BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_SUB_0);
     BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_SUB_3);
     BG_ClearCharDataRange(GF_BG_LYR_SUB_0, 0x20, 0x000, HEAP_ID_BAG);
@@ -628,13 +624,13 @@ void ov15_021F9F08(BagAppData *appData) {
 }
 
 void ov15_021FA008(BagAppData *appData) {
-    for (u32 i = 0; i < 165; ++i) {
+    for (u32 i = 0; i < NUM_BAG_STRINGS; ++i) {
         appData->unk_350[i] = String_New(18, HEAP_ID_BAG);
     }
 }
 
 void ov15_021FA028(BagAppData *appData) {
-    for (u32 i = 0; i < 165; ++i) {
+    for (u32 i = 0; i < NUM_BAG_STRINGS; ++i) {
         String_Delete(appData->unk_350[i]);
     }
 }
@@ -1506,7 +1502,7 @@ BagAppState ov15_021FB680(BagAppData *appData) {
         ItemUseError result = func(appData->unk_234->checkUseData);
         if (result != ITEMUSEERROR_OKAY) {
             GetItemUseErrorMessage(appData->unk_23C, appData->unk_5E4, appData->unk_234->itemId, result, HEAP_ID_BAG);
-            appData->unk_616 = ov15_021FEF48(appData, 0);
+            appData->unk_616 = BagApp_PrintMessage(appData, 0);
             return BAG_APP_STATE_12;
         }
     }
@@ -1541,7 +1537,7 @@ BagAppState ov15_021FB784(BagAppData *appData) {
         return BAG_APP_STATE_13;
     }
     if (TryFormatRegisteredKeyItemUseMessage(appData->unk_234->saveData, appData->unk_5E4, appData->unk_234->itemId, HEAP_ID_BAG) == TRUE) {
-        appData->unk_616 = ov15_021FEF48(appData, 0);
+        appData->unk_616 = BagApp_PrintMessage(appData, 0);
         return BAG_APP_STATE_12;
     }
     if (BagApp_TryUseItemInPlace(appData, appData->unk_234->itemId) == TRUE) {
@@ -1567,7 +1563,7 @@ BagAppState ov15_021FB830(BagAppData *appData) {
         } else {
             ReadMsgDataIntoString(appData->unk_2F0, msg_0010_00059, appData->unk_5E4);
         }
-        appData->unk_616 = ov15_021FEF48(appData, 0);
+        appData->unk_616 = BagApp_PrintMessage(appData, 0);
         appData->unk_67B = 1;
     } break;
     case 1:
@@ -1576,25 +1572,25 @@ BagAppState ov15_021FB830(BagAppData *appData) {
             FillWindowPixelBuffer(&appData->unk_004[3], 15);
             StringExpandPlaceholders(appData->unk_2F4, appData->unk_5E4, r5);
             String_Delete(r5);
-            appData->unk_616 = ov15_021FEF48(appData, 0);
+            appData->unk_616 = BagApp_PrintMessage(appData, 0);
             appData->unk_67B = 2;
         }
         break;
     case 2:
         if (!TextPrinterCheckActive(appData->unk_616)) {
-            ov15_021FF004(appData);
+            BagApp_CreateYesNoPrompt(appData);
             appData->unk_67B = 3;
         }
         break;
     case 3:
         switch (YesNoPrompt_HandleInput(appData->unk_804)) {
         case YESNORESPONSE_YES:
-            ov15_021FF058(appData);
+            BagApp_DestroyYesNoPrompt(appData);
             sub_020880CC(1, HEAP_ID_BAG);
             appData->unk_234->unk68 = 0;
             return BAG_APP_STATE_37;
         case YESNORESPONSE_NO:
-            ov15_021FF058(appData);
+            BagApp_DestroyYesNoPrompt(appData);
             ov15_021FED3C(appData);
             ClearFrameAndWindow2(&appData->unk_004[3], TRUE);
             ClearWindowTilemapAndScheduleTransfer(&appData->unk_004[3]);
@@ -1610,4 +1606,51 @@ BagAppState ov15_021FB830(BagAppData *appData) {
     }
 
     return BAG_APP_STATE_13;
+}
+
+BOOL BagApp_TryUseItemInPlace(BagAppData *appData, u16 itemId) {
+    String *string;
+
+    BufferPlayersName(appData->unk_2F4, 0, appData->unk_23C);
+    BufferItemName(appData->unk_2F4, 1, itemId);
+    if (itemId == ITEM_BLACK_FLUTE) {
+        string = NewString_ReadMsgData(appData->unk_2F0, msg_0010_00065);
+        BagApp_SetFlute(appData, FLUTE_BLACK);
+        appData->unk_680 = 0;
+    } else if (itemId == ITEM_WHITE_FLUTE) {
+        string = NewString_ReadMsgData(appData->unk_2F0, msg_0010_00064);
+        BagApp_SetFlute(appData, FLUTE_WHITE);
+        appData->unk_680 = 0;
+    } else if (itemId == ITEM_MAX_REPEL || itemId == ITEM_SUPER_REPEL || itemId == ITEM_REPEL) {
+        string = BagApp_TryUseRepel(appData, itemId);
+    } else if (itemId == ITEM_GB_SOUNDS) {
+        string = BagApp_ToggleGBSounds(appData, itemId);
+        appData->unk_680 = 0;
+    } else {
+        return FALSE;
+    }
+    StringExpandPlaceholders(appData->unk_2F4, appData->unk_5E4, string);
+    String_Delete(string);
+    return TRUE;
+}
+
+String *BagApp_TryUseRepel(BagAppData *appData, u16 itemId) {
+    if (!RoamerSave_RepelNotInUse(BagApp_GetSaveRoamers(appData))) {
+        appData->unk_680 = 0;
+        return NewString_ReadMsgData(appData->unk_2F0, msg_0010_00063);
+    }
+    BagApp_SetRepelStepCount(appData, GetItemAttr(itemId, ITEMATTR_HOLD_EFFECT_PARAM, HEAP_ID_BAG));
+    appData->unk_680 = 1;
+    PlaySE(SEQ_SE_DP_CARD2);
+    return NewString_ReadMsgData(appData->unk_2F0, msg_0010_00062);
+}
+
+String *BagApp_ToggleGBSounds(BagAppData *appData, u16 itemId) {
+    if (SoundSys_GetGBSoundsState() == TRUE) {
+        SoundSys_ToggleGBSounds();
+        return NewString_ReadMsgData(appData->unk_2F0, msg_0010_00105);
+    } else {
+        SoundSys_ToggleGBSounds();
+        return NewString_ReadMsgData(appData->unk_2F0, msg_0010_00104);
+    }
 }

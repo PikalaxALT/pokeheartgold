@@ -70,6 +70,9 @@ typedef struct BagAppData BagAppData;
 
 typedef BagAppState (*BagAppDataUnkFunc7F0)(BagAppData *);
 
+#define max(a, b)       ((a) > (b) ? (a) : (b))
+#define NUM_BAG_STRINGS (max(max(max(max(max(max(max(NUM_BAG_ITEMS, NUM_BAG_MEDICINE), NUM_BAG_BALLS), NUM_BAG_TMS_HMS), NUM_BAG_BERRIES), NUM_BAG_MAIL), NUM_BAG_BATTLE_ITEMS), NUM_BAG_KEY_ITEMS))
+
 struct BagAppData {
     BgConfig *unk_000;
     Window unk_004[35];
@@ -90,7 +93,7 @@ struct BagAppData {
     u8 unk_300[0x48];
     int unk_348;
     u8 filler_34C[4];
-    String *unk_350[165];
+    String *unk_350[NUM_BAG_STRINGS];
     String *unk_5E4;
     u8 filler_5E8[0x2C];
     u8 unk_614;
@@ -110,7 +113,7 @@ struct BagAppData {
     u8 filler_678[3];
     u8 unk_67B;
     BagAppDataUnkFunc7F0 unk_67C;
-    u8 filler_680[2];
+    u16 unk_680;
     u16 unk_682;
     u8 filler_684[8];
     void *unk_68C;
@@ -143,9 +146,9 @@ void ov15_021FED24(BagAppData *appData);
 void ov15_021FED3C(BagAppData *appData);
 void ov15_021FED58(BagAppData *appData);
 void ov15_021FED60(BagAppData *appData);
-u8 ov15_021FEF48(BagAppData *appData, int a1);
-void ov15_021FF004(BagAppData *appData);
-void ov15_021FF058(BagAppData *appData);
+u8 BagApp_PrintMessage(BagAppData *appData, int a1);
+void BagApp_CreateYesNoPrompt(BagAppData *appData);
+void BagApp_DestroyYesNoPrompt(BagAppData *appData);
 void ov15_021FF1E0(BagAppData *appData);
 void ov15_021FF29C(BagAppData *appData, int a1);
 void ov15_021FF364(BagAppData *appData, s16 a1, int a2, int a3);
