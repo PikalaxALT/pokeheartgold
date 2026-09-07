@@ -2,6 +2,9 @@
 
 #include "application/bag_app_internal.h"
 #include "msgdata/msg.naix"
+#include "msgdata/msg/msg_0010.h"
+#include "msgdata/msg/msg_0222.h"
+#include "msgdata/msg/msg_0750.h"
 
 #include "bag.h"
 #include "bag_types_def.h"
@@ -1552,4 +1555,59 @@ BagAppState ov15_021FB784(BagAppData *appData) {
 
 BagAppState ov15_021FB820(BagAppData *appData) {
     return appData->unk_67C(appData);
+}
+
+BagAppState ov15_021FB830(BagAppData *appData) {
+    switch (appData->unk_67B) {
+    case 0: {
+        u16 move = TMHMGetMove(appData->unk_234->itemId);
+        BufferMoveName(appData->unk_2F4, 0, move);
+        if (MoveIsHM(move) == TRUE) {
+            ReadMsgDataIntoString(appData->unk_2F0, msg_0010_00060, appData->unk_5E4);
+        } else {
+            ReadMsgDataIntoString(appData->unk_2F0, msg_0010_00059, appData->unk_5E4);
+        }
+        appData->unk_616 = ov15_021FEF48(appData, 0);
+        appData->unk_67B = 1;
+    } break;
+    case 1:
+        if (!TextPrinterCheckActive(appData->unk_616) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
+            String *r5 = NewString_ReadMsgData(appData->unk_2F0, msg_0010_00061);
+            FillWindowPixelBuffer(&appData->unk_004[3], 15);
+            StringExpandPlaceholders(appData->unk_2F4, appData->unk_5E4, r5);
+            String_Delete(r5);
+            appData->unk_616 = ov15_021FEF48(appData, 0);
+            appData->unk_67B = 2;
+        }
+        break;
+    case 2:
+        if (!TextPrinterCheckActive(appData->unk_616)) {
+            ov15_021FF004(appData);
+            appData->unk_67B = 3;
+        }
+        break;
+    case 3:
+        switch (YesNoPrompt_HandleInput(appData->unk_804)) {
+        case YESNORESPONSE_YES:
+            ov15_021FF058(appData);
+            sub_020880CC(1, HEAP_ID_BAG);
+            appData->unk_234->unk68 = 0;
+            return BAG_APP_STATE_37;
+        case YESNORESPONSE_NO:
+            ov15_021FF058(appData);
+            ov15_021FED3C(appData);
+            ClearFrameAndWindow2(&appData->unk_004[3], TRUE);
+            ClearWindowTilemapAndScheduleTransfer(&appData->unk_004[3]);
+            ScheduleWindowCopyToVram(&appData->unk_004[0]);
+            ov15_02200140(appData, &appData->unk_234->pockets[appData->unk_234->unk64], ov15_021FA074(appData), 0);
+            ov15_021FE868(appData);
+            ov15_02200294(appData);
+            ov15_021FB518(appData);
+            ov15_021FD788(appData, 1);
+            return BAG_APP_STATE_1;
+        }
+        break;
+    }
+
+    return BAG_APP_STATE_13;
 }

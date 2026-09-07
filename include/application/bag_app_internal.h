@@ -10,6 +10,7 @@
 #include "msgdata.h"
 #include "player_data.h"
 #include "sprite_system.h"
+#include "yes_no_prompt.h"
 
 typedef enum BagAppState {
     BAG_APP_STATE_0,
@@ -119,7 +120,7 @@ struct BagAppData {
     u8 filler_69C[8];
     u16 unk_6A4[165];
     BagAppDataUnkFunc7F0 unk_7F0[5];
-    u8 filler_804[4];
+    YesNoPrompt *unk_804;
     u8 unk_808[0x140];
     int unk_948;
 }; // size: 0x94C
@@ -143,6 +144,8 @@ void ov15_021FED3C(BagAppData *appData);
 void ov15_021FED58(BagAppData *appData);
 void ov15_021FED60(BagAppData *appData);
 u8 ov15_021FEF48(BagAppData *appData, int a1);
+void ov15_021FF004(BagAppData *appData);
+void ov15_021FF058(BagAppData *appData);
 void ov15_021FF1E0(BagAppData *appData);
 void ov15_021FF29C(BagAppData *appData, int a1);
 void ov15_021FF364(BagAppData *appData, s16 a1, int a2, int a3);
