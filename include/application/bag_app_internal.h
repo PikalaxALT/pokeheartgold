@@ -106,7 +106,10 @@ struct BagAppData {
     u8 unk_671;
     u8 unk_672;
     int unk_674;
-    u8 filler_678[10];
+    u8 filler_678[3];
+    u8 unk_67B;
+    BagAppDataUnkFunc7F0 unk_67C;
+    u8 filler_680[2];
     u16 unk_682;
     u8 filler_684[8];
     void *unk_68C;

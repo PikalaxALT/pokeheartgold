@@ -91,6 +91,9 @@ BagAppState ov15_021FB680(BagAppData *appData);
 BagAppState ov15_021FB700(BagAppData *appData);
 BagAppState ov15_021FB784(BagAppData *appData);
 BagAppState ov15_021FB820(BagAppData *appData);
+BagAppState ov15_021FB830(BagAppData *appData);
+BOOL BagApp_TryUseItemInPlace(BagAppData *appData, u16 itemId);
+BagAppState ov15_021FBBB0(BagAppData *appData);
 BagAppState ov15_021FBC6C(BagAppData *appData);
 BagAppState ov15_021FBC8C(BagAppData *appData);
 BagAppState ov15_021FBCAC(BagAppData *appData);
@@ -1525,4 +1528,28 @@ BagAppState ov15_021FB700(BagAppData *appData) {
     }
 
     return BAG_APP_STATE_12;
+}
+
+BagAppState ov15_021FB784(BagAppData *appData) {
+    BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
+    appData->unk_67B = 0;
+    if (pocket->pocketId == POCKET_TMHMS) {
+        appData->unk_67C = ov15_021FB830;
+        return BAG_APP_STATE_13;
+    }
+    if (TryFormatRegisteredKeyItemUseMessage(appData->unk_234->saveData, appData->unk_5E4, appData->unk_234->itemId, HEAP_ID_BAG) == TRUE) {
+        appData->unk_616 = ov15_021FEF48(appData, 0);
+        return BAG_APP_STATE_12;
+    }
+    if (BagApp_TryUseItemInPlace(appData, appData->unk_234->itemId) == TRUE) {
+        appData->unk_67C = ov15_021FBBB0;
+        return BAG_APP_STATE_13;
+    }
+    sub_020880CC(1, HEAP_ID_BAG);
+    appData->unk_234->unk68 = 0;
+    return BAG_APP_STATE_37;
+}
+
+BagAppState ov15_021FB820(BagAppData *appData) {
+    return appData->unk_67C(appData);
 }
