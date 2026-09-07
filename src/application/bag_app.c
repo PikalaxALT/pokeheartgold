@@ -1506,3 +1506,23 @@ BagAppState ov15_021FB680(BagAppData *appData) {
     }
     return ov15_021FB784(appData);
 }
+
+BagAppState ov15_021FB700(BagAppData *appData) {
+    if (!TextPrinterCheckActive(appData->unk_616) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
+        if (appData->unk_234->unk65 != POCKET_TMHMS) {
+            ov15_021FED3C(appData);
+        }
+        ClearFrameAndWindow2(&appData->unk_004[3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->unk_004[3]);
+        ScheduleWindowCopyToVram(&appData->unk_004[0]);
+        ov15_021FD788(appData, 1);
+        ov15_021FB518(appData);
+        if (appData->unk_234->unk65 == POCKET_TMHMS) {
+            return BAG_APP_STATE_26;
+        } else {
+            return BAG_APP_STATE_1;
+        }
+    }
+
+    return BAG_APP_STATE_12;
+}
