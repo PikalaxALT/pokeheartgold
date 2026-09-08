@@ -159,6 +159,7 @@ void ov15_021FF6BC(BagAppData *appData, u8 a1, s16 a2, int a3);
 void ov15_021FF758(Window *window, void *a2, u8 a3);
 void ov15_021FF7AC(Window *window);
 void ov15_021FF7C4(BagAppData *appData);
+void ov15_021FF834(BagAppData *appData);
 void ov15_021FF850(BagAppData *appData);
 void ov15_021FF894(BagAppData *appData);
 int ov15_021FF8D4(BagAppData *appData);
@@ -175,5 +176,6 @@ void ov15_02200294(BagAppData *appData);
 void ov15_022002B4(BagAppData *appData, int a1);
 int ov15_022002EC(u16 a0);
 void ov15_02200300(BagAppData *appData, int a1, u16 a2);
+void ov15_02200428(BagAppData *appData);
 
 #endif // GUARD_POKEHEARTGOLD_APPLICATION_BAG_APP_INTERNAL_H

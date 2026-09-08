@@ -1824,3 +1824,67 @@ BagAppState ov15_021FBD50(BagAppData *appData) {
     }
     return BAG_APP_STATE_5;
 }
+
+BagAppState ov15_021FBF98(BagAppData *appData) {
+    ov15_021FEEA4(appData);
+    ov15_02200428(appData);
+    ov15_021FFF24(appData);
+    ov15_021FF834(appData);
+    ov15_021FD788(appData, 0);
+    return BAG_APP_STATE_8;
+}
+
+BagAppState ov15_021FBFC0(BagAppData *appData) {
+    ov15_021FED3C(appData);
+    ov15_021FB518(appData);
+    ov15_02200428(appData);
+    ov15_021FF29C(appData, 0);
+    ManagedSprite_SetAnimationFrame(appData->unk_250[19], 0);
+    ManagedSprite_SetAnim(appData->unk_250[19], 16);
+    return BAG_APP_STATE_1;
+}
+
+BagAppState ov15_021FBFF8(BagAppData *appData) {
+    if (!TextPrinterCheckActive(appData->unk_616)) {
+        BagApp_CreateYesNoPrompt(appData);
+        return BAG_APP_STATE_9;
+    }
+
+    return BAG_APP_STATE_8;
+}
+
+BagAppState ov15_021FC01C(BagAppData *appData) {
+    switch ((u32)YesNoPrompt_HandleInput(appData->unk_804)) {
+    case YESNORESPONSE_YES:
+        BagApp_DestroyYesNoPrompt(appData);
+        {
+            String *string = NewString_ReadMsgData(appData->unk_2F0, msg_0010_00054);
+            if (appData->unk_680 == 1) {
+                BufferItemName(appData->unk_2F4, 0, appData->unk_234->itemId);
+            } else {
+                BufferItemNamePlural(appData->unk_2F4, 0, appData->unk_234->itemId);
+            }
+            BufferIntegerAsString(appData->unk_2F4, 1, appData->unk_680, 3, PRINTING_MODE_LEFT_ALIGN, TRUE);
+            StringExpandPlaceholders(appData->unk_2F4, appData->unk_5E4, string);
+            String_Delete(string);
+        }
+        FillWindowPixelBuffer(&appData->unk_004[3], 15);
+        appData->unk_616 = BagApp_PrintMessage(appData, 0);
+        return BAG_APP_STATE_10;
+    case LIST_NOTHING_CHOSEN:
+        break;
+    case YESNORESPONSE_NO:
+        BagApp_DestroyYesNoPrompt(appData);
+        ClearFrameAndWindow2(&appData->unk_004[3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->unk_004[3]);
+        ScheduleWindowCopyToVram(&appData->unk_004[0]);
+        ov15_02200140(appData, &appData->unk_234->pockets[appData->unk_234->unk64], ov15_021FA074(appData), 0);
+        ov15_021FE868(appData);
+        ov15_021FED3C(appData);
+        ov15_021FD788(appData, 1);
+        ov15_021FB518(appData);
+        return BAG_APP_STATE_1;
+    }
+
+    return BAG_APP_STATE_9;
+}
