@@ -1688,3 +1688,33 @@ BagAppState ov15_021FBBB0(BagAppData *appData) {
 
     return BAG_APP_STATE_13;
 }
+
+BagAppState ov15_021FBC6C(BagAppData *appData) {
+    ov15_021FED3C(appData);
+    sub_020880CC(1, HEAP_ID_BAG);
+    appData->unk_234->unk68 = 1;
+    return BAG_APP_STATE_37;
+}
+
+BagAppState ov15_021FBC8C(BagAppData *appData) {
+    ov15_021FED3C(appData);
+    sub_020880CC(1, HEAP_ID_BAG);
+    appData->unk_234->unk68 = 3;
+    return BAG_APP_STATE_37;
+}
+
+BagAppState ov15_021FBCAC(BagAppData *appData) {
+    appData->unk_680 = 1;
+    ov15_021FFF24(appData);
+    if (Pocket_GetQuantity(appData->unk_234->pockets[appData->unk_234->unk64].slots, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, appData->unk_234->itemId, HEAP_ID_BAG) == 1) {
+        ov15_021FEEA4(appData);
+        ov15_021FD788(appData, 0);
+        return BAG_APP_STATE_8;
+    }
+    ov15_021FD574(appData, 3, 0, 0);
+    ov15_02200300(appData, 3, appData->unk_682);
+    ov15_021FEDEC(appData, 3);
+    ov15_021FF7C4(appData);
+    ov15_021FF29C(appData, 1);
+    return BAG_APP_STATE_5;
+}

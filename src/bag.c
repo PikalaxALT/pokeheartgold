@@ -267,7 +267,7 @@ u16 Bag_GetQuantity(Bag *bag, u16 itemId, enum HeapID heapID) {
     return slot->quantity;
 }
 
-u16 Pocket_GetQuantity(ItemSlot *slots, u32 count, u16 itemId) {
+u16 Pocket_GetQuantity(ItemSlot *slots, u32 count, u16 itemId, enum HeapID heapID) {
     ItemSlot *slot = Pocket_GetItemSlotForRemove(slots, count, itemId, 1);
     if (slot == NULL) {
         return 0;
