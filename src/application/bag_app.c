@@ -53,7 +53,7 @@ void ov15_021F9F08(BagAppData *appData);
 void ov15_021FA008(BagAppData *appData);
 void ov15_021FA028(BagAppData *appData);
 void ov15_021FA044(s16 *a0, u16 *a1, u8 a2);
-void ov15_021FA070(s16 *a0, u16 *a1, u8 a2, int a3);
+void ov15_021FA070(s16 *a0, u16 *a1, u8 a2, enum HeapID heapId);
 int ov15_021FA074(BagAppData *appData);
 int ov15_021FA098(BagAppData *appData);
 void ov15_021FA0D8(BagAppData *appData);
@@ -98,6 +98,7 @@ BagAppState ov15_021FB830(BagAppData *appData);
 BOOL BagApp_TryUseItemInPlace(BagAppData *appData, u16 itemId);
 String *BagApp_TryUseRepel(BagAppData *appData, u16 itemId);
 String *BagApp_ToggleGBSounds(BagAppData *appData, u16 itemId);
+void ov15_021FBB28(BagAppData *appData);
 BagAppState ov15_021FBBB0(BagAppData *appData);
 BagAppState ov15_021FBC6C(BagAppData *appData);
 BagAppState ov15_021FBC8C(BagAppData *appData);
@@ -184,7 +185,7 @@ BOOL Bag_Init(OverlayManager *man, int *state) {
     ov15_021FF29C(appData, 0);
 
     ov15_021FA044(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9);
-    ov15_021FA070(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, 6);
+    ov15_021FA070(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, HEAP_ID_BAG);
     ov15_021FF850(appData);
     ov15_021FD574(appData, 0, ov15_021FA074(appData), 0);
     ov15_021FF364(appData, appData->unk_234->pockets[appData->unk_234->unk64].scroll, -1, 0);
@@ -644,7 +645,7 @@ void ov15_021FA044(s16 *a0, u16 *a1, u8 a2) {
     }
 }
 
-void ov15_021FA070(s16 *a0, u16 *a1, u8 a2, int a3) {
+void ov15_021FA070(s16 *a0, u16 *a1, u8 a2, enum HeapID a3) {
 }
 
 int ov15_021FA074(BagAppData *appData) {
@@ -1120,7 +1121,7 @@ BOOL ov15_021FAB34(BagAppData *appData) {
             ov15_02200030(appData, appData->unk_234->unk64);
             ov15_021FD404(appData, 1, appData->unk_234->unk64);
             ov15_021FA044(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9);
-            ov15_021FA070(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, 6);
+            ov15_021FA070(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, HEAP_ID_BAG);
             ++r4->unk_2;
             return TRUE;
         }
@@ -1653,4 +1654,37 @@ String *BagApp_ToggleGBSounds(BagAppData *appData, u16 itemId) {
         SoundSys_ToggleGBSounds();
         return NewString_ReadMsgData(appData->unk_2F0, msg_0010_00104);
     }
+}
+
+void ov15_021FBB28(BagAppData *appData) {
+    Pocket_TakeItem(appData->unk_234->pockets[appData->unk_234->unk64].slots, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, appData->unk_234->itemId, appData->unk_680, HEAP_ID_BAG);
+    ov15_021F9F08(appData);
+    ov15_021FA044(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9);
+    ov15_021FA070(&appData->unk_234->pockets[appData->unk_234->unk64].scroll, &appData->unk_234->pockets[appData->unk_234->unk64].position, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, HEAP_ID_BAG);
+}
+
+BagAppState ov15_021FBBB0(BagAppData *appData) {
+    switch (appData->unk_67B) {
+    case 0:
+        appData->unk_616 = BagApp_PrintMessage(appData, 0);
+        appData->unk_67B = 1;
+        break;
+    case 1:
+        if (!TextPrinterCheckActive(appData->unk_616) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
+            ov15_021FED3C(appData);
+            ClearFrameAndWindow2(&appData->unk_004[3], TRUE);
+            ClearWindowTilemapAndScheduleTransfer(&appData->unk_004[3]);
+            ov15_021FBB28(appData);
+            ov15_021FB518(appData);
+            ov15_02200140(appData, &appData->unk_234->pockets[appData->unk_234->unk64], ov15_021FA074(appData), 1);
+            ov15_021FA170(appData);
+            ScheduleWindowCopyToVram(&appData->unk_004[0]);
+            ov15_021FD788(appData, 1);
+            appData->unk_67B = 0;
+            return BAG_APP_STATE_1;
+        }
+        break;
+    }
+
+    return BAG_APP_STATE_13;
 }

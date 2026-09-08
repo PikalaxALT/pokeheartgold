@@ -132,10 +132,11 @@ BOOL Bag_HasItem(Bag *bag, u16 itemId, u16 quantity, enum HeapID heapID);
  * @param count:       Number of ItemSlot in slots
  * @param itemId:      ID of item to act upon
  * @param quantity:    Amount to add, remove, or check
+ * @param heapId:      Unused
  *
  * @returns: TRUE if the action succeeded, otherwise FALSE.
  */
-BOOL Pocket_TakeItem(ItemSlot *slots, u32 count, u16 itemId, u16 quantity);
+BOOL Pocket_TakeItem(ItemSlot *slots, u32 count, u16 itemId, u16 quantity, enum HeapID heapId);
 
 /*
  * BOOL Bag_PocketNotEmpty(Bag *bag, u32 pocket)
