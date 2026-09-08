@@ -103,6 +103,7 @@ BagAppState ov15_021FBBB0(BagAppData *appData);
 BagAppState ov15_021FBC6C(BagAppData *appData);
 BagAppState ov15_021FBC8C(BagAppData *appData);
 BagAppState ov15_021FBCAC(BagAppData *appData);
+int ov15_021FBD28(int a0, int a1, int a2);
 BagAppState ov15_021FBD50(BagAppData *appData);
 BagAppState ov15_021FBF98(BagAppData *appData);
 BagAppState ov15_021FBFC0(BagAppData *appData);
@@ -1325,7 +1326,7 @@ BagAppState ov15_021FB060(BagAppData *appData) {
 void ov15_021FB114(BagAppData *appData) {
     BagViewPocket *pocket = &appData->unk_234->pockets[appData->unk_234->unk64];
     if (appData->unk_671 != 0) {
-        ManagedSprite_SetPositionXY(appData->unk_250, 177, 16 * (pocket->position - 1) + 16);
+        ManagedSprite_SetPositionXY(appData->unk_250[0], 177, 16 * (pocket->position - 1) + 16);
     }
 }
 
@@ -1716,5 +1717,110 @@ BagAppState ov15_021FBCAC(BagAppData *appData) {
     ov15_021FEDEC(appData, 3);
     ov15_021FF7C4(appData);
     ov15_021FF29C(appData, 1);
+    return BAG_APP_STATE_5;
+}
+
+int ov15_021FBD28(int a0, int a1, int a2) {
+    if (a2 > 0) {
+        if (a0 == a1) {
+            return 1;
+        } else if (a0 + a2 > a1) {
+            return a1;
+        }
+    } else {
+        if (a0 == 1) {
+            return a1;
+        } else if (a0 + a2 <= 0) {
+            return 1;
+        }
+    }
+    return a0 + a2;
+}
+
+BagAppState ov15_021FBD50(BagAppData *appData) {
+    int r6 = 0;
+    u32 r5 = ov15_021FAC2C(appData, 3);
+    if (r5 != LIST_NOTHING_CHOSEN) {
+        switch (ov15_022002EC(appData->unk_682)) {
+        case 1:
+            if (r5 == 0 || r5 == 3) {
+                r5 = LIST_NOTHING_CHOSEN;
+            }
+            break;
+        case 2:
+            if (r5 == 0 || r5 == 1 || r5 == 3 || r5 == 4) {
+                r5 = LIST_NOTHING_CHOSEN;
+            }
+            break;
+        }
+        switch (r5) {
+        case 0:
+            appData->unk_680 = ov15_021FBD28(appData->unk_680, appData->unk_682, 100);
+            ManagedSprite_SetAnimationFrame(appData->unk_250[32], 0);
+            ManagedSprite_SetAnim(appData->unk_250[32], 26);
+            r6 = 1;
+            break;
+        case 1:
+            appData->unk_680 = ov15_021FBD28(appData->unk_680, appData->unk_682, 10);
+            ManagedSprite_SetAnimationFrame(appData->unk_250[33], 0);
+            ManagedSprite_SetAnim(appData->unk_250[33], 26);
+            r6 = 1;
+            break;
+        case 2:
+            appData->unk_680 = ov15_021FBD28(appData->unk_680, appData->unk_682, 1);
+            ManagedSprite_SetAnimationFrame(appData->unk_250[34], 0);
+            ManagedSprite_SetAnim(appData->unk_250[34], 26);
+            r6 = 1;
+            break;
+        case 3:
+            appData->unk_680 = ov15_021FBD28(appData->unk_680, appData->unk_682, -100);
+            ManagedSprite_SetAnimationFrame(appData->unk_250[35], 0);
+            ManagedSprite_SetAnim(appData->unk_250[35], 28);
+            r6 = 2;
+            break;
+        case 4:
+            appData->unk_680 = ov15_021FBD28(appData->unk_680, appData->unk_682, -10);
+            ManagedSprite_SetAnimationFrame(appData->unk_250[36], 0);
+            ManagedSprite_SetAnim(appData->unk_250[36], 28);
+            r6 = 2;
+            break;
+        case 5:
+            appData->unk_680 = ov15_021FBD28(appData->unk_680, appData->unk_682, -1);
+            ManagedSprite_SetAnimationFrame(appData->unk_250[37], 0);
+            ManagedSprite_SetAnim(appData->unk_250[37], 28);
+            r6 = 2;
+            break;
+        case 6:
+            r6 = 3;
+            break;
+        case 7:
+            r6 = 4;
+            break;
+        }
+    } else {
+        r6 = sub_020881C0(&appData->unk_680, appData->unk_682);
+        if (r6 == 0) {
+            if (gSystem.newKeys & PAD_BUTTON_A) {
+                r6 = 3;
+            } else if (gSystem.newKeys & PAD_BUTTON_B) {
+                r6 = 4;
+            }
+        }
+    }
+    switch (r6) {
+    case 0:
+        break;
+    case 1:
+    case 2:
+        ov15_021FEDEC(appData, 3);
+        PlaySE(SEQ_SE_DP_BAG_004);
+        return BAG_APP_STATE_5;
+    case 3:
+        PlaySE(SEQ_SE_DP_SELECT);
+        return ov15_021FD7D0(appData, 38, 9, 8, 6);
+    case 4:
+        PlaySE(SEQ_SE_GS_GEARCANCEL);
+        return ov15_021FD7D0(appData, 19, 9, 8, 7);
+    }
     return BAG_APP_STATE_5;
 }

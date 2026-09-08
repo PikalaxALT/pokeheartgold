@@ -83,8 +83,7 @@ struct BagAppData {
     NARC *unk_244;
     u8 filler_248[4];
     SpriteManager *unk_24C;
-    ManagedSprite *unk_250;
-    u8 filler_254[0x98];
+    ManagedSprite *unk_250[39];
     MessagePrinter *unk_2EC;
     MsgData *unk_2F0;
     MessageFormat *unk_2F4;
@@ -113,7 +112,7 @@ struct BagAppData {
     u8 filler_678[3];
     u8 unk_67B;
     BagAppDataUnkFunc7F0 unk_67C;
-    u16 unk_680;
+    s16 unk_680;
     u16 unk_682;
     u8 filler_684[8];
     void *unk_68C;
@@ -174,6 +173,7 @@ void ov15_022001C4(BagAppData *appData, BagViewPocket *pocket, int a2);
 void ov15_0220023C(BagAppData *appdata, u8 *a1);
 void ov15_02200294(BagAppData *appData);
 void ov15_022002B4(BagAppData *appData, int a1);
+int ov15_022002EC(u16 a0);
 void ov15_02200300(BagAppData *appData, int a1, u16 a2);
 
 #endif // GUARD_POKEHEARTGOLD_APPLICATION_BAG_APP_INTERNAL_H
