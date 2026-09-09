@@ -37,53 +37,6 @@
 	.extern ov15_021FC3E0
 	.extern ov15_021FC3EC
 
-	thumb_func_start ov15_021FCD80
-ov15_021FCD80: ; 0x021FCD80
-	push {r4, lr}
-	add r4, r0, #0
-	ldr r0, _021FCDDC ; =0x00000616
-	ldrb r0, [r4, r0]
-	bl TextPrinterCheckActive
-	cmp r0, #0
-	bne _021FCDD6
-	ldr r0, _021FCDE0 ; =0x00000682
-	ldrh r1, [r4, r0]
-	cmp r1, #0x63
-	bls _021FCD9C
-	mov r1, #0x63
-	strh r1, [r4, r0]
-_021FCD9C:
-	mov r2, #0
-	add r0, r4, #0
-	mov r1, #4
-	add r3, r2, #0
-	bl ov15_021FD574
-	ldr r2, _021FCDE0 ; =0x00000682
-	add r0, r4, #0
-	ldrh r2, [r4, r2]
-	mov r1, #2
-	bl ov15_02200300
-	add r0, r4, #0
-	bl ov15_021FF7FC
-	add r0, r4, #0
-	mov r1, #1
-	bl ov15_021FF29C
-	add r0, r4, #0
-	mov r1, #1
-	bl ov15_022004DC
-	add r0, r4, #0
-	mov r1, #0
-	bl ov15_021FFFDC
-	mov r0, #0x12
-	pop {r4, pc}
-_021FCDD6:
-	mov r0, #0x11
-	pop {r4, pc}
-	nop
-_021FCDDC: .word 0x00000616
-_021FCDE0: .word 0x00000682
-	thumb_func_end ov15_021FCD80
-
 	thumb_func_start ov15_021FCDE4
 ov15_021FCDE4: ; 0x021FCDE4
 	push {r3, r4, r5, r6, lr}

@@ -2289,3 +2289,20 @@ BagAppState ov15_021FCB64(BagAppData *appData) {
     appData->unk_616 = BagApp_PrintMessage(appData, 1);
     return BAG_APP_STATE_17;
 }
+
+BagAppState ov15_021FCD80(BagAppData *appData) {
+    if (!TextPrinterCheckActive(appData->unk_616)) {
+        if (appData->unk_682 > 99) {
+            appData->unk_682 = 99;
+        }
+        ov15_021FD574(appData, 4, 0, 0);
+        ov15_02200300(appData, 2, appData->unk_682);
+        ov15_021FF7FC(appData);
+        ov15_021FF29C(appData, 1);
+        ov15_022004DC(appData, 1);
+        ov15_021FFFDC(appData, 0);
+        return BAG_APP_STATE_18;
+    }
+
+    return BAG_APP_STATE_17;
+}

@@ -162,7 +162,9 @@ void ov15_021FF6BC(BagAppData *appData, u8 a1, s16 a2, int a3);
 void ov15_021FF758(Window *window, void *a2, u8 a3);
 void ov15_021FF7AC(Window *window);
 void ov15_021FF7C4(BagAppData *appData);
+void ov15_021FF7FC(BagAppData *appData);
 void ov15_021FF834(BagAppData *appData);
+
 void ov15_021FF850(BagAppData *appData);
 void ov15_021FF894(BagAppData *appData);
 int ov15_021FF8D4(BagAppData *appData);
@@ -171,6 +173,7 @@ void ov15_021FF964(BagAppData *appData);
 void ov15_021FFECC(BagAppData *appData, int a1);
 void ov15_021FFF24(BagAppData *appData);
 void ov15_021FFF34(BagAppData *appData, int a1);
+void ov15_021FFFDC(BagAppData *appData, int a1);
 void ov15_02200030(BagAppData *appData, u8 pocket);
 void ov15_02200140(BagAppData *appData, BagViewPocket *pocket, int a2, int a3);
 void ov15_022001C4(BagAppData *appData, BagViewPocket *pocket, int a2);
@@ -181,5 +184,6 @@ int ov15_022002EC(u16 a0);
 void ov15_02200300(BagAppData *appData, int a1, u16 a2);
 void ov15_02200428(BagAppData *appData);
 void ov15_02200458(BagAppData *appData, int a1);
+void ov15_022004DC(BagAppData *appData, int a1);
 
 #endif // GUARD_POKEHEARTGOLD_APPLICATION_BAG_APP_INTERNAL_H
