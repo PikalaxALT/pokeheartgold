@@ -2117,3 +2117,130 @@ BagAppState ov15_021FC784(BagAppData *appData) {
 
     return BAG_APP_STATE_15;
 }
+
+BagAppState ov15_021FC7EC(BagAppData *appData) {
+    int r4 = 0;
+
+    if (gSystem.newAndRepeatedKeys & PAD_KEY_UP) {
+        ++r4;
+        appData->unk_644 = ov15_02200640[appData->unk_644][0];
+    } else if (gSystem.newAndRepeatedKeys & PAD_KEY_DOWN) {
+        ++r4;
+        appData->unk_644 = ov15_02200640[appData->unk_644][1];
+    } else if (gSystem.newAndRepeatedKeys & PAD_KEY_LEFT) {
+        u8 r3 = ov15_02200640[appData->unk_644][2];
+        if (r3 == 14) {
+            u8 spC;
+            BagAppState r0 = ov15_021FA73C(appData, 14, &spC, 1, 4, MENU_INPUT_STATE_BUTTONS);
+            if (r0 != BAG_APP_STATE_1) {
+                return r0;
+            }
+            return BAG_APP_STATE_16;
+        } else if (appData->unk_644 == 16) {
+        } else if (appData->unk_644 >= 0 && appData->unk_644 < 8) {
+            int r0 = ov15_021FA6C0(appData, appData->unk_644, -1);
+            if (appData->unk_644 != r0) {
+                appData->unk_644 = r0;
+                ++r4;
+            }
+        } else {
+            appData->unk_644 = r3;
+            ++r4;
+        }
+    } else if (gSystem.newAndRepeatedKeys & PAD_KEY_RIGHT) {
+        u8 r3 = ov15_02200640[appData->unk_644][3];
+        if (r3 == 15) {
+            u8 spB;
+            BagAppState r0 = ov15_021FA73C(appData, 15, &spB, 1, 4, MENU_INPUT_STATE_BUTTONS);
+            if (r0 != BAG_APP_STATE_1) {
+                return r0;
+            }
+            return BAG_APP_STATE_16;
+        } else if (appData->unk_644 == 16) {
+        } else if (appData->unk_644 >= 0 && appData->unk_644 < 8) {
+            int r0 = ov15_021FA6C0(appData, appData->unk_644, 1);
+            if (appData->unk_644 != r0) {
+                appData->unk_644 = r0;
+                ++r4;
+            }
+        } else {
+            appData->unk_644 = r3;
+            ++r4;
+        }
+    } else if (gSystem.newKeys & PAD_BUTTON_L) {
+        u8 spA;
+        if (appData->unk_644 >= 0 && appData->unk_644 < 8) {
+            appData->unk_644 = ov15_021FA6C0(appData, appData->unk_234->unk64, -1);
+            ov15_021FFECC(appData, appData->unk_644);
+            ov15_021FA73C(appData, appData->unk_644, &spA, 1, 4, MENU_INPUT_STATE_BUTTONS);
+        } else {
+            ov15_021FA73C(appData, ov15_021FA6C0(appData, appData->unk_234->unk64, -1), &spA, 1, 4, MENU_INPUT_STATE_BUTTONS);
+        }
+        return BAG_APP_STATE_16;
+    } else if (gSystem.newKeys & PAD_BUTTON_R) {
+        u8 sp9;
+        if (appData->unk_644 >= 0 && appData->unk_644 < 8) {
+            appData->unk_644 = ov15_021FA6C0(appData, appData->unk_234->unk64, 1);
+            ov15_021FFECC(appData, appData->unk_644);
+            ov15_021FA73C(appData, appData->unk_644, &sp9, 1, 4, MENU_INPUT_STATE_BUTTONS);
+        } else {
+            ov15_021FA73C(appData, ov15_021FA6C0(appData, appData->unk_234->unk64, 1), &sp9, 1, 4, MENU_INPUT_STATE_BUTTONS);
+        }
+        return BAG_APP_STATE_16;
+    }
+    if (appData->unk_644 == 17) {
+        appData->unk_644 = appData->unk_234->unk64;
+    }
+    if (r4) {
+        PlaySE(SEQ_SE_DP_SELECT);
+        ov15_021FFECC(appData, appData->unk_644);
+        ov15_021FA0E4(appData, appData->unk_644);
+        ov15_021FA170(appData);
+    }
+    u8 sp8 = 0;
+    u32 r4_2 = ov15_021FAC2C(appData, 0);
+    if (r4_2 != TOUCH_MENU_NO_INPUT) {
+        if (ov15_021FA104(appData, r4_2)) {
+            if (r4_2 < 8) {
+                if (ov15_021FA68C(appData, r4_2) != -1) {
+                    appData->unk_644 = r4_2;
+                    ov15_021FFECC(appData, appData->unk_644);
+                }
+            } else {
+                appData->unk_644 = r4_2;
+                ov15_021FFECC(appData, appData->unk_644);
+                if (appData->unk_644 >= 8 && appData->unk_644 <= 13) {
+                    ov15_021FA0E4(appData, appData->unk_644);
+                }
+            }
+        }
+        BagAppState r1 = ov15_021FA73C(appData, r4_2, &sp8, 1, 4, MENU_INPUT_STATE_TOUCH);
+        if (r1 != BAG_APP_STATE_1) {
+            appData->unk_234->unk68 = 5;
+            return r1;
+        }
+    } else if (gSystem.newKeys & PAD_BUTTON_A) {
+        BagAppState r4_3 = ov15_021FA73C(appData, appData->unk_644, &sp8, 1, 4, MENU_INPUT_STATE_BUTTONS);
+        if (appData->unk_644 >= 8 && appData->unk_644 <= 13) {
+            ov15_021FA0E4(appData, appData->unk_644);
+        }
+        if (r4_3 != BAG_APP_STATE_1) {
+            appData->unk_234->unk68 = 5;
+            return r4_3;
+        }
+    } else if (gSystem.newKeys & PAD_BUTTON_B) {
+        appData->unk_234->itemId = ITEM_NONE;
+        appData->unk_234->unk68 = 5;
+        ov15_021FD774(appData, MENU_INPUT_STATE_BUTTONS);
+        PlaySE(SEQ_SE_GS_GEARCANCEL);
+        if (appData->unk_644 >= 8 && appData->unk_644 <= 13) {
+            ov15_021FA0E4(appData, appData->unk_644);
+        }
+        return ov15_021FD7D0(appData, 19, 9, 8, 36);
+    }
+    if (sp8 == 1) {
+        return ov15_021FD810(appData, 20, 41, 34);
+    }
+
+    return BAG_APP_STATE_16;
+}
