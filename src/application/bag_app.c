@@ -1915,3 +1915,26 @@ BagAppState ov15_021FC164(BagAppData *appData) {
 
     return BAG_APP_STATE_11;
 }
+
+BagAppState ov15_021FC224(BagAppData *appData) {
+    if (!Bag_TryRegisterItem(appData->unk_238, appData->unk_234->itemId)) {
+        String *string = NewString_ReadMsgData(appData->unk_2F0, msg_0010_00103);
+        FillWindowPixelBuffer(&appData->unk_004[3], 15);
+        StringExpandPlaceholders(appData->unk_2F4, appData->unk_5E4, string);
+        String_Delete(string);
+        BagApp_PrintMessage(appData, 0);
+        ov15_02200294(appData);
+        ov15_021FFF24(appData);
+        ov15_021FD788(appData, 0);
+        return BAG_APP_STATE_25;
+    } else {
+        ov15_02200294(appData);
+        ov15_021FF560(appData);
+        ov15_021FF7AC(&appData->unk_004[24]);
+        ov15_02200140(appData, &appData->unk_234->pockets[appData->unk_234->unk64], ov15_021FA074(appData), 0);
+        ov15_021FE868(appData);
+        ov15_021FED3C(appData);
+        ov15_021FB518(appData);
+        return BAG_APP_STATE_1;
+    }
+}
