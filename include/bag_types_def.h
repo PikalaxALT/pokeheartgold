@@ -53,7 +53,7 @@ typedef struct BagViewPocket {
     u16 position;
     s16 scroll;
     u8 pocketId; // POCKET_XXX constant
-    u8 unk_9;
+    u8 count;
 } BagViewPocket;
 
 typedef struct ItemCheckUseData {
@@ -73,7 +73,7 @@ typedef struct ItemCheckUseData {
 typedef struct BagView {
     SaveData *saveData;       // Persistent game state
     BagViewPocket pockets[8]; // Pocket information
-    u8 unk64;
+    u8 curPocket;
     u8 unk65;
     u16 itemId;
     u16 unk68;

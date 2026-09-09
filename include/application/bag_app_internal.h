@@ -114,7 +114,8 @@ struct BagAppData {
     BagAppDataUnkFunc7F0 unk_67C;
     s16 unk_680;
     u16 unk_682;
-    u8 filler_684[8];
+    int unk_684;
+    u8 filler_688[4];
     void *unk_68C;
     void *unk_690;
     NNSG2dPaletteData *unk_694;
@@ -150,6 +151,8 @@ void ov15_021FEEA4(BagAppData *appData);
 u8 BagApp_PrintMessage(BagAppData *appData, int a1);
 void BagApp_CreateYesNoPrompt(BagAppData *appData);
 void BagApp_DestroyYesNoPrompt(BagAppData *appData);
+void ov15_021FF068(BagAppData *appData);
+void ov15_021FF0FC(BagAppData *appData, int a1);
 void ov15_021FF1E0(BagAppData *appData);
 void ov15_021FF29C(BagAppData *appData, int a1);
 void ov15_021FF364(BagAppData *appData, s16 a1, int a2, int a3);
@@ -177,5 +180,6 @@ void ov15_022002B4(BagAppData *appData, int a1);
 int ov15_022002EC(u16 a0);
 void ov15_02200300(BagAppData *appData, int a1, u16 a2);
 void ov15_02200428(BagAppData *appData);
+void ov15_02200458(BagAppData *appData, int a1);
 
 #endif // GUARD_POKEHEARTGOLD_APPLICATION_BAG_APP_INTERNAL_H
