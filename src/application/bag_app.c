@@ -2106,3 +2106,14 @@ BagAppState ov15_021FC41C(BagAppData *appData) {
 
     return BAG_APP_STATE_14;
 }
+
+BagAppState ov15_021FC784(BagAppData *appData) {
+    if (!TextPrinterCheckActive(appData->unk_616) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
+        ClearFrameAndWindow2(&appData->unk_004[3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->unk_004[3]);
+        ov15_021FF364(appData, appData->unk_234->pockets[appData->unk_234->unk64].scroll, -1, 0);
+        return BAG_APP_STATE_14;
+    }
+
+    return BAG_APP_STATE_15;
+}

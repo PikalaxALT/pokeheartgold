@@ -37,58 +37,6 @@
 	.extern ov15_021FC3E0
 	.extern ov15_021FC3EC
 
-	thumb_func_start ov15_021FC784
-ov15_021FC784: ; 0x021FC784
-	push {r4, lr}
-	add r4, r0, #0
-	ldr r0, _021FC7E0 ; =0x00000616
-	ldrb r0, [r4, r0]
-	bl TextPrinterCheckActive
-	cmp r0, #0
-	bne _021FC7DC
-	ldr r0, _021FC7E4 ; =gSystem
-	ldr r1, [r0, #0x48]
-	mov r0, #3
-	tst r0, r1
-	bne _021FC7A6
-	ldr r0, _021FC7E8 ; =gSystem + 0x40
-	ldrh r0, [r0, #0x24]
-	cmp r0, #0
-	beq _021FC7DC
-_021FC7A6:
-	add r0, r4, #0
-	add r0, #0x34
-	mov r1, #1
-	bl ClearFrameAndWindow2
-	add r0, r4, #0
-	add r0, #0x34
-	bl ClearWindowTilemapAndScheduleTransfer
-	mov r0, #0x8d
-	lsl r0, r0, #2
-	ldr r3, [r4, r0]
-	add r0, r4, #0
-	add r1, r3, #0
-	add r1, #0x64
-	ldrb r2, [r1]
-	mov r1, #0xc
-	mul r1, r2
-	add r1, r3, r1
-	mov r2, #0xa
-	ldrsh r1, [r1, r2]
-	sub r2, #0xb
-	mov r3, #0
-	bl ov15_021FF364
-	mov r0, #0xe
-	pop {r4, pc}
-_021FC7DC:
-	mov r0, #0xf
-	pop {r4, pc}
-	.balign 4, 0
-_021FC7E0: .word 0x00000616
-_021FC7E4: .word gSystem
-_021FC7E8: .word gSystem + 0x40
-	thumb_func_end ov15_021FC784
-
 	thumb_func_start ov15_021FC7EC
 ov15_021FC7EC: ; 0x021FC7EC
 	push {r4, r5, r6, lr}
