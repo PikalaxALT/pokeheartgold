@@ -1956,3 +1956,29 @@ BagAppState ov15_021FC2E0(BagAppData *appData) {
 
     return BAG_APP_STATE_25;
 }
+
+BagAppState ov15_021FC37C(BagAppData *appData) {
+    Bag_UnregisterItem(appData->unk_238, appData->unk_234->itemId);
+    ov15_02200294(appData);
+    ov15_021FF560(appData);
+    ov15_021FF7AC(&appData->unk_004[24]);
+    ov15_02200140(appData, &appData->unk_234->pockets[appData->unk_234->unk64], ov15_021FA074(appData), 0);
+    ov15_021FE868(appData);
+    ov15_021FED3C(appData);
+    ov15_021FB518(appData);
+    return BAG_APP_STATE_1;
+}
+
+BagAppState ov15_021FC3E0(BagAppData *appData) {
+    ov15_021FAC48(appData);
+    return BAG_APP_STATE_3;
+}
+
+BagAppState ov15_021FC3EC(BagAppData *appData) {
+    ov15_021FED3C(appData);
+    ov15_021FD788(appData, 0);
+    ov15_021FFF24(appData);
+    sub_020880CC(1, HEAP_ID_BAG);
+    appData->unk_234->unk68 = 2;
+    return BAG_APP_STATE_37;
+}

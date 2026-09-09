@@ -33,84 +33,9 @@
 	.extern ov15_021FBCAC
 	.extern ov15_021FBD28
 	.extern ov15_021FC224
-
-	thumb_func_start ov15_021FC37C
-ov15_021FC37C: ; 0x021FC37C
-	push {r3, r4, r5, lr}
-	mov r1, #0x8e
-	add r5, r0, #0
-	lsl r1, r1, #2
-	ldr r0, [r5, r1]
-	sub r1, r1, #4
-	ldr r1, [r5, r1]
-	add r1, #0x66
-	ldrh r1, [r1]
-	bl Bag_UnregisterItem
-	add r0, r5, #0
-	bl ov15_02200294
-	add r0, r5, #0
-	bl ov15_021FF560
-	mov r0, #0x61
-	lsl r0, r0, #2
-	add r0, r5, r0
-	bl ov15_021FF7AC
-	mov r0, #0x8d
-	lsl r0, r0, #2
-	ldr r4, [r5, r0]
-	add r0, r5, #0
-	bl ov15_021FA074
-	add r1, r4, #4
-	add r4, #0x64
-	add r2, r0, #0
-	ldrb r4, [r4]
-	mov r3, #0xc
-	add r0, r5, #0
-	mul r3, r4
-	add r1, r1, r3
-	mov r3, #0
-	bl ov15_02200140
-	add r0, r5, #0
-	bl ov15_021FE868
-	add r0, r5, #0
-	bl ov15_021FED3C
-	add r0, r5, #0
-	bl ov15_021FB518
-	mov r0, #1
-	pop {r3, r4, r5, pc}
-	thumb_func_end ov15_021FC37C
-
-	thumb_func_start ov15_021FC3E0
-ov15_021FC3E0: ; 0x021FC3E0
-	push {r3, lr}
-	bl ov15_021FAC48
-	mov r0, #3
-	pop {r3, pc}
-	.balign 4, 0
-	thumb_func_end ov15_021FC3E0
-
-	thumb_func_start ov15_021FC3EC
-ov15_021FC3EC: ; 0x021FC3EC
-	push {r4, lr}
-	add r4, r0, #0
-	bl ov15_021FED3C
-	add r0, r4, #0
-	mov r1, #0
-	bl ov15_021FD788
-	add r0, r4, #0
-	bl ov15_021FFF24
-	mov r0, #1
-	mov r1, #6
-	bl sub_020880CC
-	mov r0, #0x8d
-	lsl r0, r0, #2
-	ldr r0, [r4, r0]
-	mov r1, #2
-	add r0, #0x68
-	strh r1, [r0]
-	mov r0, #0x25
-	pop {r4, pc}
-	.balign 4, 0
-	thumb_func_end ov15_021FC3EC
+	.extern ov15_021FC37C
+	.extern ov15_021FC3E0
+	.extern ov15_021FC3EC
 
 	thumb_func_start ov15_021FC41C
 ov15_021FC41C: ; 0x021FC41C
