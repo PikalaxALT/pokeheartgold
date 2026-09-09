@@ -1888,3 +1888,30 @@ BagAppState ov15_021FC01C(BagAppData *appData) {
 
     return BAG_APP_STATE_9;
 }
+
+BagAppState ov15_021FC140(BagAppData *appData) {
+    if (TextPrinterCheckActive(appData->unk_616)) {
+        return BAG_APP_STATE_10;
+    }
+    ScheduleWindowCopyToVram(&appData->unk_004[3]);
+    return BAG_APP_STATE_11;
+}
+
+BagAppState ov15_021FC164(BagAppData *appData) {
+    if (!TextPrinterCheckActive(appData->unk_616) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
+        ClearFrameAndWindow2(&appData->unk_004[3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->unk_004[3]);
+        ScheduleWindowCopyToVram(&appData->unk_004[0]);
+        Pocket_TakeItem(appData->unk_234->pockets[appData->unk_234->unk64].slots, appData->unk_234->pockets[appData->unk_234->unk64].unk_9, appData->unk_234->itemId, appData->unk_680, HEAP_ID_BAG);
+        ov15_021F9F08(appData);
+        ov15_02200140(appData, &appData->unk_234->pockets[appData->unk_234->unk64], ov15_021FA074(appData), 1);
+        ov15_021FE868(appData);
+        ov15_021FED3C(appData);
+        ov15_021FB518(appData);
+        ov15_021FA170(appData);
+        ov15_021FD788(appData, 1);
+        return BAG_APP_STATE_1;
+    }
+
+    return BAG_APP_STATE_11;
+}
