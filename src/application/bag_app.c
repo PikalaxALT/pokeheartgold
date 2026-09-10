@@ -2481,3 +2481,40 @@ BagAppState ov15_021FD24C(BagAppData *appData) {
     ScheduleWindowCopyToVram(&appData->unk_004[3]);
     return BAG_APP_STATE_24;
 }
+
+BagAppState ov15_021FD2FC(BagAppData *appData) {
+    if (!TextPrinterCheckActive(appData->unk_616) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
+        appData->unk_684 = 0;
+        sub_0200E5D4(&appData->unk_004[33], TRUE);
+        ClearFrameAndWindow2(&appData->unk_004[3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->unk_004[3]);
+        ScheduleWindowCopyToVram(&appData->unk_004[0]);
+        ov15_02200140(appData, &appData->unk_234->pockets[appData->unk_234->curPocket], ov15_021FA074(appData), 1);
+        ov15_021FE868(appData);
+        ov15_021FED3C(appData);
+        ov15_021FB518(appData);
+        ov15_021FA170(appData);
+        ov15_02200458(appData, 1);
+        ov15_021FD788(appData, 1);
+        return BAG_APP_STATE_16;
+    }
+
+    return BAG_APP_STATE_24;
+}
+
+BagAppState ov15_021FD3AC(BagAppData *appData) {
+    if (ov15_021FA650(appData) == TRUE) {
+        return BAG_APP_STATE_2;
+    }
+
+    return BAG_APP_STATE_26;
+}
+
+BagAppState ov15_021FD3C0(BagAppData *appData) {
+    ov15_021FED3C(appData);
+    ov15_021FD788(appData, 0);
+    ov15_021FFF24(appData);
+    sub_020880CC(1, HEAP_ID_BAG);
+    appData->unk_234->unk68 = 4;
+    return BAG_APP_STATE_37;
+}
