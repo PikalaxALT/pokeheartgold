@@ -2462,3 +2462,22 @@ BagAppState ov15_021FD10C(BagAppData *appData) {
 
     return BAG_APP_STATE_22;
 }
+
+BagAppState ov15_021FD24C(BagAppData *appData) {
+    if (TextPrinterCheckActive(appData->unk_616)) {
+        return BAG_APP_STATE_23;
+    }
+    PlaySE(SEQ_SE_DP_REGI);
+    PlayerProfile_AddMoney(appData->unk_23C, appData->unk_680 * appData->unk_684);
+    if (appData->unk_680 == 1) {
+        if (appData->unk_234->unk75 != 0xFF) {
+            ++appData->unk_234->unk75;
+        }
+    } else {
+        appData->unk_234->unk75 = 2;
+    }
+    Pocket_TakeItem(appData->unk_234->pockets[appData->unk_234->curPocket].slots, appData->unk_234->pockets[appData->unk_234->curPocket].count, appData->unk_234->itemId, appData->unk_680, HEAP_ID_BAG);
+    ov15_021F9F08(appData);
+    ScheduleWindowCopyToVram(&appData->unk_004[3]);
+    return BAG_APP_STATE_24;
+}
