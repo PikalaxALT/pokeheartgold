@@ -2381,3 +2381,18 @@ BagAppState ov15_021FCDE4(BagAppData *appData) {
 
     return BAG_APP_STATE_18;
 }
+
+BagAppState ov15_021FCFC8(BagAppData *appData) {
+    sub_0200E5D4(&appData->unk_004[4], TRUE);
+    ov15_021FF834(appData);
+    FillWindowPixelBuffer(&appData->unk_004[3], 15);
+    String *string = NewString_ReadMsgData(appData->unk_2F0, msg_0010_00078);
+    BufferIntegerAsString(appData->unk_2F4, 0, appData->unk_680 * appData->unk_684, 6, PRINTING_MODE_LEFT_ALIGN, TRUE);
+    StringExpandPlaceholders(appData->unk_2F4, appData->unk_5E4, string);
+    String_Delete(string);
+    appData->unk_616 = BagApp_PrintMessage(appData, 1);
+    ov15_02200428(appData);
+    ov15_021FFF24(appData);
+    ov15_021FD788(appData, 0);
+    return BAG_APP_STATE_21;
+}
