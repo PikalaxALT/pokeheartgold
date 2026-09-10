@@ -2396,3 +2396,69 @@ BagAppState ov15_021FCFC8(BagAppData *appData) {
     ov15_021FD788(appData, 0);
     return BAG_APP_STATE_21;
 }
+
+BagAppState ov15_021FD058(BagAppData *appData) {
+    appData->unk_684 = 0;
+    sub_0200E5D4(&appData->unk_004[33], TRUE);
+    sub_0200E5D4(&appData->unk_004[4], TRUE);
+    ClearFrameAndWindow2(&appData->unk_004[3], TRUE);
+    ClearWindowTilemapAndScheduleTransfer(&appData->unk_004[3]);
+    ScheduleWindowCopyToVram(&appData->unk_004[0]);
+    ov15_02200428(appData);
+    ov15_021FFF24(appData);
+    ov15_02200140(appData, &appData->unk_234->pockets[appData->unk_234->curPocket], ov15_021FA074(appData), 0);
+    ov15_021FE868(appData);
+    ov15_021FED3C(appData);
+    ov15_021FB518(appData);
+    ov15_02200458(appData, 1);
+    ov15_021FD788(appData, 1);
+    return BAG_APP_STATE_16;
+}
+
+BagAppState ov15_021FD0E8(BagAppData *appData) {
+    if (!TextPrinterCheckActive(appData->unk_616)) {
+        BagApp_CreateYesNoPrompt(appData);
+        return BAG_APP_STATE_22;
+    }
+
+    return BAG_APP_STATE_21;
+}
+
+BagAppState ov15_021FD10C(BagAppData *appData) {
+    u32 response = YesNoPrompt_HandleInput(appData->unk_804);
+    switch (response) {
+    case YESNORESPONSE_YES:
+        BagApp_DestroyYesNoPrompt(appData);
+        {
+            String *string = NewString_ReadMsgData(appData->unk_2F0, msg_0010_00079);
+            if (appData->unk_680 > 1) {
+                BufferItemNamePlural(appData->unk_2F4, 0, appData->unk_234->itemId);
+            } else {
+                BufferItemName(appData->unk_2F4, 0, appData->unk_234->itemId);
+            }
+            BufferIntegerAsString(appData->unk_2F4, 1, appData->unk_680 * appData->unk_684, 6, PRINTING_MODE_LEFT_ALIGN, TRUE);
+            StringExpandPlaceholders(appData->unk_2F4, appData->unk_5E4, string);
+            String_Delete(string);
+        }
+        appData->unk_616 = BagApp_PrintMessage(appData, 0);
+        return BAG_APP_STATE_23;
+    case LIST_NOTHING_CHOSEN:
+        break;
+    case YESNORESPONSE_NO:
+        BagApp_DestroyYesNoPrompt(appData);
+        appData->unk_684 = 0;
+        sub_0200E5D4(&appData->unk_004[33], TRUE);
+        ClearFrameAndWindow2(&appData->unk_004[3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->unk_004[3]);
+        ScheduleWindowCopyToVram(&appData->unk_004[0]);
+        ov15_02200140(appData, &appData->unk_234->pockets[appData->unk_234->curPocket], ov15_021FA074(appData), 0);
+        ov15_021FE868(appData);
+        ov15_021FED3C(appData);
+        ov15_021FB518(appData);
+        ov15_02200458(appData, 1);
+        ov15_021FD788(appData, 1);
+        return BAG_APP_STATE_16;
+    }
+
+    return BAG_APP_STATE_22;
+}
