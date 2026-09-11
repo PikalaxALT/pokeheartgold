@@ -133,6 +133,7 @@ BagAppState ov15_021FD3C0(BagAppData *appData);
 BOOL ov15_021FD3F0(u8 pocket, u16 itemId);
 void ov15_021FD404(BagAppData *appData, int a1, int pocket);
 void ov15_021FD43C(BgConfig *bgConfig, int bgId, int a2);
+void ov15_021FD4C0(BgConfig *bgConfig, int bgId, int a2, int a3);
 void ov15_021FD574(BagAppData *appData, int a1, int a2, int a3);
 void ov15_021FD774(BagAppData *appData, MenuInputState a1);
 void ov15_021FD788(BagAppData *appData, int a1);
@@ -2545,6 +2546,26 @@ void ov15_021FD43C(BgConfig *bgConfig, int bgId, int a2) {
             } else if (r5[i][0] == 2) {
                 FillBgTilemapRect(bgConfig, bgId, 0, r5[i][3], r5[i][4], r5[i][5], r5[i][6], 0);
             }
+        }
+    }
+}
+
+extern const u8 ov15_02201340[5][2][4];
+extern const u8 ov15_02201328[6][4];
+
+void ov15_021FD4C0(BgConfig *bgConfig, int bgId, int a2, int a3) {
+    u16 *sp18 = GetBgTilemapBuffer(bgConfig, bgId);
+
+    const u8(*r5)[4] = ov15_02201340[a2 - 1];
+    for (int i = 0; i < 2; ++i) {
+        FillBgTilemapRect(bgConfig, bgId, 0, r5[i][0], r5[i][1], r5[i][2], r5[i][3], 0);
+    }
+    if (a3 != -1) {
+        const u8 *r3 = ov15_02201328[a3];
+        if (a3 == 0 || a3 == 1) {
+            LoadRectToBgTilemapRect(bgConfig, bgId, sp18 + 0x300, r3[0], r3[1], r3[2], r3[3]);
+        } else {
+            LoadRectToBgTilemapRect(bgConfig, bgId, sp18 + 0x360, r3[0], r3[1], r3[2], r3[3]);
         }
     }
 }
