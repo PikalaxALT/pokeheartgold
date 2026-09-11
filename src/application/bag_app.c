@@ -131,8 +131,8 @@ BagAppState ov15_021FD2FC(BagAppData *appData);
 BagAppState ov15_021FD3AC(BagAppData *appData);
 BagAppState ov15_021FD3C0(BagAppData *appData);
 BOOL ov15_021FD3F0(u8 pocket, u16 itemId);
-void ov15_021FD404(BagAppData *appData, int a1, u8 pocket);
-void ov15_021FD43C(BgConfig *bgConfig, u8 bgId, int a2);
+void ov15_021FD404(BagAppData *appData, int a1, int pocket);
+void ov15_021FD43C(BgConfig *bgConfig, int bgId, int a2);
 void ov15_021FD574(BagAppData *appData, int a1, int a2, int a3);
 void ov15_021FD774(BagAppData *appData, MenuInputState a1);
 void ov15_021FD788(BagAppData *appData, int a1);
@@ -487,8 +487,8 @@ void ov15_021F9AE4(BagAppData *appData) {
     GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 38, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_0_OFFSET, 0, HEAP_ID_BAG);
     LoadFontPal1(GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_11_OFFSET, HEAP_ID_BAG);
     GfGfxLoader_LoadCharData(NARC_a_0_1_5, 46, appData->unk_000, GF_BG_LYR_SUB_2, 0, 0, FALSE, HEAP_ID_BAG);
-    appData->unk_68C = GfGfxLoader_GetPlttData(NARC_a_0_1_5, 40, &appData->unk_694, HEAP_ID_BAG);
-    appData->unk_690 = GfGfxLoader_GetPlttData(NARC_a_0_1_5, 41, &appData->unk_698, HEAP_ID_BAG);
+    appData->unk_68C = GfGfxLoader_GetPlttData(NARC_a_0_1_5, 40, &appData->unk_694[0], HEAP_ID_BAG);
+    appData->unk_690 = GfGfxLoader_GetPlttData(NARC_a_0_1_5, 41, &appData->unk_694[1], HEAP_ID_BAG);
     GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 8, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_8_OFFSET, 0x80, HEAP_ID_BAG);
     LoadUserFrameGfx2(appData->unk_000, GF_BG_LYR_SUB_0, 0x3E2, 12, Options_GetFrame(appData->unk_240), HEAP_ID_BAG);
 }
@@ -2517,4 +2517,34 @@ BagAppState ov15_021FD3C0(BagAppData *appData) {
     sub_020880CC(1, HEAP_ID_BAG);
     appData->unk_234->unk68 = 4;
     return BAG_APP_STATE_37;
+}
+
+BOOL ov15_021FD3F0(u8 pocket, u16 itemId) {
+    return pocket == POCKET_BERRIES || (itemId >= ITEM_GROWTH_MULCH && itemId < (ITEM_GOOEY_MULCH + 1));
+}
+
+void ov15_021FD404(BagAppData *appData, int a1, int pocket) {
+    const u16 *r5 = appData->unk_694[a1]->pRawData;
+    if (pocket <= 7) {
+        GXS_LoadBGPltt(r5 + 16 * pocket, 0, 0x20);
+        GXS_LoadBGPltt(r5 + 16 * pocket, 0x20, 0x40);
+        GXS_LoadBGPltt(r5 + 16 * pocket, 0x60, 0x20);
+    }
+}
+
+extern const u8 ov15_022013A8[6][4][8];
+
+void ov15_021FD43C(BgConfig *bgConfig, int bgId, int a2) {
+    u16 *sp14 = GetBgTilemapBuffer(bgConfig, bgId);
+
+    if (a2 != 6) {
+        const u8(*r5)[8] = ov15_022013A8[a2];
+        for (int i = 0; i < 4; ++i) {
+            if (r5[i][0] == 1) {
+                LoadRectToBgTilemapRect(bgConfig, bgId, sp14 + (r5[i][1] + 32 * r5[i][2]), r5[i][3], r5[i][4], r5[i][5], r5[i][6]);
+            } else if (r5[i][0] == 2) {
+                FillBgTilemapRect(bgConfig, bgId, 0, r5[i][3], r5[i][4], r5[i][5], r5[i][6], 0);
+            }
+        }
+    }
 }

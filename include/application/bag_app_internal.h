@@ -118,8 +118,7 @@ struct BagAppData {
     u8 filler_688[4];
     void *unk_68C;
     void *unk_690;
-    NNSG2dPaletteData *unk_694;
-    NNSG2dPaletteData *unk_698;
+    NNSG2dPaletteData *unk_694[2];
     u8 filler_69C[8];
     u16 unk_6A4[165];
     BagAppDataUnkFunc7F0 unk_7F0[5];
