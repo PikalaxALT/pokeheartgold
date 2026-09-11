@@ -66,6 +66,16 @@ typedef struct BagAppData_Sub619 {
     u8 unk_7_7 : 1;
 } BagAppData_Sub619;
 
+typedef struct BagAppData_Sub940 {
+    u8 unk_0;
+    u8 unk_1_0 : 4;
+    u8 unk_1_4 : 4;
+    u8 unk_2;
+    u8 unk_3_0 : 4;
+    u8 unk_3_4 : 4;
+    BagAppState unk_4;
+} BagAppData_Sub940;
+
 typedef struct BagAppData BagAppData;
 
 typedef BagAppState (*BagAppDataUnkFunc7F0)(BagAppData *);
@@ -123,7 +133,8 @@ struct BagAppData {
     u16 unk_6A4[165];
     BagAppDataUnkFunc7F0 unk_7F0[5];
     YesNoPrompt *unk_804;
-    u8 unk_808[0x140];
+    u8 unk_808[0x138];
+    BagAppData_Sub940 unk_940;
     int unk_948;
 }; // size: 0x94C
 
@@ -164,6 +175,7 @@ void ov15_021FF7C4(BagAppData *appData);
 void ov15_021FF7FC(BagAppData *appData);
 void ov15_021FF834(BagAppData *appData);
 
+void ov15_021FF844(BagAppData *appData);
 void ov15_021FF850(BagAppData *appData);
 void ov15_021FF894(BagAppData *appData);
 int ov15_021FF8D4(BagAppData *appData);

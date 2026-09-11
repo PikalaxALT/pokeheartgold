@@ -135,10 +135,10 @@ void ov15_021FD404(BagAppData *appData, int a1, int pocket);
 void ov15_021FD43C(BgConfig *bgConfig, int bgId, int a2);
 void ov15_021FD4C0(BgConfig *bgConfig, int bgId, int a2, int a3);
 void ov15_021FD574(BagAppData *appData, u32 a1, int a2, int a3);
-void ov15_021FD774(BagAppData *appData, MenuInputState a1);
+void ov15_021FD774(BagAppData *appData, MenuInputState state);
 void ov15_021FD788(BagAppData *appData, int a1);
-BagAppState ov15_021FD7D0(BagAppData *appData, u8 a1, int a2, int a3, int a4);
-BagAppState ov15_021FD810(BagAppData *appData, int a1, int a2, int a3);
+BagAppState ov15_021FD7D0(BagAppData *appData, u8 a1, u8 a2, u8 a3, BagAppState a4);
+BagAppState ov15_021FD810(BagAppData *appData, u8 a1, u8 a2, BagAppState a3);
 BagAppState ov15_021FD850(BagAppData *appData);
 void ov15_021FD93C(BagAppData *appData);
 void ov15_021FDAF4(void *a0, int a1, int a2);
@@ -828,7 +828,7 @@ BagAppState ov15_021FA1BC(BagAppData *appData) {
     }
 
     if (sp8 == 1) {
-        return ov15_021FD810(appData, 20, 41, 27);
+        return ov15_021FD810(appData, 20, 41, BAG_APP_STATE_27);
     }
 
     return BAG_APP_STATE_1;
@@ -993,13 +993,13 @@ BagAppState ov15_021FA73C(BagAppData *appData, int a1, u8 *a2, int a3, int a4, M
     case 15:
         if (appData->unk_234->pockets[appData->unk_234->curPocket].count > 6) {
             PlaySE(SEQ_SE_DP_SELECT);
-            r6 = ov15_021FD7D0(appData, 18, 9, 8, 30);
+            r6 = ov15_021FD7D0(appData, 18, 9, 8, BAG_APP_STATE_30);
         }
         break;
     case 14:
         if (appData->unk_234->pockets[appData->unk_234->curPocket].count > 6) {
             PlaySE(SEQ_SE_DP_SELECT);
-            r6 = ov15_021FD7D0(appData, 17, 9, 8, 31);
+            r6 = ov15_021FD7D0(appData, 17, 9, 8, BAG_APP_STATE_31);
         }
         break;
     case 16:
@@ -1007,7 +1007,7 @@ BagAppState ov15_021FA73C(BagAppData *appData, int a1, u8 *a2, int a3, int a4, M
         appData->unk_234->unk68 = 5;
         ov15_021FD774(appData, a5);
         PlaySE(SEQ_SE_GS_GEARCANCEL);
-        r6 = ov15_021FD7D0(appData, 19, 9, 8, 36);
+        r6 = ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_36);
         break;
     }
 
@@ -1269,25 +1269,25 @@ BagAppState ov15_021FAE48(BagAppData *appData) {
     case LIST_CANCEL:
         PlaySE(SEQ_SE_GS_GEARCANCEL);
         pocket->scroll = appData->unk_672 / 6 * 6;
-        return ov15_021FD7D0(appData, 19, 9, 8, 32);
+        return ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_32);
     case 14:
         if (pocket->count > 6) {
             PlaySE(SEQ_SE_DP_SELECT);
-            return ov15_021FD7D0(appData, 17, 9, 8, 31);
+            return ov15_021FD7D0(appData, 17, 9, 8, BAG_APP_STATE_31);
         }
         break;
     case 15:
         if (pocket->count > 6) {
             PlaySE(SEQ_SE_DP_SELECT);
-            return ov15_021FD7D0(appData, 18, 9, 8, 30);
+            return ov15_021FD7D0(appData, 18, 9, 8, BAG_APP_STATE_30);
         }
         break;
     default:
         PlaySE(SEQ_SE_DP_SELECT);
         if (appData->unk_672 == pocket->scroll + appData->unk_66C) {
-            return ov15_021FD810(appData, 20, 41, 33);
+            return ov15_021FD810(appData, 20, 41, BAG_APP_STATE_33);
         } else {
-            return ov15_021FD810(appData, 20, 42, 33);
+            return ov15_021FD810(appData, 20, 42, BAG_APP_STATE_33);
         }
     }
 
@@ -1472,10 +1472,10 @@ BagAppState ov15_021FB5AC(BagAppData *appData) {
     case LIST_NOTHING_CHOSEN:
         break;
     case LIST_CANCEL:
-        return ov15_021FD7D0(appData, 19, 9, 8, 28);
+        return ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_28);
     default:
         appData->unk_948 = r1;
-        return ov15_021FD7D0(appData, r1 + 28, 9, 8, 29);
+        return ov15_021FD7D0(appData, r1 + 28, 9, 8, BAG_APP_STATE_29);
     }
 
     return BAG_APP_STATE_4;
@@ -1819,10 +1819,10 @@ BagAppState ov15_021FBD50(BagAppData *appData) {
         return BAG_APP_STATE_5;
     case 3:
         PlaySE(SEQ_SE_DP_SELECT);
-        return ov15_021FD7D0(appData, 38, 9, 8, 6);
+        return ov15_021FD7D0(appData, 38, 9, 8, BAG_APP_STATE_6);
     case 4:
         PlaySE(SEQ_SE_GS_GEARCANCEL);
-        return ov15_021FD7D0(appData, 19, 9, 8, 7);
+        return ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_7);
     }
     return BAG_APP_STATE_5;
 }
@@ -2102,7 +2102,7 @@ BagAppState ov15_021FC41C(BagAppData *appData) {
             return BAG_APP_STATE_15;
         } else {
             appData->unk_234->unk68 = 4;
-            return ov15_021FD810(appData, 20, 41, 36);
+            return ov15_021FD810(appData, 20, 41, BAG_APP_STATE_36);
         }
     }
 
@@ -2238,10 +2238,10 @@ BagAppState ov15_021FC7EC(BagAppData *appData) {
         if (appData->unk_644 >= 8 && appData->unk_644 <= 13) {
             ov15_021FA0E4(appData, appData->unk_644);
         }
-        return ov15_021FD7D0(appData, 19, 9, 8, 36);
+        return ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_36);
     }
     if (sp8 == 1) {
-        return ov15_021FD810(appData, 20, 41, 34);
+        return ov15_021FD810(appData, 20, 41, BAG_APP_STATE_34);
     }
 
     return BAG_APP_STATE_16;
@@ -2374,10 +2374,10 @@ BagAppState ov15_021FCDE4(BagAppData *appData) {
         return BAG_APP_STATE_18;
     case 3:
         PlaySE(SEQ_SE_DP_SELECT);
-        return ov15_021FD7D0(appData, 38, 9, 8, 19);
+        return ov15_021FD7D0(appData, 38, 9, 8, BAG_APP_STATE_19);
     case 4:
         PlaySE(SEQ_SE_GS_GEARCANCEL);
-        return ov15_021FD7D0(appData, 19, 9, 8, 20);
+        return ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_20);
     }
 
     return BAG_APP_STATE_18;
@@ -2629,4 +2629,80 @@ void ov15_021FD574(BagAppData *appData, u32 a1, int a2, int a3) {
         Heap_Free(r5);
         break;
     }
+}
+
+void ov15_021FD774(BagAppData *appData, MenuInputState state) {
+    if (appData->unk_234->menuInputStateMgr != NULL) {
+        MenuInputStateMgr_SetState(appData->unk_234->menuInputStateMgr, state);
+    }
+}
+
+void ov15_021FD788(BagAppData *appData, int a1) {
+    if (a1 == 1) {
+        ov15_022004DC(appData, 1);
+        ov15_021FF29C(appData, 0);
+        ScheduleWindowCopyToVram(&appData->unk_004[7]);
+        ManagedSprite_SetAnimationFrame(appData->unk_250[19], 0);
+        ManagedSprite_SetAnim(appData->unk_250[19], 16);
+    } else {
+        ov15_022004DC(appData, 0);
+        ov15_021FF844(appData);
+    }
+}
+
+BagAppState ov15_021FD7D0(BagAppData *appData, u8 a1, u8 a2, u8 a3, BagAppState a4) {
+    BagAppData_Sub940 *r0 = &appData->unk_940;
+    r0->unk_2 = 0;
+    r0->unk_0 = a1;
+    r0->unk_1_0 = a2;
+    r0->unk_1_4 = a3;
+    r0->unk_4 = a4;
+    r0->unk_3_0 = 0;
+    r0->unk_3_4 = 0;
+    return BAG_APP_STATE_35;
+}
+
+BagAppState ov15_021FD810(BagAppData *appData, u8 a1, u8 a2, BagAppState a3) {
+    BagAppData_Sub940 *r0 = &appData->unk_940;
+    r0->unk_2 = 1;
+    r0->unk_0 = a1;
+    r0->unk_4 = a3;
+    r0->unk_3_0 = 0;
+    r0->unk_3_4 = 0;
+    ManagedSprite_SetAnimationFrame(appData->unk_250[a1], 0);
+    ManagedSprite_SetAnim(appData->unk_250[a1], a2);
+    return BAG_APP_STATE_35;
+}
+
+BagAppState ov15_021FD850(BagAppData *appData) {
+    BagAppData_Sub940 *r4 = &appData->unk_940;
+
+    if (r4->unk_2 == 1) {
+        if (!ManagedSprite_IsAnimated(appData->unk_250[r4->unk_0])) {
+            return r4->unk_4;
+        }
+    } else {
+        switch (r4->unk_3_0) {
+        case 0:
+            ManagedSprite_SetPaletteOverride(appData->unk_250[r4->unk_0], r4->unk_1_0);
+            ++r4->unk_3_0;
+            break;
+        case 1:
+            ++r4->unk_3_4;
+            if (r4->unk_3_4 == 4) {
+                ManagedSprite_SetPaletteOverride(appData->unk_250[r4->unk_0], r4->unk_1_4);
+                r4->unk_3_4 = 0;
+                ++r4->unk_3_0;
+            }
+            break;
+        case 2:
+            ++r4->unk_3_4;
+            if (r4->unk_3_4 == 2) {
+                return r4->unk_4;
+            }
+            break;
+        }
+    }
+
+    return BAG_APP_STATE_35;
 }
