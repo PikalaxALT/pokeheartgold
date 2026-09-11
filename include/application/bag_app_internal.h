@@ -173,6 +173,7 @@ void ov15_021FFECC(BagAppData *appData, int a1);
 void ov15_021FFF24(BagAppData *appData);
 void ov15_021FFF34(BagAppData *appData, int a1);
 void ov15_021FFFDC(BagAppData *appData, int a1);
+void ov15_0220005C(BagAppData *appdata, int a1, int a2, int a3);
 void ov15_02200030(BagAppData *appData, u8 pocket);
 void ov15_02200140(BagAppData *appData, BagViewPocket *pocket, int a2, int a3);
 void ov15_022001C4(BagAppData *appData, BagViewPocket *pocket, int a2);

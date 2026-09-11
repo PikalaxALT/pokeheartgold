@@ -134,7 +134,7 @@ BOOL ov15_021FD3F0(u8 pocket, u16 itemId);
 void ov15_021FD404(BagAppData *appData, int a1, int pocket);
 void ov15_021FD43C(BgConfig *bgConfig, int bgId, int a2);
 void ov15_021FD4C0(BgConfig *bgConfig, int bgId, int a2, int a3);
-void ov15_021FD574(BagAppData *appData, int a1, int a2, int a3);
+void ov15_021FD574(BagAppData *appData, u32 a1, int a2, int a3);
 void ov15_021FD774(BagAppData *appData, MenuInputState a1);
 void ov15_021FD788(BagAppData *appData, int a1);
 BagAppState ov15_021FD7D0(BagAppData *appData, u8 a1, int a2, int a3, int a4);
@@ -2567,5 +2567,66 @@ void ov15_021FD4C0(BgConfig *bgConfig, int bgId, int a2, int a3) {
         } else {
             LoadRectToBgTilemapRect(bgConfig, bgId, sp18 + 0x360, r3[0], r3[1], r3[2], r3[3]);
         }
+    }
+}
+
+void ov15_021FD574(BagAppData *appData, u32 a1, int a2, int a3) {
+    NNSG2dScreenData *sp4;
+    void *r5;
+
+    GF_ASSERT(a1 <= 4);
+
+    switch (a1) {
+    case 0:
+        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 43, FALSE, &sp4, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->unk_000, GF_BG_LYR_SUB_1, sp4->rawData, sp4->szByte);
+        DC_FlushRange(GetBgTilemapBuffer(appData->unk_000, GF_BG_LYR_SUB_1), sp4->szByte);
+        ov15_021FD43C(appData->unk_000, GF_BG_LYR_SUB_1, a2);
+        ScheduleBgTilemapBufferTransfer(appData->unk_000, GF_BG_LYR_SUB_1);
+        Heap_Free(r5);
+
+        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 39, FALSE, &sp4, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->unk_000, GF_BG_LYR_SUB_2, sp4->rawData, sp4->szByte);
+        ScheduleBgTilemapBufferTransfer(appData->unk_000, GF_BG_LYR_SUB_2);
+        Heap_Free(r5);
+
+        ov15_0220005C(appData, 0, 0, 0);
+        break;
+    case 1:
+        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 44, FALSE, &sp4, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->unk_000, GF_BG_LYR_SUB_1, sp4->rawData, sp4->szByte);
+        DC_FlushRange(GetBgTilemapBuffer(appData->unk_000, GF_BG_LYR_SUB_1), sp4->szByte);
+        ov15_021FD4C0(appData->unk_000, GF_BG_LYR_SUB_1, a2, a3);
+        ScheduleBgTilemapBufferTransfer(appData->unk_000, GF_BG_LYR_SUB_1);
+        Heap_Free(r5);
+
+        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 42, FALSE, &sp4, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->unk_000, GF_BG_LYR_SUB_2, sp4->rawData, sp4->szByte);
+        ScheduleBgTilemapBufferTransfer(appData->unk_000, GF_BG_LYR_SUB_2);
+        Heap_Free(r5);
+
+        ov15_02200294(appData);
+        ov15_0220005C(appData, a2, ov15_021FA098(appData), 0);
+        break;
+    case 2:
+        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 45, FALSE, &sp4, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->unk_000, GF_BG_LYR_SUB_2, sp4->rawData, sp4->szByte);
+        ScheduleBgTilemapBufferTransfer(appData->unk_000, GF_BG_LYR_SUB_2);
+        Heap_Free(r5);
+        ov15_021FD43C(appData->unk_000, GF_BG_LYR_SUB_1, a2);
+        ScheduleBgTilemapBufferTransfer(appData->unk_000, GF_BG_LYR_SUB_1);
+        break;
+    case 3:
+        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 52, FALSE, &sp4, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->unk_000, GF_BG_LYR_SUB_2, sp4->rawData, sp4->szByte);
+        ScheduleBgTilemapBufferTransfer(appData->unk_000, GF_BG_LYR_SUB_2);
+        Heap_Free(r5);
+        break;
+    case 4:
+        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 53, FALSE, &sp4, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->unk_000, GF_BG_LYR_SUB_2, sp4->rawData, sp4->szByte);
+        ScheduleBgTilemapBufferTransfer(appData->unk_000, GF_BG_LYR_SUB_2);
+        Heap_Free(r5);
+        break;
     }
 }
