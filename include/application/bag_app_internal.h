@@ -87,7 +87,7 @@ typedef BagAppState (*BagAppDataUnkFunc7F0)(BagAppData *);
 
 typedef struct BagAppData_Sub808_Sub014 {
     NNSG3dRenderObj unk_00;
-    NNSG3dResMdl *unk_54;
+    NNSG3dResMdl *resMdl;
     NNSG3dResFileHeader *unk_58;
     void *unk_5C[8];
     void *unk_7C[8];
@@ -95,47 +95,47 @@ typedef struct BagAppData_Sub808_Sub014 {
     NNSG3dAnmObj *unk_A0[8];
     NNSG3dAnmObj *unk_C0[8];
     NNSG3dAnmObj *unk_E0;
-    int unk_E4;
+    int pocketIdx;
 } BagAppData_Sub808_Sub014;
 
 typedef struct BagAppData_Sub808 {
-    NNSFndAllocator unk_000;
-    Camera *unk_010;
-    BagAppData_Sub808_Sub014 unk_014;
+    NNSFndAllocator allocator;
+    Camera *camera;
+    BagAppData_Sub808_Sub014 obj;
     VecFx32 unk_0FC;
-    CameraParam unk_108;
+    CameraParam cameraParam;
     int unk_11C;
     int unk_120;
     int unk_124;
     u16 unk_128;
     u16 unk_12A;
-    VecFx32 unk_12C;
+    VecFx32 translation;
 } BagAppData_Sub808;
 
 struct BagAppData {
-    BgConfig *unk_000;
-    Window unk_004[35];
-    BagView *unk_234;
-    Bag *unk_238;
-    PlayerProfile *unk_23C;
-    Options *unk_240;
+    BgConfig *bgConfig;
+    Window windows[35];
+    BagView *bagView;
+    Bag *bag;
+    PlayerProfile *playerProfile;
+    Options *options;
     NARC *unk_244;
     u8 filler_248[4];
-    SpriteManager *unk_24C;
-    ManagedSprite *unk_250[39];
-    MessagePrinter *unk_2EC;
-    MsgData *unk_2F0;
-    MessageFormat *unk_2F4;
+    SpriteManager *spriteManager;
+    ManagedSprite *sprites[39];
+    MessagePrinter *msgPrinter;
+    MsgData *msgData;
+    MessageFormat *msgFormat;
     MsgData *unk_2F8;
     MsgData *unk_2FC;
     u8 unk_300[0x48];
     int unk_348;
     u8 filler_34C[4];
-    String *unk_350[NUM_BAG_STRINGS];
-    String *unk_5E4;
+    String *itemNameStrings[NUM_BAG_STRINGS];
+    String *formattedStrbuf;
     u8 filler_5E8[0x2C];
     u8 unk_614;
-    u8 unk_615;
+    u8 gender;
     u8 unk_616;
     u8 unk_617;
     u8 unk_618;
@@ -161,8 +161,8 @@ struct BagAppData {
     u8 filler_69C[8];
     u16 unk_6A4[165];
     BagAppDataUnkFunc7F0 unk_7F0[5];
-    YesNoPrompt *unk_804;
-    BagAppData_Sub808 unk_808;
+    YesNoPrompt *yesNoPrompt;
+    BagAppData_Sub808 threeDimState;
     BagAppData_Sub940 unk_940;
     int unk_948;
 }; // size: 0x94C
