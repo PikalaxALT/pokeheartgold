@@ -12,6 +12,7 @@
 #include "bg_window.h"
 #include "field_use_item.h"
 #include "font.h"
+#include "gf_3d_render.h"
 #include "gf_gfx_loader.h"
 #include "gf_gfx_planes.h"
 #include "list_menu_items.h"
@@ -141,9 +142,11 @@ BagAppState ov15_021FD7D0(BagAppData *appData, u8 a1, u8 a2, u8 a3, BagAppState 
 BagAppState ov15_021FD810(BagAppData *appData, u8 a1, u8 a2, BagAppState a3);
 BagAppState ov15_021FD850(BagAppData *appData);
 void ov15_021FD93C(BagAppData *appData);
-void ov15_021FDAF4(void *a0, int a1, int a2);
+void ov15_021FDAD0(BagAppData_Sub808 *a0);
+void ov15_021FDAF4(BagAppData_Sub808 *a0, int a1, int a2);
 void ov15_021FDC6C(BagAppData *appData);
 int ov15_021FDC88(BagAppData *appData);
+void ov15_021FDD70(BagAppData *appData);
 void ov15_021FDF88(BagAppData *appData);
 
 extern const u8 ov15_022008B0[8];
@@ -2705,4 +2708,41 @@ BagAppState ov15_021FD850(BagAppData *appData) {
     }
 
     return BAG_APP_STATE_35;
+}
+
+extern const GXRgb ov15_02201304[];
+extern const VecFx32 ov15_02200500;
+extern const VecFx32 ov15_0220050C;
+extern const CameraParam ov15_0220053C;
+
+void ov15_021FD93C(BagAppData *appData) {
+    GF3dRender_InitSimpleManager(HEAP_ID_BAG);
+    G3X_AntiAlias(TRUE);
+    G3X_SetFog(FALSE, GX_FOGBLEND_COLOR_ALPHA, GX_FOGSLOPE_0x8000, 0);
+    G3X_SetClearColor(RGB_BLACK, 0, 0x7FFF, 0, FALSE);
+    NNS_G3dGlbMaterialColorDiffAmb(GX_RGB(15, 15, 15), GX_RGB(10, 10, 10), FALSE);
+    NNS_G3dGlbMaterialColorSpecEmi(GX_RGB(15, 15, 15), GX_RGB(15, 15, 15), FALSE);
+    NNS_G3dGlbPolygonAttr(15, GX_POLYGONMODE_MODULATE, GX_CULL_NONE, 0, 31, 0);
+    G3X_EdgeMarking(TRUE);
+    G3X_SetEdgeColorTable(ov15_02201304);
+    SetBgPriority(GF_BG_LYR_MAIN_0, 0);
+    GfGfx_EngineATogglePlanes(GX_PLANEMASK_BG0, GF_PLANE_TOGGLE_ON);
+
+    appData->unk_808.unk_010 = Camera_New(HEAP_ID_BAG);
+    appData->unk_808.unk_0FC = ov15_02200500;
+    appData->unk_808.unk_108 = ov15_0220053C;
+    Camera_Init_FromTargetDistanceAndAngle(&appData->unk_808.unk_0FC, appData->unk_808.unk_108.distance, &appData->unk_808.unk_108.angle, appData->unk_808.unk_108.perspective, appData->unk_808.unk_108.perspectiveType, TRUE, appData->unk_808.unk_010);
+    appData->unk_808.unk_12C = ov15_0220050C;
+    ov15_021FDAD0(&appData->unk_808);
+    ov15_021FDAF4(&appData->unk_808, appData->unk_234->curPocket + 1, 7);
+    Camera_SetPerspectiveClippingPlane(FX32_CONST(123), FX32_CONST(1700), appData->unk_808.unk_010);
+    Camera_SetStaticPtr(appData->unk_808.unk_010);
+    for (int i = 0; i < 4u; ++i) {
+        NNS_G3dGlbLightVector((GXLightId)i, FX32_ONE, 0, 0);
+        NNS_G3dGlbLightColor((GXLightId)i, RGB_WHITE);
+    }
+
+    ov15_021FDD70(appData);
+    GfGfx_EngineATogglePlanes(GX_PLANEMASK_BG0, GF_PLANE_TOGGLE_ON); // didn't we just do this?
+    G2_SetBG0Priority(2);
 }

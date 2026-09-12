@@ -27,179 +27,6 @@
 	.extern ov15_021FD43C
 	.extern ov15_021FD4C0
 
-	thumb_func_start ov15_021FD93C
-ov15_021FD93C: ; 0x021FD93C
-	push {r4, r5, r6, r7, lr}
-	sub sp, #0xc
-	add r5, r0, #0
-	mov r0, #6
-	bl GF3dRender_InitSimpleManager
-	ldr r2, _021FDA94 ; =0x04000060
-	ldr r0, _021FDA98 ; =0xFFFFCFFF
-	ldrh r1, [r2]
-	and r1, r0
-	mov r0, #0x10
-	orr r0, r1
-	strh r0, [r2]
-	mov r0, #0
-	add r1, r0, #0
-	add r2, r0, #0
-	add r3, r0, #0
-	bl G3X_SetFog
-	mov r0, #0
-	ldr r2, _021FDA9C ; =0x00007FFF
-	add r1, r0, #0
-	add r3, r0, #0
-	str r0, [sp]
-	bl G3X_SetClearColor
-	ldr r0, _021FDAA0 ; =0x00003DEF
-	ldr r1, _021FDAA4 ; =0x0000294A
-	mov r2, #0
-	bl NNS_G3dGlbMaterialColorDiffAmb
-	ldr r0, _021FDAA0 ; =0x00003DEF
-	mov r2, #0
-	add r1, r0, #0
-	bl NNS_G3dGlbMaterialColorSpecEmi
-	mov r0, #0x1f
-	mov r1, #0
-	str r0, [sp]
-	mov r0, #0xf
-	mov r2, #3
-	add r3, r1, #0
-	str r1, [sp, #4]
-	bl NNS_G3dGlbPolygonAttr
-	ldr r2, _021FDA94 ; =0x04000060
-	ldr r0, _021FDA98 ; =0xFFFFCFFF
-	ldrh r1, [r2]
-	and r1, r0
-	mov r0, #0x20
-	orr r0, r1
-	strh r0, [r2]
-	ldr r0, _021FDAA8 ; =ov15_02201304
-	bl G3X_SetEdgeColorTable
-	mov r0, #0
-	add r1, r0, #0
-	bl SetBgPriority
-	mov r0, #1
-	add r1, r0, #0
-	bl GfGfx_EngineATogglePlanes
-	mov r0, #6
-	bl Camera_New
-	ldr r2, _021FDAAC ; =0x00000818
-	ldr r4, _021FDAB0 ; =ov15_02200500
-	str r0, [r5, r2]
-	add r0, r2, #0
-	add r0, #0xec
-	add r3, r5, r0
-	ldmia r4!, {r0, r1}
-	add r6, r3, #0
-	stmia r3!, {r0, r1}
-	ldr r0, [r4]
-	ldr r4, _021FDAB4 ; =ov15_0220053C
-	str r0, [r3]
-	add r0, r2, #0
-	add r0, #0xf8
-	add r3, r5, r0
-	ldmia r4!, {r0, r1}
-	stmia r3!, {r0, r1}
-	ldmia r4!, {r0, r1}
-	stmia r3!, {r0, r1}
-	ldr r0, [r4]
-	str r0, [r3]
-	ldr r3, _021FDAB8 ; =0x0000091C
-	ldrb r0, [r5, r3]
-	add r1, r3, #0
-	sub r1, #0xc
-	str r0, [sp]
-	mov r0, #1
-	str r0, [sp, #4]
-	ldr r0, [r5, r2]
-	add r2, r3, #0
-	str r0, [sp, #8]
-	add r3, r3, #2
-	sub r2, #8
-	ldrh r3, [r5, r3]
-	ldr r1, [r5, r1]
-	add r0, r6, #0
-	add r2, r5, r2
-	bl Camera_Init_FromTargetDistanceAndAngle
-	ldr r0, _021FDABC ; =0x00000934
-	ldr r3, _021FDAC0 ; =ov15_0220050C
-	add r2, r5, r0
-	ldmia r3!, {r0, r1}
-	stmia r2!, {r0, r1}
-	ldr r0, [r3]
-	str r0, [r2]
-	ldr r0, _021FDAC4 ; =0x00000808
-	add r0, r5, r0
-	bl ov15_021FDAD0
-	mov r1, #0x8d
-	lsl r1, r1, #2
-	ldr r1, [r5, r1]
-	ldr r0, _021FDAC4 ; =0x00000808
-	add r1, #0x64
-	ldrb r1, [r1]
-	add r0, r5, r0
-	mov r2, #7
-	add r1, r1, #1
-	bl ov15_021FDAF4
-	ldr r2, _021FDAAC ; =0x00000818
-	mov r0, #0x7b
-	ldr r1, _021FDAC8 ; =0x006A4000
-	ldr r2, [r5, r2]
-	lsl r0, r0, #0xc
-	bl Camera_SetPerspectiveClippingPlane
-	ldr r0, _021FDAAC ; =0x00000818
-	ldr r0, [r5, r0]
-	bl Camera_SetStaticPtr
-	mov r6, #1
-	ldr r7, _021FDA9C ; =0x00007FFF
-	mov r4, #0
-	lsl r6, r6, #0xc
-_021FDA58:
-	mov r2, #0
-	add r0, r4, #0
-	add r1, r6, #0
-	add r3, r2, #0
-	bl NNS_G3dGlbLightVector
-	add r0, r4, #0
-	add r1, r7, #0
-	bl NNS_G3dGlbLightColor
-	add r4, r4, #1
-	cmp r4, #4
-	blo _021FDA58
-	add r0, r5, #0
-	bl ov15_021FDD70
-	mov r0, #1
-	add r1, r0, #0
-	bl GfGfx_EngineATogglePlanes
-	ldr r1, _021FDACC ; =0x04000008
-	mov r0, #3
-	ldrh r2, [r1]
-	bic r2, r0
-	mov r0, #2
-	orr r0, r2
-	strh r0, [r1]
-	add sp, #0xc
-	pop {r4, r5, r6, r7, pc}
-	nop
-_021FDA94: .word 0x04000060
-_021FDA98: .word 0xFFFFCFFF
-_021FDA9C: .word 0x00007FFF
-_021FDAA0: .word 0x00003DEF
-_021FDAA4: .word 0x0000294A
-_021FDAA8: .word ov15_02201304
-_021FDAAC: .word 0x00000818
-_021FDAB0: .word ov15_02200500
-_021FDAB4: .word ov15_0220053C
-_021FDAB8: .word 0x0000091C
-_021FDABC: .word 0x00000934
-_021FDAC0: .word ov15_0220050C
-_021FDAC4: .word 0x00000808
-_021FDAC8: .word 0x006A4000
-_021FDACC: .word 0x04000008
-	thumb_func_end ov15_021FD93C
-
 	thumb_func_start ov15_021FDAD0
 ov15_021FDAD0: ; 0x021FDAD0
 	mov r2, #0x47
@@ -5527,13 +5354,16 @@ ov15_022004F4: ; 0x022004F4
 
 	.global ov15_02200500
 ov15_02200500: ; 0x02200500
-	.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	.word 0x00000000
+	.word 0x00000000
+	.word 0x00000000
 	.size ov15_02200500,.-ov15_02200500
 
 	.global ov15_0220050C
 ov15_0220050C: ; 0x0220050C
-	.byte 0x00, 0x00, 0x00, 0x00
-	.byte 0x00, 0x30, 0xFD, 0xFF, 0x00, 0x00, 0x00, 0x00
+	.word 0x00000000
+	.word 0xFFFD3000
+	.word 0x00000000
 	.size ov15_0220050C,.-ov15_0220050C
 
 	.global ov15_02200518
@@ -5553,8 +5383,15 @@ ov15_02200528: ; 0x02200528
 
 	.global ov15_0220053C
 ov15_0220053C: ; 0x0220053C
-	.byte 0x51, 0x3B, 0x15, 0x00
-	.byte 0x82, 0xE9, 0x20, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x0A, 0x00, 0x00, 0x00, 0x00
+	.word 0x00153B51
+	.short 0xE982
+	.short 0x1420
+	.short 0x0000
+	.short 0x0000
+	.byte 0x00
+	.short 0x0A01
+	.byte 0x00
+	.balign 4, 0
 	.size ov15_0220053C,.-ov15_0220053C
 
 	.global ov15_02200550

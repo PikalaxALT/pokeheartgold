@@ -5,12 +5,17 @@
 
 #include "bag_types_def.h"
 #include "bg_window.h"
+#include "camera.h"
 #include "message_format.h"
 #include "message_printer.h"
 #include "msgdata.h"
 #include "player_data.h"
 #include "sprite_system.h"
 #include "yes_no_prompt.h"
+
+/** Make sure we have the correct capacity for our string buffer array */
+#define max(a, b)       ((a) > (b) ? (a) : (b))
+#define NUM_BAG_STRINGS (max(max(max(max(max(max(max(NUM_BAG_ITEMS, NUM_BAG_MEDICINE), NUM_BAG_BALLS), NUM_BAG_TMS_HMS), NUM_BAG_BERRIES), NUM_BAG_MAIL), NUM_BAG_BATTLE_ITEMS), NUM_BAG_KEY_ITEMS))
 
 typedef enum BagAppState {
     BAG_APP_STATE_0,
@@ -80,8 +85,19 @@ typedef struct BagAppData BagAppData;
 
 typedef BagAppState (*BagAppDataUnkFunc7F0)(BagAppData *);
 
-#define max(a, b)       ((a) > (b) ? (a) : (b))
-#define NUM_BAG_STRINGS (max(max(max(max(max(max(max(NUM_BAG_ITEMS, NUM_BAG_MEDICINE), NUM_BAG_BALLS), NUM_BAG_TMS_HMS), NUM_BAG_BERRIES), NUM_BAG_MAIL), NUM_BAG_BATTLE_ITEMS), NUM_BAG_KEY_ITEMS))
+typedef struct BagAppData_Sub808 {
+    u8 unk_000[0x10];
+    Camera *unk_010;
+    u8 filler_014[0xE8];
+    VecFx32 unk_0FC;
+    CameraParam unk_108;
+    int unk_11C;
+    int unk_120;
+    int unk_124;
+    u16 unk_128;
+    u16 unk_12A;
+    VecFx32 unk_12C;
+} BagAppData_Sub808;
 
 struct BagAppData {
     BgConfig *unk_000;
@@ -133,7 +149,7 @@ struct BagAppData {
     u16 unk_6A4[165];
     BagAppDataUnkFunc7F0 unk_7F0[5];
     YesNoPrompt *unk_804;
-    u8 unk_808[0x138];
+    BagAppData_Sub808 unk_808;
     BagAppData_Sub940 unk_940;
     int unk_948;
 }; // size: 0x94C
