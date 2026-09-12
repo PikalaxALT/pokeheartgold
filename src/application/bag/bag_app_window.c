@@ -74,3 +74,37 @@ void ov15_021FE204(BagAppData *appData) {
         FillWindowPixelBuffer(&appData->windows3[23], 0);
     }
 }
+
+void ov15_021FE3E0(BagAppData *appData) {
+    int i; // forward decl is required to match
+
+    if (appData->windows3[12].bgConfig != NULL) {
+        for (i = 0; i < 3; ++i) {
+            ClearWindowTilemapAndScheduleTransfer(&appData->windows3[17 + i]);
+            RemoveWindow(&appData->windows3[17 + i]);
+            appData->windows3[17 + i].bgConfig = NULL;
+        }
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows3[23]);
+        RemoveWindow(&appData->windows3[23]);
+        appData->windows3[23].bgConfig = NULL;
+
+        RemoveWindow(&appData->windows3[22]);
+        appData->windows3[22].bgConfig = NULL;
+
+        RemoveWindow(&appData->windows3[21]);
+        appData->windows3[21].bgConfig = NULL;
+
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows3[20]);
+        RemoveWindow(&appData->windows3[20]);
+        appData->windows3[20].bgConfig = NULL;
+
+        for (i = 0; i < 4; ++i) {
+            ClearWindowTilemapAndScheduleTransfer(&appData->windows3[13 + i]);
+            RemoveWindow(&appData->windows3[13 + i]);
+            appData->windows3[13 + i].bgConfig = NULL;
+        }
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows3[12]);
+        RemoveWindow(&appData->windows3[12]);
+        appData->windows3[12].bgConfig = NULL;
+    }
+}
