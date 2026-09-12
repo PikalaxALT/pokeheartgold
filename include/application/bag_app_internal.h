@@ -124,8 +124,8 @@ struct BagAppData {
     MessagePrinter *msgPrinter;
     MsgData *msgData;
     MessageFormat *msgFormat;
-    MsgData *unk_2F8;
-    MsgData *unk_2FC;
+    MsgData *itemNamesMsgdata;
+    MsgData *moveNamesMsgData;
     u8 unk_300[0x48];
     int unk_348;
     u8 filler_34C[4];

@@ -49,7 +49,7 @@ static void ov15_021F9984(void);
 static void ov15_021F99A4(BgConfig *bgConfig);
 static void ov15_021F9A8C(BgConfig *bgConfig);
 static void ov15_021F9AE4(BagAppData *appData);
-static void ov15_021F9CBC(BagAppData *appData);
+static void BagApp_InitMsgSystem(BagAppData *appData);
 static void ov15_021F9D28(BagAppData *appData);
 static void ov15_021F9D8C(MsgData *msgData, String *dest, u16 itemId, enum HeapID heapID);
 static void ov15_021F9D9C(MsgData *msgData, String *dest, u16 itemId, enum HeapID heapID);
@@ -349,7 +349,7 @@ BOOL Bag_Init(OverlayManager *man, int *state) {
     BeginNormalPaletteFade(FADE_SUB_THEN_MAIN, FADE_TYPE_DOWNWARD_IN, FADE_TYPE_DOWNWARD_IN, RGB_BLACK, 6, 1, HEAP_ID_BAG);
     SetKeyRepeatTimers(3, 8);
     ov15_021F9DB4(appData);
-    ov15_021F9CBC(appData);
+    BagApp_InitMsgSystem(appData);
     ov15_021FA008(appData);
     ov15_021F9D28(appData);
     ov15_021FA620(appData);
@@ -564,8 +564,8 @@ BOOL Bag_Exit(OverlayManager *man, int *state) {
         ov15_021FE8A4(appData);
         ov15_021FA028(appData);
         String_Delete(appData->formattedStrbuf);
-        DestroyMsgData(appData->unk_2FC);
-        DestroyMsgData(appData->unk_2F8);
+        DestroyMsgData(appData->moveNamesMsgData);
+        DestroyMsgData(appData->itemNamesMsgdata);
         DestroyMsgData(appData->msgData);
         MessagePrinter_Delete(appData->msgPrinter);
         MessageFormat_Delete(appData->msgFormat);
@@ -798,12 +798,12 @@ void ov15_021F9C78(BagAppData *appData, BOOL a1) {
     }
 }
 
-static void ov15_021F9CBC(BagAppData *appData) {
+static void BagApp_InitMsgSystem(BagAppData *appData) {
     appData->msgData = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, NARC_msg_msg_0010_bin, HEAP_ID_BAG);
     appData->msgPrinter = MessagePrinter_New(1, 2, 0, HEAP_ID_BAG);
     appData->msgFormat = MessageFormat_New(HEAP_ID_BAG);
-    appData->unk_2F8 = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, NARC_msg_msg_0222_bin, HEAP_ID_BAG);
-    appData->unk_2FC = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, NARC_msg_msg_0750_bin, HEAP_ID_BAG);
+    appData->itemNamesMsgdata = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, NARC_msg_msg_0222_bin, HEAP_ID_BAG);
+    appData->moveNamesMsgData = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, NARC_msg_msg_0750_bin, HEAP_ID_BAG);
     appData->formattedStrbuf = String_New(256, HEAP_ID_BAG);
 }
 
@@ -898,7 +898,7 @@ static void ov15_021F9F08(BagAppData *appData) {
             if (pocket->slots[i].id == ITEM_NONE || pocket->slots[i].quantity == 0) {
                 break;
             }
-            ov15_021F9D9C(appData->unk_2FC, appData->itemNameStrings[i], pocket->slots[i].id, HEAP_ID_BAG);
+            ov15_021F9D9C(appData->moveNamesMsgData, appData->itemNameStrings[i], pocket->slots[i].id, HEAP_ID_BAG);
             appData->unk_6A4[i] = pocket->slots[i].id;
         }
         pocket->count = i;
@@ -907,7 +907,7 @@ static void ov15_021F9F08(BagAppData *appData) {
             if (pocket->slots[i].id == ITEM_NONE || pocket->slots[i].quantity == 0) {
                 break;
             }
-            ov15_021F9D8C(appData->unk_2F8, appData->itemNameStrings[i], pocket->slots[i].id, HEAP_ID_BAG);
+            ov15_021F9D8C(appData->itemNamesMsgdata, appData->itemNameStrings[i], pocket->slots[i].id, HEAP_ID_BAG);
             appData->unk_6A4[i] = pocket->slots[i].id;
         }
         pocket->count = i;
