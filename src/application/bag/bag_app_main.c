@@ -1457,7 +1457,7 @@ static void ov15_021FAC48(BagAppData *appData) {
     ov15_021FB114(appData);
     ov15_02200294(appData);
     ov15_021FF560(appData);
-    ov15_021FF7AC(&appData->windows[24]);
+    ov15_021FF7AC(&appData->windows3[13]);
     ov15_021FED58(appData);
 
     {
@@ -1694,10 +1694,10 @@ static void ov15_021FB380(BagAppData *appData, u8 *a1) {
     appData->unk_66C = 0;
     ov15_021FFECC(appData, ov15_02201468[appData->unk_66C]);
     ov15_0220023C(appData, a1);
-    ov15_021FF758(&appData->windows[24], &appData->unk_300, a1[0]);
-    ov15_021FF758(&appData->windows[25], &appData->unk_300, a1[1]);
-    ov15_021FF758(&appData->windows[26], &appData->unk_300, a1[2]);
-    ov15_021FF758(&appData->windows[27], &appData->unk_300, a1[3]);
+    ov15_021FF758(&appData->windows3[13], &appData->unk_300, a1[0]);
+    ov15_021FF758(&appData->windows3[14], &appData->unk_300, a1[1]);
+    ov15_021FF758(&appData->windows3[15], &appData->unk_300, a1[2]);
+    ov15_021FF758(&appData->windows3[16], &appData->unk_300, a1[3]);
 }
 
 static int ov15_021FB3F0(BagAppData *appData) {
@@ -1776,7 +1776,7 @@ static BagAppState ov15_021FB5AC(BagAppData *appData) {
 static BagAppState ov15_021FB604(BagAppData *appData) {
     ov15_02200294(appData);
     ov15_021FF560(appData);
-    ov15_021FF7AC(&appData->windows[24]);
+    ov15_021FF7AC(&appData->windows3[13]);
     ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], ov15_021FA074(appData), 0);
     ov15_021FE868(appData);
     ov15_021FED3C(appData);
@@ -1786,7 +1786,7 @@ static BagAppState ov15_021FB604(BagAppData *appData) {
 
 static BagAppState ov15_021FB654(BagAppData *appData) {
     ov15_02200294(appData);
-    ov15_021FF7AC(&appData->windows[24]);
+    ov15_021FF7AC(&appData->windows3[13]);
     return appData->unk_7F0[appData->unk_948](appData);
 }
 
@@ -2224,7 +2224,7 @@ static BagAppState ov15_021FC224(BagAppData *appData) {
     } else {
         ov15_02200294(appData);
         ov15_021FF560(appData);
-        ov15_021FF7AC(&appData->windows[24]);
+        ov15_021FF7AC(&appData->windows3[13]);
         ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], ov15_021FA074(appData), 0);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
@@ -2239,7 +2239,7 @@ static BagAppState ov15_021FC2E0(BagAppData *appData) {
         ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
         ov15_02200294(appData);
         ov15_021FF560(appData);
-        ov15_021FF7AC(&appData->windows[24]);
+        ov15_021FF7AC(&appData->windows3[13]);
         ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], ov15_021FA074(appData), 0);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
@@ -2255,7 +2255,7 @@ static BagAppState ov15_021FC37C(BagAppData *appData) {
     Bag_UnregisterItem(appData->bag, appData->bagView->itemId);
     ov15_02200294(appData);
     ov15_021FF560(appData);
-    ov15_021FF7AC(&appData->windows[24]);
+    ov15_021FF7AC(&appData->windows3[13]);
     ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], ov15_021FA074(appData), 0);
     ov15_021FE868(appData);
     ov15_021FED3C(appData);
@@ -2692,7 +2692,7 @@ static BagAppState ov15_021FCFC8(BagAppData *appData) {
 
 static BagAppState ov15_021FD058(BagAppData *appData) {
     appData->unk_684 = 0;
-    sub_0200E5D4(&appData->windows[33], TRUE);
+    sub_0200E5D4(&appData->windows3[22], TRUE);
     sub_0200E5D4(&appData->windows[4], TRUE);
     ClearFrameAndWindow2(&appData->windows[3], TRUE);
     ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
@@ -2740,7 +2740,7 @@ static BagAppState BagAppMainTask_ConfirmSale_HandleYesNo(BagAppData *appData) {
     case YESNORESPONSE_NO:
         BagApp_DestroyYesNoPrompt(appData);
         appData->unk_684 = 0;
-        sub_0200E5D4(&appData->windows[33], TRUE);
+        sub_0200E5D4(&appData->windows3[22], TRUE);
         ClearFrameAndWindow2(&appData->windows[3], TRUE);
         ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
         ScheduleWindowCopyToVram(&appData->windows[0]);
@@ -2778,7 +2778,7 @@ static BagAppState BagAppMainTask_CompleteSale(BagAppData *appData) {
 static BagAppState BagAppMainTask_CompleteSale_WaitMessage(BagAppData *appData) {
     if (!TextPrinterCheckActive(appData->textPrinterId) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
         appData->unk_684 = 0;
-        sub_0200E5D4(&appData->windows[33], TRUE);
+        sub_0200E5D4(&appData->windows3[22], TRUE);
         ClearFrameAndWindow2(&appData->windows[3], TRUE);
         ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
         ScheduleWindowCopyToVram(&appData->windows[0]);

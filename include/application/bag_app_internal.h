@@ -112,7 +112,9 @@ typedef struct BagApp3DState {
 
 struct BagAppData {
     BgConfig *bgConfig;
-    Window windows[35];
+    Window windows[8];
+    Window windows2[3];
+    Window windows3[24];
     BagView *bagView;
     Bag *bag;
     PlayerProfile *playerProfile;
