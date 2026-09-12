@@ -18,33 +18,33 @@
 #define NUM_BAG_STRINGS (max(max(max(max(max(max(max(NUM_BAG_ITEMS, NUM_BAG_MEDICINE), NUM_BAG_BALLS), NUM_BAG_TMS_HMS), NUM_BAG_BERRIES), NUM_BAG_MAIL), NUM_BAG_BATTLE_ITEMS), NUM_BAG_KEY_ITEMS))
 
 typedef enum BagAppState {
-    BAG_APP_STATE_0,
-    BAG_APP_STATE_1,
-    BAG_APP_STATE_2,
+    BAG_APP_STATE_WAIT_FADE_AND_ENTER,
+    BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE,
+    BAG_APP_STATE_RETURN_FROM_SUBMENU,
     BAG_APP_STATE_3,
     BAG_APP_STATE_4,
-    BAG_APP_STATE_5,
-    BAG_APP_STATE_6,
+    BAG_APP_STATE_TOSS_SELECT_QUANTITY,
+    BAG_APP_STATE_CONFIRM_TOSS_PRINT_MESSAGE,
     BAG_APP_STATE_7,
-    BAG_APP_STATE_8,
-    BAG_APP_STATE_9,
-    BAG_APP_STATE_10,
-    BAG_APP_STATE_11,
+    BAG_APP_STATE_CONFIRM_TOSS_WAIT_MESSAGE,
+    BAG_APP_STATE_CONFIRM_TOSS_HANDLE_YESNO,
+    BAG_APP_STATE_COMPLETE_TOSS_WAIT_MESSAGE,
+    BAG_APP_STATE_COMPLETE_TOSS_WAIT_BUTTON,
     BAG_APP_STATE_12,
     BAG_APP_STATE_13,
-    BAG_APP_STATE_14,
-    BAG_APP_STATE_15,
-    BAG_APP_STATE_16,
+    BAG_APP_STATE_HANDLE_INPUT_GIVE_ITEM,
+    BAG_APP_STATE_GIVE_ITEM_ERROR_WAIT_MESSAGE,
+    BAG_APP_STATE_SELL_HANDLE_INPUT,
     BAG_APP_STATE_17,
     BAG_APP_STATE_18,
     BAG_APP_STATE_19,
     BAG_APP_STATE_20,
-    BAG_APP_STATE_21,
-    BAG_APP_STATE_22,
-    BAG_APP_STATE_23,
-    BAG_APP_STATE_24,
+    BAG_APP_STATE_CONFIRM_SALE_WAIT_MESSAGE,
+    BAG_APP_STATE_CONFIRM_SALE_WAIT_YESNO,
+    BAG_APP_STATE_COMPLETE_SALE,
+    BAG_APP_STATE_COMPLETE_SALE_WAIT_MESSAGE,
     BAG_APP_STATE_25,
-    BAG_APP_STATE_26,
+    BAG_APP_STATE_DEBUG,
     BAG_APP_STATE_27,
     BAG_APP_STATE_28,
     BAG_APP_STATE_29,
@@ -54,8 +54,8 @@ typedef enum BagAppState {
     BAG_APP_STATE_33,
     BAG_APP_STATE_34,
     BAG_APP_STATE_35,
-    BAG_APP_STATE_36,
-    BAG_APP_STATE_37,
+    BAG_APP_STATE_FADE_TO_EXIT,
+    BAG_APP_STATE_WAIT_FADE_AND_EXIT,
 } BagAppState;
 
 typedef struct BagAppData_Sub619 {
@@ -85,7 +85,7 @@ typedef struct BagAppData BagAppData;
 
 typedef BagAppState (*BagAppDataUnkFunc7F0)(BagAppData *);
 
-typedef struct BagAppData_Sub808_Sub014 {
+typedef struct BagApp3DModelData {
     NNSG3dRenderObj unk_00;
     NNSG3dResMdl *resMdl;
     NNSG3dResFileHeader *unk_58;
@@ -96,21 +96,19 @@ typedef struct BagAppData_Sub808_Sub014 {
     NNSG3dAnmObj *unk_C0[8];
     NNSG3dAnmObj *unk_E0;
     int pocketIdx;
-} BagAppData_Sub808_Sub014;
+} BagApp3DModelData;
 
-typedef struct BagAppData_Sub808 {
+typedef struct BagApp3DState {
     NNSFndAllocator allocator;
     Camera *camera;
-    BagAppData_Sub808_Sub014 obj;
-    VecFx32 unk_0FC;
+    BagApp3DModelData obj;
+    VecFx32 cameraTarget;
     CameraParam cameraParam;
-    int unk_11C;
-    int unk_120;
-    int unk_124;
-    u16 unk_128;
-    u16 unk_12A;
+    int cameraAnchorsQueue[3];
+    u16 frame;
+    u16 duration;
     VecFx32 translation;
-} BagAppData_Sub808;
+} BagApp3DState;
 
 struct BagAppData {
     BgConfig *bgConfig;
@@ -136,12 +134,12 @@ struct BagAppData {
     u8 filler_5E8[0x2C];
     u8 unk_614;
     u8 gender;
-    u8 unk_616;
+    u8 textPrinterId;
     u8 unk_617;
     u8 unk_618;
     BagAppData_Sub619 unk_619;
     u8 filler_624[0x20];
-    int unk_644;
+    int cursorPos;
     u8 filler_648[0x24];
     int unk_66C;
     u8 unk_670;
@@ -151,8 +149,8 @@ struct BagAppData {
     u8 filler_678[3];
     u8 unk_67B;
     BagAppDataUnkFunc7F0 unk_67C;
-    s16 unk_680;
-    u16 unk_682;
+    s16 quantity;
+    u16 maxQuantity;
     int unk_684;
     u8 filler_688[4];
     void *unk_68C;
@@ -162,10 +160,14 @@ struct BagAppData {
     u16 unk_6A4[165];
     BagAppDataUnkFunc7F0 unk_7F0[5];
     YesNoPrompt *yesNoPrompt;
-    BagAppData_Sub808 threeDimState;
+    BagApp3DState threeDimState;
     BagAppData_Sub940 unk_940;
     int unk_948;
 }; // size: 0x94C
+
+void ov15_021F9C78(BagAppData *appData, BOOL a1);
+u16 ov15_021F9D60(BagAppData *appData, int a1, BOOL a2);
+BOOL ov15_021FD3F0(u8 pocketId, u16 itemId);
 
 void ov15_021FE020(BagAppData *appData);
 void ov15_021FE154(BagAppData *appData);
