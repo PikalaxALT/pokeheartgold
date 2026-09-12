@@ -9,11 +9,6 @@
 
 	.extern ov15_021F9C78
 	.extern ov15_021F9D60
-	.extern ov15_021FA074
-	.extern ov15_021FA098
-	.extern ov15_021FA170
-	.extern ov15_021FA650
-	.extern ov15_021FB518
 	.extern ov15_021FB680
 	.extern ov15_021FBC6C
 	.extern ov15_021FBC8C
@@ -24,63 +19,6 @@
 	.extern ov15_021FC3EC
 	.extern ov15_021FD3C0
 	.extern ov15_021FD3F0
-	.extern ov15_021FD43C
-	.extern ov15_021FD4C0
-
-	thumb_func_start ov15_021FDAD0
-ov15_021FDAD0: ; 0x021FDAD0
-	mov r2, #0x47
-	lsl r2, r2, #2
-	mov r3, #0
-	str r3, [r0, r2]
-	add r1, r2, #4
-	str r3, [r0, r1]
-	add r1, r2, #0
-	sub r3, r3, #1
-	add r1, #8
-	str r3, [r0, r1]
-	add r1, r2, #0
-	mov r3, #7
-	add r1, #0xc
-	strh r3, [r0, r1]
-	add r2, #0xe
-	strh r3, [r0, r2]
-	bx lr
-	.balign 4, 0
-	thumb_func_end ov15_021FDAD0
-
-	thumb_func_start ov15_021FDAF4
-ov15_021FDAF4: ; 0x021FDAF4
-	push {r4, r5}
-	mov r4, #0x4a
-	lsl r4, r4, #2
-	add r3, r4, #2
-	ldrh r5, [r0, r4]
-	ldrh r3, [r0, r3]
-	cmp r5, r3
-	bne _021FDB22
-	add r3, r4, #0
-	sub r3, #8
-	ldr r5, [r0, r3]
-	add r3, r4, #0
-	sub r3, #0xc
-	str r5, [r0, r3]
-	add r3, r4, #0
-	sub r3, #8
-	str r1, [r0, r3]
-	mov r1, #0
-	strh r1, [r0, r4]
-	add r1, r4, #2
-	strh r2, [r0, r1]
-	pop {r4, r5}
-	bx lr
-_021FDB22:
-	sub r2, r4, #4
-	str r1, [r0, r2]
-	pop {r4, r5}
-	bx lr
-	.balign 4, 0
-	thumb_func_end ov15_021FDAF4
 
 	thumb_func_start ov15_021FDB2C
 ov15_021FDB2C: ; 0x021FDB2C

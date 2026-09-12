@@ -2746,3 +2746,22 @@ void ov15_021FD93C(BagAppData *appData) {
     GfGfx_EngineATogglePlanes(GX_PLANEMASK_BG0, GF_PLANE_TOGGLE_ON); // didn't we just do this?
     G2_SetBG0Priority(2);
 }
+
+void ov15_021FDAD0(BagAppData_Sub808 *a0) {
+    a0->unk_11C = 0;
+    a0->unk_120 = 0;
+    a0->unk_124 = -1;
+    a0->unk_128 = 7;
+    a0->unk_12A = 7;
+}
+
+void ov15_021FDAF4(BagAppData_Sub808 *a0, int a1, int a2) {
+    if (a0->unk_128 == a0->unk_12A) {
+        a0->unk_11C = a0->unk_120;
+        a0->unk_120 = a1;
+        a0->unk_128 = 0;
+        a0->unk_12A = a2;
+    } else {
+        a0->unk_124 = a1;
+    }
+}
