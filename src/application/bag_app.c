@@ -33,6 +33,12 @@
 #include "unk_0208805C.h"
 #include "vram_transfer_manager.h"
 
+typedef struct UnkStruct_ov15_02200790 {
+    CameraAngle unk_0;
+    fx32 unk_8;
+    fx32 unk_C;
+} UnkStruct_ov15_02200790;
+
 void BagApp_GetSaveStructPtrs(BagAppData *appData);
 RoamerSaveData *BagApp_GetSaveRoamers(BagAppData *appData);
 void BagApp_SetRepelStepCount(BagAppData *appData, u8 repelSteps);
@@ -144,6 +150,7 @@ BagAppState ov15_021FD850(BagAppData *appData);
 void ov15_021FD93C(BagAppData *appData);
 void ov15_021FDAD0(BagAppData_Sub808 *a0);
 void ov15_021FDAF4(BagAppData_Sub808 *a0, int a1, int a2);
+void ov15_021FDB2C(BagAppData_Sub808 *a0, int a1);
 void ov15_021FDC6C(BagAppData *appData);
 int ov15_021FDC88(BagAppData *appData);
 void ov15_021FDD70(BagAppData *appData);
@@ -2763,5 +2770,48 @@ void ov15_021FDAF4(BagAppData_Sub808 *a0, int a1, int a2) {
         a0->unk_12A = a2;
     } else {
         a0->unk_124 = a1;
+    }
+}
+
+extern const UnkStruct_ov15_02200790 ov15_02200790[][9];
+
+#define ABS(x) ((x) < 0 ? -(x) : (x))
+
+void ov15_021FDB2C(BagAppData_Sub808 *a0, int a1) {
+    const UnkStruct_ov15_02200790 *r4 = ov15_02200790[a1];
+    if (a0->unk_128 != a0->unk_12A) {
+        ++a0->unk_128;
+        fx32 r0 = ABS(r4[a0->unk_120].unk_0.x - r4[a0->unk_11C].unk_0.x);
+        int r1;
+        if (r4[a0->unk_120].unk_0.x < r4[a0->unk_11C].unk_0.x) {
+            r1 = -1;
+        } else {
+            r1 = 1;
+        }
+        if (r0 > FX32_ONE * 8) {
+            r0 = FX32_ONE * 16 - r0;
+            r1 *= -1;
+        }
+        fx32 sp14;
+        if (r1 > 0) {
+            sp14 = r4[a0->unk_11C].unk_0.x + r0 / a0->unk_12A * a0->unk_128;
+        } else {
+            sp14 = r4[a0->unk_11C].unk_0.x - r0 / a0->unk_12A * a0->unk_128;
+        }
+        fx32 sp10 = r4[a0->unk_11C].unk_0.y + (r4[a0->unk_120].unk_0.y - r4[a0->unk_11C].unk_0.y) / a0->unk_12A * a0->unk_128;
+        fx32 spC = r4[a0->unk_11C].unk_8 + (r4[a0->unk_120].unk_8 - r4[a0->unk_11C].unk_8) / a0->unk_12A * a0->unk_128;
+        fx32 r1_2 = r4[a0->unk_11C].unk_C + (r4[a0->unk_120].unk_C - r4[a0->unk_11C].unk_C) / a0->unk_12A * a0->unk_128;
+        a0->unk_108.angle.x = sp14;
+        a0->unk_108.angle.y = sp10;
+        a0->unk_108.distance = spC;
+        a0->unk_12C.y = r1_2;
+    }
+    if (a0->unk_128 == a0->unk_12A) {
+        if (a0->unk_124 != -1) {
+            a0->unk_11C = a0->unk_120;
+            a0->unk_120 = a0->unk_124;
+            a0->unk_124 = -1;
+            a0->unk_128 = 0;
+        }
     }
 }
