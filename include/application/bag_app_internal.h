@@ -85,10 +85,23 @@ typedef struct BagAppData BagAppData;
 
 typedef BagAppState (*BagAppDataUnkFunc7F0)(BagAppData *);
 
+typedef struct BagAppData_Sub808_Sub014 {
+    NNSG3dRenderObj unk_00;
+    NNSG3dResMdl *unk_54;
+    NNSG3dResFileHeader *unk_58;
+    void *unk_5C[8];
+    void *unk_7C[8];
+    void *unk_9C;
+    NNSG3dAnmObj *unk_A0[8];
+    NNSG3dAnmObj *unk_C0[8];
+    NNSG3dAnmObj *unk_E0;
+    int unk_E4;
+} BagAppData_Sub808_Sub014;
+
 typedef struct BagAppData_Sub808 {
-    u8 unk_000[0x10];
+    NNSFndAllocator unk_000;
     Camera *unk_010;
-    u8 filler_014[0xE8];
+    BagAppData_Sub808_Sub014 unk_014;
     VecFx32 unk_0FC;
     CameraParam unk_108;
     int unk_11C;

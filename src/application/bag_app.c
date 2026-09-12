@@ -29,6 +29,7 @@
 #include "system.h"
 #include "unk_02005D10.h"
 #include "unk_020210A0.h"
+#include "unk_02026E30.h"
 #include "unk_0203A3B0.h"
 #include "unk_0208805C.h"
 #include "vram_transfer_manager.h"
@@ -152,8 +153,10 @@ void ov15_021FDAD0(BagAppData_Sub808 *a0);
 void ov15_021FDAF4(BagAppData_Sub808 *a0, int a1, int a2);
 void ov15_021FDB2C(BagAppData_Sub808 *a0, int a1);
 void ov15_021FDC6C(BagAppData *appData);
-int ov15_021FDC88(BagAppData *appData);
+void ov15_021FDC88(BagAppData *appData);
+void ov15_021FDD54(NNSG3dAnmObj *animObj);
 void ov15_021FDD70(BagAppData *appData);
+void ov15_021FDF20(BagAppData *appdata);
 void ov15_021FDF88(BagAppData *appData);
 
 extern const u8 ov15_022008B0[8];
@@ -2814,4 +2817,89 @@ void ov15_021FDB2C(BagAppData_Sub808 *a0, int a1) {
             a0->unk_128 = 0;
         }
     }
+}
+
+void ov15_021FDC6C(BagAppData *appData) {
+    ov15_021FDF20(appData);
+    Camera_Delete(appData->unk_808.unk_010);
+    GF3dRender_DeleteSimpleManager();
+}
+
+void ov15_021FDC88(BagAppData *appData) {
+    extern const MtxFx33 ov15_022005CC;
+    MtxFx33 sp18 = ov15_022005CC;
+
+    extern const VecFx32 ov15_022004F4;
+    VecFx32 spC = ov15_022004F4;
+
+    ov15_021FDB2C(&appData->unk_808, appData->unk_615);
+    Camera_Init_FromTargetDistanceAndAngle(&appData->unk_808.unk_0FC, appData->unk_808.unk_108.distance, &appData->unk_808.unk_108.angle, appData->unk_808.unk_108.perspective, appData->unk_808.unk_108.perspectiveType, TRUE, appData->unk_808.unk_010);
+    Thunk_G3X_Reset();
+    Camera_PushLookAtToNNSGlb();
+    BagAppData_Sub808_Sub014 *r4 = &appData->unk_808.unk_014;
+    ov15_021FDD54(r4->unk_A0[r4->unk_E4]);
+    ov15_021FDD54(r4->unk_C0[r4->unk_E4]);
+    ov15_021FDD54(r4->unk_E0);
+    GF3dRender_DrawModel(&r4->unk_00, &appData->unk_808.unk_12C, &sp18, &spC);
+    RequestSwap3DBuffers(GX_SORTMODE_AUTO, GX_BUFFERMODE_Z);
+}
+
+void ov15_021FDD54(NNSG3dAnmObj *animObj) {
+    if (animObj->frame + FX32_ONE < NNS_G3dAnmObjGetNumFrame(animObj)) {
+        animObj->frame += FX32_ONE;
+    } else {
+        animObj->frame = 0;
+    }
+}
+
+void ov15_021FDD70(BagAppData *appData) {
+    NARC *sp10;
+    BagAppData_Sub808_Sub014 *r4;
+    NNSG3dResTex *spC;
+    void *sp14;
+    u32 sp8, sp4, sp0, r1;
+    u32 i;
+
+    sp10 = NARC_New(NARC_a_0_1_5, HEAP_ID_BAG);
+    HeapExp_FndInitAllocator(&appData->unk_808.unk_000, HEAP_ID_BAG, 4);
+    r4 = &appData->unk_808.unk_014;
+    if (appData->unk_615 == 0) {
+        r1 = 55;
+        sp8 = 57;
+        sp4 = 65;
+        sp0 = 73;
+    } else {
+        r1 = 74;
+        sp8 = 76;
+        sp4 = 84;
+        sp0 = 92;
+    }
+    r4->unk_58 = NARC_AllocAndReadWholeMember(sp10, r1, HEAP_ID_BAG);
+    GF3dRender_InitObjFromHeader(&r4->unk_00, &r4->unk_54, &r4->unk_58);
+    spC = NNS_G3dGetTex(r4->unk_58);
+    NNS_G3dMdlUseMdlDiff(r4->unk_54);
+    NNS_G3dMdlUseMdlAmb(r4->unk_54);
+    NNS_G3dMdlUseMdlSpec(r4->unk_54);
+    NNS_G3dMdlUseMdlEmi(r4->unk_54);
+    NNS_G3dMdlUseMdlPolygonID(r4->unk_54);
+    for (i = 0; i < 8u; ++i) {
+        r4->unk_5C[i] = NARC_AllocAndReadWholeMember(sp10, sp8 + i, HEAP_ID_BAG);
+        sp14 = NNS_G3dGetAnmByIdx(r4->unk_5C[i], 0);
+        r4->unk_A0[i] = NNS_G3dAllocAnmObj(&appData->unk_808.unk_000, sp14, r4->unk_54);
+        NNS_G3dAnmObjInit(r4->unk_A0[i], sp14, r4->unk_54, spC);
+        r4->unk_7C[i] = NARC_AllocAndReadWholeMember(sp10, sp4 + i, HEAP_ID_BAG);
+        sp14 = NNS_G3dGetAnmByIdx(r4->unk_7C[i], 0);
+        r4->unk_C0[i] = NNS_G3dAllocAnmObj(&appData->unk_808.unk_000, sp14, r4->unk_54);
+        NNS_G3dAnmObjInit(r4->unk_C0[i], sp14, r4->unk_54, spC);
+    }
+    r4->unk_9C = NARC_AllocAndReadWholeMember(sp10, sp0, HEAP_ID_BAG);
+    sp14 = NNS_G3dGetAnmByIdx(r4->unk_9C, 0);
+    r4->unk_E0 = NNS_G3dAllocAnmObj(&appData->unk_808.unk_000, sp14, r4->unk_54);
+    NNS_G3dAnmObjInit(r4->unk_E0, sp14, r4->unk_54, spC);
+
+    r4->unk_E4 = appData->unk_234->curPocket;
+    NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_A0[r4->unk_E4]);
+    NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_C0[r4->unk_E4]);
+    NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_E0);
+    NARC_Delete(sp10);
 }
