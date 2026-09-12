@@ -3,6 +3,7 @@
 #include "msgdata/msg/msg_0010.h"
 #include "msgdata/msg/msg_0225.h"
 
+#include "move.h"
 #include "text.h"
 
 void ov15_021FE17C(BagAppData *appData);
@@ -12,6 +13,7 @@ void ov15_021FE204(BagAppData *appData);
 void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno);
 void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno);
 void ov15_021FE5C4(BagAppData *appData, u16 itemId);
+void ov15_021FE620(BagAppData *appData, u16 itemId);
 
 void ov15_021FE020(BagAppData *appData) {
     AddWindowParameterized(appData->bgConfig, &appData->windows[0], GF_BG_LYR_MAIN_1, 0, 18, 32, 6, 4, 0x001);
@@ -156,4 +158,67 @@ void ov15_021FE5C4(BagAppData *appData, u16 itemId) {
     }
     AddTextPrinterParameterizedWithColor(&appData->windows[0], 0, string, 20, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
     String_Delete(string);
+}
+
+void ov15_021FE620(BagAppData *appData, u16 itemId) {
+    Window *window = &appData->windows[1];
+    u16 moveId = TMHMGetMove(itemId);
+    String *string;
+    u16 attr;
+
+    // TYPE
+    string = NewString_ReadMsgData(appData->msgData, msg_0010_00101);
+    AddTextPrinterParameterizedWithColor(window, 0, string, 0, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    String_Delete(string);
+
+    // PP
+    string = NewString_ReadMsgData(appData->msgData, msg_0010_00089);
+    AddTextPrinterParameterizedWithColor(window, 0, string, 0, 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    String_Delete(string);
+
+    // CATEGORY
+    string = NewString_ReadMsgData(appData->msgData, msg_0010_00092);
+    AddTextPrinterParameterizedWithColor(window, 0, string, 72, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    String_Delete(string);
+
+    // POWER
+    string = NewString_ReadMsgData(appData->msgData, msg_0010_00090);
+    AddTextPrinterParameterizedWithColor(window, 0, string, 168, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    String_Delete(string);
+
+    // ACCURACY
+    string = NewString_ReadMsgData(appData->msgData, msg_0010_00091);
+    AddTextPrinterParameterizedWithColor(window, 0, string, 168, 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    String_Delete(string);
+
+    attr = GetMoveMaxPP(moveId, 0);
+    string = NewString_ReadMsgData(appData->msgData, msg_0010_00093);
+    BufferIntegerAsString(appData->msgFormat, 0, attr, 2, PRINTING_MODE_RIGHT_ALIGN, TRUE);
+    StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
+    String_Delete(string);
+    AddTextPrinterParameterizedWithColor(window, 0, appData->formattedStrbuf, 48, 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+
+    attr = GetMoveAttr(moveId, MOVEATTR_POWER);
+    if (attr <= 1) {
+        string = NewString_ReadMsgData(appData->msgData, msg_0010_00025);
+    } else {
+        string = NewString_ReadMsgData(appData->msgData, msg_0010_00094);
+    }
+    BufferIntegerAsString(appData->msgFormat, 0, attr, 3, PRINTING_MODE_LEFT_ALIGN, TRUE);
+    StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
+    String_Delete(string);
+    AddTextPrinterParameterizedWithColor(window, 0, appData->formattedStrbuf, 232, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+
+    attr = GetMoveAttr(moveId, MOVEATTR_ACCURACY);
+    if (attr == 0) {
+        string = NewString_ReadMsgData(appData->msgData, msg_0010_00025);
+    } else {
+        string = NewString_ReadMsgData(appData->msgData, msg_0010_00094);
+    }
+    BufferIntegerAsString(appData->msgFormat, 0, attr, 3, PRINTING_MODE_LEFT_ALIGN, TRUE);
+    StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
+    String_Delete(string);
+    AddTextPrinterParameterizedWithColor(window, 0, appData->formattedStrbuf, 232, 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+
+    ScheduleWindowCopyToVram(window);
 }
