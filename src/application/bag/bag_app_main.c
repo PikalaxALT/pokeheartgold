@@ -816,12 +816,12 @@ static void ov15_021F9D28(BagAppData *appData) {
     }
 }
 
-u16 ov15_021F9D60(BagAppData *appData, int a1, BOOL a2) {
+u16 ov15_021F9D60(BagAppData *appData, u16 slot, BOOL fetchQuantity) {
     BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
-    if (a2 == FALSE) {
-        return pocket->slots[a1].id;
+    if (fetchQuantity == FALSE) {
+        return pocket->slots[slot].id;
     } else {
-        return pocket->slots[a1].quantity;
+        return pocket->slots[slot].quantity;
     }
 }
 

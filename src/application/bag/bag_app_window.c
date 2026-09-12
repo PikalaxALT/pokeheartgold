@@ -1,9 +1,17 @@
 #include "application/bag_app_internal.h"
+#include "msgdata/msg.naix"
+#include "msgdata/msg/msg_0010.h"
+#include "msgdata/msg/msg_0225.h"
+
+#include "text.h"
 
 void ov15_021FE17C(BagAppData *appData);
 void ov15_021FE1D0(BagAppData *appData);
 void ov15_021FE3E0(BagAppData *appData);
 void ov15_021FE204(BagAppData *appData);
+void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno);
+void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno);
+void ov15_021FE5C4(BagAppData *appData, u16 itemId);
 
 void ov15_021FE020(BagAppData *appData) {
     AddWindowParameterized(appData->bgConfig, &appData->windows[0], GF_BG_LYR_MAIN_1, 0, 18, 32, 6, 4, 0x001);
@@ -107,4 +115,45 @@ void ov15_021FE3E0(BagAppData *appData) {
         RemoveWindow(&appData->windows3[12]);
         appData->windows3[12].bgConfig = NULL;
     }
+}
+
+void ov15_021FE4C8(BagAppData *appData) {
+    MsgData *msgData = NewMsgDataFromNarc(MSGDATA_LOAD_LAZY, NARC_msgdata_msg, NARC_msg_msg_0225_bin, HEAP_ID_BAG);
+    for (u16 i = 0; i < 8; ++i) {
+        appData->unk_5F4[i] = NewString_ReadMsgData(msgData, msg_0225_00000 + i);
+    }
+    DestroyMsgData(msgData);
+}
+
+void ov15_021FE504(BagAppData *appData) {
+    for (u16 i = 0; i < 8; ++i) {
+        String_Delete(appData->unk_5F4[i]);
+    }
+}
+
+void ov15_021FE528(BagAppData *appData) {
+    for (u16 i = 0; i < 12; ++i) {
+        FillBgTilemapRect(appData->bgConfig, GF_BG_LYR_MAIN_3, 205 + i, i, 13, 1, 1, 4);
+        FillBgTilemapRect(appData->bgConfig, GF_BG_LYR_MAIN_3, 241 + i, i, 14, 1, 1, 4);
+    }
+}
+
+void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno) {
+    BufferItemName(appData->msgFormat, fieldno, ov15_021F9D60(appData, itemSlot, FALSE));
+}
+
+void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno) {
+    BufferItemNamePlural(appData->msgFormat, fieldno, ov15_021F9D60(appData, itemSlot, FALSE));
+}
+
+void ov15_021FE5C4(BagAppData *appData, u16 itemId) {
+    String *string;
+    if (itemId != 0xFFFF) {
+        string = String_New(130, HEAP_ID_BAG);
+        GetItemDescIntoString(string, itemId, HEAP_ID_BAG);
+    } else {
+        string = NewString_ReadMsgData(appData->msgData, msg_0010_00097);
+    }
+    AddTextPrinterParameterizedWithColor(&appData->windows[0], 0, string, 20, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    String_Delete(string);
 }

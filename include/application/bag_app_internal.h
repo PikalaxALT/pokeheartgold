@@ -133,7 +133,8 @@ struct BagAppData {
     u8 filler_34C[4];
     String *itemNameStrings[NUM_BAG_STRINGS];
     String *formattedStrbuf;
-    u8 filler_5E8[0x2C];
+    u8 filler_5E8[0xC];
+    String *unk_5F4[8];
     u8 unk_614;
     u8 gender;
     u8 textPrinterId;
@@ -168,7 +169,7 @@ struct BagAppData {
 }; // size: 0x94C
 
 void ov15_021F9C78(BagAppData *appData, BOOL a1);
-u16 ov15_021F9D60(BagAppData *appData, int a1, BOOL a2);
+u16 ov15_021F9D60(BagAppData *appData, u16 slot, BOOL fetchQuantity);
 BOOL ov15_021FD3F0(u8 pocketId, u16 itemId);
 
 void ov15_021FE020(BagAppData *appData);
