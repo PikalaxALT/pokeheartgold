@@ -156,7 +156,7 @@ void ov15_021FDC6C(BagAppData *appData);
 void ov15_021FDC88(BagAppData *appData);
 void ov15_021FDD54(NNSG3dAnmObj *animObj);
 void ov15_021FDD70(BagAppData *appData);
-void ov15_021FDF20(BagAppData *appdata);
+void ov15_021FDF20(BagAppData *appData);
 void ov15_021FDF88(BagAppData *appData);
 
 extern const u8 ov15_022008B0[8];
@@ -2882,7 +2882,7 @@ void ov15_021FDD70(BagAppData *appData) {
     NNS_G3dMdlUseMdlSpec(r4->unk_54);
     NNS_G3dMdlUseMdlEmi(r4->unk_54);
     NNS_G3dMdlUseMdlPolygonID(r4->unk_54);
-    for (i = 0; i < 8u; ++i) {
+    for (i = 0; i < 8; ++i) {
         r4->unk_5C[i] = NARC_AllocAndReadWholeMember(sp10, sp8 + i, HEAP_ID_BAG);
         sp14 = NNS_G3dGetAnmByIdx(r4->unk_5C[i], 0);
         r4->unk_A0[i] = NNS_G3dAllocAnmObj(&appData->unk_808.unk_000, sp14, r4->unk_54);
@@ -2902,4 +2902,31 @@ void ov15_021FDD70(BagAppData *appData) {
     NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_C0[r4->unk_E4]);
     NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_E0);
     NARC_Delete(sp10);
+}
+
+void ov15_021FDF20(BagAppData *appData) {
+    BagAppData_Sub808_Sub014 *sp0 = &appData->unk_808.unk_014;
+
+    for (u32 i = 0; i < 8; ++i) {
+        NNS_G3dFreeAnmObj(&appData->unk_808.unk_000, sp0->unk_A0[i]);
+        NNS_G3dFreeAnmObj(&appData->unk_808.unk_000, sp0->unk_C0[i]);
+        Heap_Free(sp0->unk_5C[i]);
+        Heap_Free(sp0->unk_7C[i]);
+    }
+    NNS_G3dFreeAnmObj(&appData->unk_808.unk_000, sp0->unk_E0);
+    Heap_Free(sp0->unk_9C);
+    Heap_Free(sp0->unk_58);
+}
+
+void ov15_021FDF88(BagAppData *appData) {
+    BagAppData_Sub808_Sub014 *r4 = &appData->unk_808.unk_014;
+
+    NNS_G3dRenderObjRemoveAnmObj(&r4->unk_00, r4->unk_C0[r4->unk_E4]);
+    NNS_G3dRenderObjRemoveAnmObj(&r4->unk_00, r4->unk_A0[r4->unk_E4]);
+    r4->unk_E4 = appData->unk_234->curPocket;
+    r4->unk_A0[r4->unk_E4]->frame = 0;
+    r4->unk_C0[r4->unk_E4]->frame = 0;
+    r4->unk_E0->frame = 0;
+    NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_A0[r4->unk_E4]);
+    NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_C0[r4->unk_E4]);
 }
