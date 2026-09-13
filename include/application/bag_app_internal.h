@@ -158,7 +158,8 @@ struct BagAppData {
     s16 quantity;
     u16 maxQuantity;
     int unitSellPrice;
-    u8 filler_688[4];
+    u8 filler_688[2];
+    u8 unk_68A;
     void *unk_68C;
     void *unk_690;
     NNSG2dPaletteData *unk_694[2];
@@ -202,7 +203,7 @@ void ov15_021FF068(BagAppData *appData);
 void ov15_021FF0FC(BagAppData *appData, int a1);
 void ov15_021FF1E0(BagAppData *appData);
 void ov15_021FF29C(BagAppData *appData, int a1);
-void ov15_021FF364(BagAppData *appData, s16 a1, int a2, int a3);
+void ov15_021FF364(BagAppData *appData, int a1, int a2, int a3);
 void ov15_021FF4EC(BagAppData *appData, int a1, int a2);
 void ov15_021FF560(BagAppData *appData);
 void ov15_021FF6BC(BagAppData *appData, u8 a1, s16 a2, int a3);

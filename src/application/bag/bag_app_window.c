@@ -26,6 +26,7 @@ void ov15_021FE9B0(BagAppData *appData, Window *window, int a2);
 void ov15_021FE9F0(BagAppData *appData, Window *window, int a2, BOOL a3);
 int BagApp_PrintMessageCallback(TextPrinterTemplate *printer, u16 cmd);
 int ov15_021FF320(BagViewPocket *pocket, int pocketId, int a2);
+void ov15_021FF570(BagAppData *appData, Window *window, String *out, BagViewPocket *pocket, int slotId);
 
 extern const u8 ov15_022008C8[];
 
@@ -564,4 +565,47 @@ int ov15_021FF320(BagViewPocket *pocket, int pocketId, int a2) {
         }
     }
     return i;
+}
+
+void ov15_021FF364(BagAppData *appData, int a1, int a2, int a3) {
+    int i;
+    int sp28;
+    BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
+    int sp20 = pocket->count - pocket->scroll;
+    u16 sp18;
+    u16 r4;
+    if (sp20 > 6) {
+        sp20 = 6;
+    }
+    if (appData->unk_68A == 0) {
+        sp18 = 0;
+        r4 = 6;
+    } else {
+        sp18 = 6;
+        r4 = 0;
+    }
+    appData->unk_68A ^= 1;
+    ov15_021FE17C(appData);
+    for (i = 0; i < 6; ++i) {
+        FillWindowPixelBuffer(&appData->windows3[sp18 + i], 0);
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows3[r4 + i]);
+    }
+    sp28 = 0;
+    for (i = ov15_021FF320(pocket, appData->bagView->curPocket, a1); i < ov15_022008C8[appData->bagView->curPocket]; ++i) {
+        if (pocket->slots[i].id != ITEM_NONE && pocket->slots[i].quantity != 0) {
+            if (a3 == 0) {
+                ov15_021FF570(appData, &appData->windows3[sp18 + sp28], appData->itemNameStrings[i], pocket, i);
+            } else if (i == appData->unk_672) {
+                ov15_021FF570(appData, &appData->windows3[sp18 + sp28], appData->itemNameStrings[i], pocket, i);
+            } else {
+                AddTextPrinterParameterizedWithColor(&appData->windows3[sp18 + sp28], 0, appData->itemNameStrings[i], 0, 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
+            }
+            if (++sp28 >= sp20) {
+                break;
+            }
+        }
+    }
+    for (i = 0; i < 6; ++i) {
+        ScheduleWindowCopyToVram(&appData->windows3[sp18 + i]);
+    }
 }
