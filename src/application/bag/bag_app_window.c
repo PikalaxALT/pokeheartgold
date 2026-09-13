@@ -5,8 +5,10 @@
 
 #include "font.h"
 #include "move.h"
+#include "render_text.h"
 #include "render_window.h"
 #include "text.h"
+#include "unk_02005D10.h"
 #include "unk_0200CE7C.h"
 
 void ov15_021FE17C(BagAppData *appData);
@@ -22,6 +24,7 @@ void ov15_021FE914(BagAppData *appData, Window *window, ItemSlot *a2, u32 a3);
 void *ov15_021FE990(BagAppData *appData, NNSG2dCharacterData **ppCharData);
 void ov15_021FE9B0(BagAppData *appData, Window *window, int a2);
 void ov15_021FE9F0(BagAppData *appData, Window *window, int a2, BOOL a3);
+int BagApp_PrintMessageCallback(TextPrinterTemplate *printer, u16 cmd);
 
 void ov15_021FE020(BagAppData *appData) {
     AddWindowParameterized(appData->bgConfig, &appData->windows[0], GF_BG_LYR_MAIN_1, 0, 18, 32, 6, 4, 0x001);
@@ -373,4 +376,108 @@ void ov15_021FED3C(BagAppData *appData) {
 
 void ov15_021FED58(BagAppData *appData) {
     ov15_021FE3E0(appData);
+}
+
+void ov15_021FED60(BagAppData *appData) {
+    FillWindowPixelBuffer(&appData->windows[2], 0xFF);
+    String *r6 = NewString_ReadMsgData(appData->msgData, msg_0010_00046);
+    String *r4 = String_New(130, HEAP_ID_BAG);
+    ov15_021FE584(appData, appData->unk_672, 0);
+    StringExpandPlaceholders(appData->msgFormat, r4, r6);
+    DrawFrameAndWindow2(&appData->windows[2], TRUE, 0x3E2, 12);
+    AddTextPrinterParameterizedWithColor(&appData->windows[2], 1, r4, 0, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
+    ScheduleWindowCopyToVram(&appData->windows[2]);
+    String_Delete(r4);
+    String_Delete(r6);
+}
+
+void ov15_021FEDEC(BagAppData *appData, u32 a1) {
+    GF_ASSERT(appData->quantity < 1000);
+    String *sp14 = String_New(2, HEAP_ID_BAG);
+    u32 r4;
+    if (a1 == 2) {
+        r4 = 10;
+    } else {
+        r4 = 100;
+    }
+    u32 quantity = appData->quantity;
+    for (int i = 0; i < a1; ++i) {
+        u32 sp18 = quantity / r4;
+        String16_FormatInteger(sp14, sp18, 1, PRINTING_MODE_LEFT_ALIGN, TRUE);
+        quantity -= sp18 * r4;
+        r4 /= 10;
+        FillWindowPixelBuffer(&appData->windows3[17 + i], 0);
+        AddTextPrinterParameterizedWithColor(&appData->windows3[17 + i], 0, sp14, 0, 4, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
+        ScheduleWindowCopyToVram(&appData->windows3[17 + i]);
+    }
+    String_Delete(sp14);
+}
+
+void ov15_021FEEA4(BagAppData *appData) {
+    String *r4 = NewString_ReadMsgData(appData->msgData, msg_0010_00055);
+    BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
+    if (appData->quantity > 1) {
+        ov15_021FE5A4(appData, pocket->scroll + appData->cursorPos - 8, 0);
+    } else {
+        ov15_021FE584(appData, pocket->scroll + appData->cursorPos - 8, 0);
+    }
+    BufferIntegerAsString(appData->msgFormat, 1, appData->quantity, 3, PRINTING_MODE_LEFT_ALIGN, TRUE);
+    StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, r4);
+    String_Delete(r4);
+    appData->textPrinterId = BagApp_PrintMessage(appData, 0);
+}
+
+u8 BagApp_PrintMessage(BagAppData *appData, int a1) {
+    Window *window;
+    if (a1 == 0) {
+        window = &appData->windows[3];
+    } else {
+        GF_ASSERT(appData->windows3[21].bgConfig != NULL);
+        window = &appData->windows3[21];
+    }
+    FillWindowPixelBuffer(window, 15);
+    DrawFrameAndWindow2(window, TRUE, 0x3E2, 12);
+    ScheduleWindowCopyToVram(window);
+    TextFlags_SetCanABSpeedUpPrint(TRUE);
+    TextFlags_SetAutoScrollParam(0);
+    return AddTextPrinterParameterized(window, 1, appData->formattedStrbuf, 0, 0, Options_GetTextFrameDelay(appData->options), BagApp_PrintMessageCallback);
+}
+
+int BagApp_PrintMessageCallback(TextPrinterTemplate *printer, u16 cmd) {
+    switch (cmd) {
+    case 0:
+        break;
+    case 1:
+        return GF_IsAnySEPlaying();
+    case 2:
+        return IsFanfarePlaying();
+    case 3:
+        PlaySE(SEQ_SE_DP_PC_LOGIN);
+        break;
+    case 4:
+        return IsSEPlaying(SEQ_SE_DP_PC_LOGIN);
+    }
+
+    return FALSE;
+}
+
+void BagApp_CreateYesNoPrompt(BagAppData *appData) {
+    YesNoPromptTemplate yesnoTemplate;
+
+    yesnoTemplate.bgConfig = appData->bgConfig;
+    yesnoTemplate.bgId = GF_BG_LYR_SUB_1;
+    yesnoTemplate.tileStart = 0x81;
+    yesnoTemplate.plttSlot = 9;
+    yesnoTemplate.x = 25;
+    yesnoTemplate.y = 6;
+    yesnoTemplate.ignoreTouchFlag = FALSE;
+    yesnoTemplate.initialCursorPos = 0;
+    yesnoTemplate.initialCursorPos = 0;
+    yesnoTemplate.shapeParam = 0;
+    appData->yesNoPrompt = YesNoPrompt_Create(HEAP_ID_BAG);
+    YesNoPrompt_InitFromTemplate(appData->yesNoPrompt, &yesnoTemplate);
+}
+
+void BagApp_DestroyYesNoPrompt(BagAppData *appData) {
+    YesNoPrompt_Destroy(appData->yesNoPrompt);
 }

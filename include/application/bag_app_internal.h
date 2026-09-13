@@ -193,7 +193,7 @@ void ov15_021FED24(BagAppData *appData);
 void ov15_021FED3C(BagAppData *appData);
 void ov15_021FED58(BagAppData *appData);
 void ov15_021FED60(BagAppData *appData);
-void ov15_021FEDEC(BagAppData *appData, int a1);
+void ov15_021FEDEC(BagAppData *appData, u32 a1);
 void ov15_021FEEA4(BagAppData *appData);
 u8 BagApp_PrintMessage(BagAppData *appData, int a1);
 void BagApp_CreateYesNoPrompt(BagAppData *appData);
