@@ -18,7 +18,9 @@ void ov15_021FE5C4(BagAppData *appData, u16 itemId);
 void ov15_021FE620(BagAppData *appData, u16 itemId);
 void ov15_021FE8C4(BagAppData *appData, u16 a1, u16 a2, u32 textColor);
 void ov15_021FE914(BagAppData *appData, Window *window, ItemSlot *a2, u32 a3);
-void ov15_021FE9B0(BagAppData *appdata, Window *window, int a2);
+void *ov15_021FE990(BagAppData *appData, NNSG2dCharacterData **ppCharData);
+void ov15_021FE9B0(BagAppData *appData, Window *window, int a2);
+void ov15_021FE9F0(BagAppData *appData, Window *window, int a2, BOOL a3);
 
 void ov15_021FE020(BagAppData *appData) {
     AddWindowParameterized(appData->bgConfig, &appData->windows[0], GF_BG_LYR_MAIN_1, 0, 18, 32, 6, 4, 0x001);
@@ -261,4 +263,28 @@ void ov15_021FE914(BagAppData *appData, Window *window, ItemSlot *a2, u32 a3) {
         PrintUIntOnWindow(appData->msgPrinter, itemId, 2, PRINTING_MODE_RIGHT_ALIGN, window, 16, a3 + 5);
         ov15_021FE9B0(appData, window, 16);
     }
+}
+
+void *ov15_021FE990(BagAppData *appData, NNSG2dCharacterData **ppCharData) {
+    void *pNcgrFile = NARC_AllocAndReadWholeMember(appData->unk_244, 37, HEAP_ID_BAG);
+    NNS_G2dGetUnpackedBGCharacterData(pNcgrFile, ppCharData);
+    return pNcgrFile;
+}
+
+void ov15_021FE9B0(BagAppData *appData, Window *window, int a2) {
+    NNSG2dCharacterData *pCharData;
+    void *pNcgrFile = ov15_021FE990(appData, &pCharData);
+    BlitBitmapRectToWindow(window, pCharData->pRawData, 0, 0, 104, 16, 0, a2, 24, 16);
+    Heap_FreeExplicit(HEAP_ID_BAG, pNcgrFile);
+}
+
+void ov15_021FE9F0(BagAppData *appData, Window *window, int a2, BOOL a3) {
+    NNSG2dCharacterData *pCharData;
+    void *pNcgrFile = ov15_021FE990(appData, &pCharData);
+    if (!a3) {
+        BlitBitmapRectToWindow(window, pCharData->pRawData, 24, 0, 104, 16, 0, a2, 40, 16);
+    } else {
+        BlitBitmapRectToWindow(window, pCharData->pRawData, 64, 0, 104, 16, 0, a2, 40, 16);
+    }
+    Heap_FreeExplicit(HEAP_ID_BAG, pNcgrFile);
 }
