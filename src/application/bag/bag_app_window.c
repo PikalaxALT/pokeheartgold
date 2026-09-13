@@ -609,3 +609,20 @@ void ov15_021FF364(BagAppData *appData, int a1, int a2, int a3) {
         ScheduleWindowCopyToVram(&appData->windows3[sp18 + i]);
     }
 }
+
+void ov15_021FF4EC(BagAppData *appData, int a1, int a2) {
+    BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
+    a2 = a1 + a2;
+    for (int i = 0; i < 6; ++i) {
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows3[i]);
+    }
+    ov15_021FE1D0(appData);
+    ClearWindowTilemapAndScheduleTransfer(&appData->windows[6]);
+    ov15_021FE204(appData);
+    ov15_021FF570(appData, &appData->windows3[12], appData->itemNameStrings[a2], pocket, a2);
+    ScheduleWindowCopyToVram(&appData->windows3[12]);
+}
+
+void ov15_021FF560(BagAppData *appData) {
+    ClearWindowTilemapAndScheduleTransfer(&appData->windows3[12]);
+}
