@@ -7,126 +7,12 @@
 
 	.text
 
-	.extern ov15_021F9C78
-	.extern ov15_021FD3F0
 	.extern ov15_021FE17C
 	.extern ov15_021FE1D0
 	.extern ov15_021FE204
-	.extern ov15_021FE3E0
-	.extern ov15_021FE584
-	.extern ov15_021FE5A4
-	.extern ov15_021FE5C4
-	.extern ov15_021FE620
-	.extern ov15_021FE8C4
 	.extern ov15_021FE914
-	.extern ov15_021FE990
 	.extern ov15_021FE9F0
-	.extern ov15_021FED24
-
-	thumb_func_start ov15_021FF29C
-ov15_021FF29C: ; 0x021FF29C
-	push {r4, r5, r6, lr}
-	sub sp, #0x10
-	add r5, r0, #0
-	mov r0, #0x2f
-	lsl r0, r0, #4
-	add r6, r1, #0
-	ldr r0, [r5, r0]
-	mov r1, #8
-	bl NewString_ReadMsgData
-	add r4, r0, #0
-	add r0, r5, #0
-	add r0, #0x74
-	mov r1, #0
-	bl FillWindowPixelBuffer
-	cmp r6, #0
-	bne _021FF2EE
-	mov r0, #0
-	add r1, r4, #0
-	add r2, r0, #0
-	bl FontID_String_GetWidth
-	mov r1, #0
-	add r3, r0, #0
-	mov r6, #0x30
-	sub r3, r6, r3
-	lsr r3, r3, #1
-	str r1, [sp]
-	mov r0, #0xff
-	str r0, [sp, #4]
-	ldr r0, _021FF31C ; =0x000F0E00
-	add r2, r4, #0
-	str r0, [sp, #8]
-	add r0, r5, #0
-	add r0, #0x74
-	add r3, #8
-	str r1, [sp, #0xc]
-	bl AddTextPrinterParameterizedWithColor
-	b _021FF308
-_021FF2EE:
-	mov r1, #0
-	str r1, [sp]
-	mov r0, #0xff
-	str r0, [sp, #4]
-	ldr r0, _021FF31C ; =0x000F0E00
-	add r2, r4, #0
-	str r0, [sp, #8]
-	add r0, r5, #0
-	add r0, #0x74
-	mov r3, #5
-	str r1, [sp, #0xc]
-	bl AddTextPrinterParameterizedWithColor
-_021FF308:
-	add r5, #0x74
-	add r0, r5, #0
-	bl ScheduleWindowCopyToVram
-	add r0, r4, #0
-	bl String_Delete
-	add sp, #0x10
-	pop {r4, r5, r6, pc}
-	nop
-_021FF31C: .word 0x000F0E00
-	thumb_func_end ov15_021FF29C
-
-	thumb_func_start ov15_021FF320
-ov15_021FF320: ; 0x021FF320
-	push {r4, r5, r6, r7}
-	add r3, r1, #0
-	add r1, r2, #0
-	ldr r2, _021FF360 ; =ov15_022008C8
-	mov r5, #0
-	ldrb r6, [r2, r3]
-	add r4, r5, #0
-	cmp r6, #0
-	ble _021FF35A
-	ldr r7, [r0]
-	ldrb r2, [r2, r3]
-	add r0, r7, #0
-	add r6, r5, #0
-	add r1, r1, #1
-_021FF33C:
-	ldrh r3, [r0]
-	cmp r3, #0
-	beq _021FF350
-	add r3, r7, r6
-	ldrh r3, [r3, #2]
-	cmp r3, #0
-	beq _021FF350
-	add r5, r5, #1
-	cmp r5, r1
-	beq _021FF35A
-_021FF350:
-	add r4, r4, #1
-	add r0, r0, #4
-	add r6, r6, #4
-	cmp r4, r2
-	blt _021FF33C
-_021FF35A:
-	add r0, r4, #0
-	pop {r4, r5, r6, r7}
-	bx lr
-	.balign 4, 0
-_021FF360: .word ov15_022008C8
-	thumb_func_end ov15_021FF320
+	.extern ov15_021FF320
 
 	thumb_func_start ov15_021FF364
 ov15_021FF364: ; 0x021FF364

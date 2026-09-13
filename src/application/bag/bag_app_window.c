@@ -25,6 +25,9 @@ void *ov15_021FE990(BagAppData *appData, NNSG2dCharacterData **ppCharData);
 void ov15_021FE9B0(BagAppData *appData, Window *window, int a2);
 void ov15_021FE9F0(BagAppData *appData, Window *window, int a2, BOOL a3);
 int BagApp_PrintMessageCallback(TextPrinterTemplate *printer, u16 cmd);
+int ov15_021FF320(BagViewPocket *pocket, int pocketId, int a2);
+
+extern const u8 ov15_022008C8[];
 
 void ov15_021FE020(BagAppData *appData) {
     AddWindowParameterized(appData->bgConfig, &appData->windows[0], GF_BG_LYR_MAIN_1, 0, 18, 32, 6, 4, 0x001);
@@ -534,4 +537,31 @@ void ov15_021FF1E0(BagAppData *appData) {
     AddTextPrinterParameterized(window, 0, appData->formattedStrbuf, 88 - width, 16, TEXT_SPEED_NOTRANSFER, NULL);
 
     ScheduleWindowCopyToVram(window);
+}
+
+void ov15_021FF29C(BagAppData *appData, int a1) {
+    String *r4 = NewString_ReadMsgData(appData->msgData, msg_0010_00008);
+    FillWindowPixelBuffer(&appData->windows[7], 0);
+    if (a1 == 0) {
+        u32 width = FontID_String_GetWidth(0, r4, 0);
+        AddTextPrinterParameterizedWithColor(&appData->windows[7], 0, r4, (48 - width) / 2 + 8, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    } else {
+        AddTextPrinterParameterizedWithColor(&appData->windows[7], 0, r4, 5, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    }
+    ScheduleWindowCopyToVram(&appData->windows[7]);
+    String_Delete(r4);
+}
+
+int ov15_021FF320(BagViewPocket *pocket, int pocketId, int a2) {
+    int i;
+    int r5 = 0;
+    for (i = 0; i < ov15_022008C8[pocketId]; ++i) {
+        if (pocket->slots[i].id != ITEM_NONE && pocket->slots[i].quantity != 0) {
+            ++r5;
+            if (r5 == a2 + 1) {
+                break;
+            }
+        }
+    }
+    return i;
 }
