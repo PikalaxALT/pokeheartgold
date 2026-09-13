@@ -514,3 +514,24 @@ void ov15_021FF0FC(BagAppData *appData, int a1) {
     String_Delete(sp10);
     String_Delete(r4);
 }
+
+void ov15_021FF1E0(BagAppData *appData) {
+    Window *window = &appData->windows[5];
+    String *r6;
+
+    FillWindowPixelBuffer(window, 15);
+    DrawFrameAndWindow1(window, TRUE, 0x3F7, 14);
+
+    r6 = NewString_ReadMsgData(appData->msgData, msg_0010_00115);
+    AddTextPrinterParameterized(window, 0, r6, 0, 0, TEXT_SPEED_NOTRANSFER, NULL);
+    String_Delete(r6);
+
+    r6 = NewString_ReadMsgData(appData->msgData, msg_0010_00116);
+    BufferIntegerAsString(appData->msgFormat, 0, 0, 3, PRINTING_MODE_RIGHT_ALIGN, TRUE);
+    StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, r6);
+    String_Delete(r6);
+    u32 width = FontID_String_GetWidth(0, appData->formattedStrbuf, 0);
+    AddTextPrinterParameterized(window, 0, appData->formattedStrbuf, 88 - width, 16, TEXT_SPEED_NOTRANSFER, NULL);
+
+    ScheduleWindowCopyToVram(window);
+}
