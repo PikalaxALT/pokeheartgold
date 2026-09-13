@@ -481,3 +481,36 @@ void BagApp_CreateYesNoPrompt(BagAppData *appData) {
 void BagApp_DestroyYesNoPrompt(BagAppData *appData) {
     YesNoPrompt_Destroy(appData->yesNoPrompt);
 }
+
+void ov15_021FF068(BagAppData *appData) {
+    Window *window = &appData->windows3[23];
+    FillWindowPixelBuffer(window, 0);
+    String *r4 = NewString_ReadMsgData(appData->msgData, msg_0010_00083);
+    BufferIntegerAsString(appData->msgFormat, 0, appData->unitSellPrice * appData->quantity, 6, PRINTING_MODE_RIGHT_ALIGN, TRUE);
+    StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, r4);
+    u32 width = FontID_String_GetWidth(0, appData->formattedStrbuf, 0);
+    AddTextPrinterParameterizedWithColor(window, 0, appData->formattedStrbuf, 0, 4, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
+    ScheduleWindowCopyToVram(window);
+    String_Delete(r4);
+}
+
+void ov15_021FF0FC(BagAppData *appData, int a1) {
+    String *r4 = String_New(256, HEAP_ID_BAG);
+    Window *window = &appData->windows3[22];
+    if (a1 == 0) {
+        FillWindowPixelBuffer(window, 0);
+        String *r7 = NewString_ReadMsgData(appData->msgData, msg_0010_00080);
+        AddTextPrinterParameterizedWithColor(window, 0, r7, 4, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
+        String_Delete(r7);
+    } else {
+        FillWindowPixelRect(window, 0, 0, 16, 72, 16);
+    }
+    String *sp10 = NewString_ReadMsgData(appData->msgData, msg_0010_00081);
+    BufferIntegerAsString(appData->msgFormat, 0, PlayerProfile_GetMoney(appData->playerProfile), 6, PRINTING_MODE_RIGHT_ALIGN, TRUE);
+    StringExpandPlaceholders(appData->msgFormat, r4, sp10);
+    u32 width = FontID_String_GetWidth(0, r4, 0);
+    AddTextPrinterParameterizedWithColor(window, 0, r4, 68 - (width + 8), 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
+    ScheduleWindowCopyToVram(window);
+    String_Delete(sp10);
+    String_Delete(r4);
+}

@@ -157,7 +157,7 @@ struct BagAppData {
     BagAppDataUnkFunc7F0 unk_67C;
     s16 quantity;
     u16 maxQuantity;
-    int unk_684;
+    int unitSellPrice;
     u8 filler_688[4];
     void *unk_68C;
     void *unk_690;

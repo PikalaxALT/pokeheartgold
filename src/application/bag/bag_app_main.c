@@ -2544,7 +2544,7 @@ static BagAppState ov15_021FCB64(BagAppData *appData) {
 
     ov15_021FD574(appData, 4, 0, 0);
     appData->quantity = 1;
-    appData->unk_684 = GetItemAttr(appData->bagView->itemId, ITEMATTR_PRICE, HEAP_ID_BAG) >> 1;
+    appData->unitSellPrice = GetItemAttr(appData->bagView->itemId, ITEMATTR_PRICE, HEAP_ID_BAG) >> 1;
     ov15_021FD43C(appData->bgConfig, GF_BG_LYR_SUB_1, 0);
     ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_1);
     ManagedSprite_SetDrawFlag(appData->sprites[17], FALSE);
@@ -2555,7 +2555,7 @@ static BagAppState ov15_021FCB64(BagAppData *appData) {
     ov15_022002B4(appData, appData->cursorPos - 8);
     ov15_021FECA0(appData, &appData->windows[0], appData->bagView->itemId);
     ov15_021FFF24(appData);
-    if (GetItemAttr(appData->bagView->itemId, ITEMATTR_PREVENT_TOSS, HEAP_ID_BAG) || appData->unk_684 == 0) {
+    if (GetItemAttr(appData->bagView->itemId, ITEMATTR_PREVENT_TOSS, HEAP_ID_BAG) || appData->unitSellPrice == 0) {
         String *string = NewString_ReadMsgData(appData->msgData, msg_0010_00076);
         BufferItemName(appData->msgFormat, 0, appData->bagView->itemId);
         StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
@@ -2568,7 +2568,7 @@ static BagAppState ov15_021FCB64(BagAppData *appData) {
     ov15_021FEDEC(appData, 2);
     if (Pocket_GetQuantity(appData->bagView->pockets[appData->bagView->curPocket].slots, appData->bagView->pockets[appData->bagView->curPocket].count, appData->bagView->itemId, HEAP_ID_BAG) == 1) {
         String *string = NewString_ReadMsgData(appData->msgData, msg_0010_00078);
-        BufferIntegerAsString(appData->msgFormat, 0, appData->quantity * appData->unk_684, 6, PRINTING_MODE_LEFT_ALIGN, TRUE);
+        BufferIntegerAsString(appData->msgFormat, 0, appData->quantity * appData->unitSellPrice, 6, PRINTING_MODE_LEFT_ALIGN, TRUE);
         StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
         String_Delete(string);
         appData->textPrinterId = BagApp_PrintMessage(appData, 1);
@@ -2680,7 +2680,7 @@ static BagAppState ov15_021FCFC8(BagAppData *appData) {
     ov15_021FF834(appData);
     FillWindowPixelBuffer(&appData->windows[3], 15);
     String *string = NewString_ReadMsgData(appData->msgData, msg_0010_00078);
-    BufferIntegerAsString(appData->msgFormat, 0, appData->quantity * appData->unk_684, 6, PRINTING_MODE_LEFT_ALIGN, TRUE);
+    BufferIntegerAsString(appData->msgFormat, 0, appData->quantity * appData->unitSellPrice, 6, PRINTING_MODE_LEFT_ALIGN, TRUE);
     StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
     String_Delete(string);
     appData->textPrinterId = BagApp_PrintMessage(appData, 1);
@@ -2691,7 +2691,7 @@ static BagAppState ov15_021FCFC8(BagAppData *appData) {
 }
 
 static BagAppState ov15_021FD058(BagAppData *appData) {
-    appData->unk_684 = 0;
+    appData->unitSellPrice = 0;
     sub_0200E5D4(&appData->windows3[22], TRUE);
     sub_0200E5D4(&appData->windows[4], TRUE);
     ClearFrameAndWindow2(&appData->windows[3], TRUE);
@@ -2729,7 +2729,7 @@ static BagAppState BagAppMainTask_ConfirmSale_HandleYesNo(BagAppData *appData) {
             } else {
                 BufferItemName(appData->msgFormat, 0, appData->bagView->itemId);
             }
-            BufferIntegerAsString(appData->msgFormat, 1, appData->quantity * appData->unk_684, 6, PRINTING_MODE_LEFT_ALIGN, TRUE);
+            BufferIntegerAsString(appData->msgFormat, 1, appData->quantity * appData->unitSellPrice, 6, PRINTING_MODE_LEFT_ALIGN, TRUE);
             StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
             String_Delete(string);
         }
@@ -2739,7 +2739,7 @@ static BagAppState BagAppMainTask_ConfirmSale_HandleYesNo(BagAppData *appData) {
         break;
     case YESNORESPONSE_NO:
         BagApp_DestroyYesNoPrompt(appData);
-        appData->unk_684 = 0;
+        appData->unitSellPrice = 0;
         sub_0200E5D4(&appData->windows3[22], TRUE);
         ClearFrameAndWindow2(&appData->windows[3], TRUE);
         ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
@@ -2761,7 +2761,7 @@ static BagAppState BagAppMainTask_CompleteSale(BagAppData *appData) {
         return BAG_APP_STATE_COMPLETE_SALE;
     }
     PlaySE(SEQ_SE_DP_REGI);
-    PlayerProfile_AddMoney(appData->playerProfile, appData->quantity * appData->unk_684);
+    PlayerProfile_AddMoney(appData->playerProfile, appData->quantity * appData->unitSellPrice);
     if (appData->quantity == 1) {
         if (appData->bagView->unk75 != 0xFF) {
             ++appData->bagView->unk75;
@@ -2777,7 +2777,7 @@ static BagAppState BagAppMainTask_CompleteSale(BagAppData *appData) {
 
 static BagAppState BagAppMainTask_CompleteSale_WaitMessage(BagAppData *appData) {
     if (!TextPrinterCheckActive(appData->textPrinterId) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
-        appData->unk_684 = 0;
+        appData->unitSellPrice = 0;
         sub_0200E5D4(&appData->windows3[22], TRUE);
         ClearFrameAndWindow2(&appData->windows[3], TRUE);
         ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
