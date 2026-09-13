@@ -340,3 +340,37 @@ void ov15_021FEB84(BagAppData *appData, u8 *a1, int a2) {
     String_Delete(r7);
     ScheduleWindowCopyToVram(&appData->windows[2]);
 }
+
+void ov15_021FECA0(BagAppData *appData, Window *window, int itemId) {
+    FillWindowPixelBuffer(window, 0);
+    ov15_021FE5C4(appData, itemId);
+    ScheduleWindowCopyToVram(window);
+}
+
+void ov15_021FECC4(BagAppData *appData, Window *window) {
+    FillWindowPixelBuffer(window, 0);
+    ScheduleWindowCopyToVram(window);
+}
+
+void ov15_021FECD8(BagAppData *appData, Window *window, int pocket) {
+    String *string = NewString_ReadMsgData(appData->msgData, msg_0010_00120 + pocket);
+    FillWindowPixelBuffer(window, 0);
+    AddTextPrinterParameterizedWithColor(window, 0, string, 20, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    String_Delete(string);
+    ScheduleWindowCopyToVram(window);
+}
+
+void ov15_021FED24(BagAppData *appData) {
+    ClearFrameAndWindow2(&appData->windows[2], TRUE);
+    ClearWindowTilemapAndScheduleTransfer(&appData->windows[2]);
+}
+
+void ov15_021FED3C(BagAppData *appData) {
+    ov15_021FED24(appData);
+    ov15_021FE3E0(appData);
+    ov15_021FF97C(appData, ITEM_NONE, 0);
+}
+
+void ov15_021FED58(BagAppData *appData) {
+    ov15_021FE3E0(appData);
+}
