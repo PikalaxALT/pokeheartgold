@@ -128,7 +128,8 @@ struct BagAppData {
     MessageFormat *msgFormat;
     MsgData *itemNamesMsgdata;
     MsgData *moveNamesMsgData;
-    u8 unk_300[0x48];
+    String *unk_300[16];
+    u8 filler_340[8];
     int unk_348;
     u8 filler_34C[4];
     String *itemNameStrings[NUM_BAG_STRINGS];

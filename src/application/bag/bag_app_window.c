@@ -288,3 +288,28 @@ void ov15_021FE9F0(BagAppData *appData, Window *window, int a2, BOOL a3) {
     }
     Heap_FreeExplicit(HEAP_ID_BAG, pNcgrFile);
 }
+
+void ov15_021FEA5C(BagAppData *appData) {
+    appData->unk_300[0] = NewString_ReadMsgData(appData->msgData, msg_0010_00000);
+    appData->unk_300[1] = NewString_ReadMsgData(appData->msgData, msg_0010_00006);
+    appData->unk_300[2] = NewString_ReadMsgData(appData->msgData, msg_0010_00016);
+    appData->unk_300[3] = NewString_ReadMsgData(appData->msgData, msg_0010_00098);
+    appData->unk_300[4] = NewString_ReadMsgData(appData->msgData, msg_0010_00099);
+    appData->unk_300[5] = NewString_ReadMsgData(appData->msgData, msg_0010_00001);
+    appData->unk_300[6] = NewString_ReadMsgData(appData->msgData, msg_0010_00002);
+    appData->unk_300[7] = NewString_ReadMsgData(appData->msgData, msg_0010_00018);
+    appData->unk_300[8] = NewString_ReadMsgData(appData->msgData, msg_0010_00003);
+    appData->unk_300[9] = NewString_ReadMsgData(appData->msgData, msg_0010_00004);
+    appData->unk_300[10] = NewString_ReadMsgData(appData->msgData, msg_0010_00005);
+    appData->unk_300[11] = NewString_ReadMsgData(appData->msgData, msg_0010_00008);
+    appData->unk_300[12] = NewString_ReadMsgData(appData->msgData, msg_0010_00075);
+    appData->unk_300[13] = NewString_ReadMsgData(appData->msgData, msg_0010_00086);
+    appData->unk_300[14] = NewString_ReadMsgData(appData->msgData, msg_0010_00000);
+    appData->unk_300[15] = NewString_ReadMsgData(appData->msgData, msg_0010_00128);
+}
+
+void ov15_021FEB64(BagAppData *appData) {
+    for (u16 i = 0; i < 16; ++i) {
+        String_Delete(appData->unk_300[i]);
+    }
+}
