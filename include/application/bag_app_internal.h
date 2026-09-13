@@ -133,7 +133,9 @@ struct BagAppData {
     u8 filler_34C[4];
     String *itemNameStrings[NUM_BAG_STRINGS];
     String *formattedStrbuf;
-    u8 filler_5E8[0xC];
+    String *unk_5E8;
+    String *unk_5EC;
+    u8 filler_5F0[4];
     String *unk_5F4[8];
     u8 unk_614;
     u8 gender;

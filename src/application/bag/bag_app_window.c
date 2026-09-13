@@ -3,6 +3,7 @@
 #include "msgdata/msg/msg_0010.h"
 #include "msgdata/msg/msg_0225.h"
 
+#include "font.h"
 #include "move.h"
 #include "text.h"
 
@@ -14,6 +15,7 @@ void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno);
 void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno);
 void ov15_021FE5C4(BagAppData *appData, u16 itemId);
 void ov15_021FE620(BagAppData *appData, u16 itemId);
+void ov15_021FE8C4(BagAppData *appData, int a1);
 
 void ov15_021FE020(BagAppData *appData) {
     AddWindowParameterized(appData->bgConfig, &appData->windows[0], GF_BG_LYR_MAIN_1, 0, 18, 32, 6, 4, 0x001);
@@ -221,4 +223,26 @@ void ov15_021FE620(BagAppData *appData, u16 itemId) {
     AddTextPrinterParameterizedWithColor(window, 0, appData->formattedStrbuf, 232, 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
 
     ScheduleWindowCopyToVram(window);
+}
+
+void ov15_021FE868(BagAppData *appData) {
+    ClearWindowTilemapAndScheduleTransfer(&appData->windows[1]);
+}
+
+void ov15_021FE874(BagAppData *appData) {
+    appData->unk_5E8 = NewString_ReadMsgData(appData->msgData, msg_0010_00039);
+    appData->unk_5EC = NewString_ReadMsgData(appData->msgData, msg_0010_00038);
+}
+
+void ov15_021FE8A4(BagAppData *appData) {
+    String_Delete(appData->unk_5E8);
+    String_Delete(appData->unk_5EC);
+}
+
+void ov15_021FE8C4(BagAppData *appData, int a1) {
+    String *string = String_New(10, HEAP_ID_BAG);
+    BufferIntegerAsString(appData->msgFormat, 0, a1, 3, PRINTING_MODE_LEFT_ALIGN, TRUE);
+    StringExpandPlaceholders(appData->msgFormat, string, appData->unk_5EC);
+    u32 result = FontID_String_GetWidth(0, string, 0);
+    String_Delete(string);
 }
