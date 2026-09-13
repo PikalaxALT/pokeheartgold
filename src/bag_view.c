@@ -35,12 +35,12 @@ u32 BagView_sizeof(void) {
     return sizeof(BagView);
 }
 
-void sub_02077894(BagView *bagView, u8 a1) {
-    bagView->unk65 = a1;
+void BagView_SetContext(BagView *bagView, u8 context) {
+    bagView->context = context;
 }
 
-void sub_0207789C(BagView *bagView, SaveData *save, u8 a2, BagCursor *cursor, MenuInputStateMgr *menuInputStateMgr) {
-    sub_02077894(bagView, a2);
+void BagView_Init(BagView *bagView, SaveData *save, u8 context, BagCursor *cursor, MenuInputStateMgr *menuInputStateMgr) {
+    BagView_SetContext(bagView, context);
     bagView->saveData = save;
     bagView->menuInputStateMgr = menuInputStateMgr;
     bagView->cursor = cursor;
@@ -61,7 +61,7 @@ void sub_020778C8(BagView *bagView) {
     bagView->unk76_0 = TRUE;
 }
 
-void sub_020778DC(BagView *bagView, ItemCheckUseData *checkUseData) {
+void BagView_SetCheckUseData(BagView *bagView, ItemCheckUseData *checkUseData) {
     bagView->checkUseData = checkUseData;
 }
 

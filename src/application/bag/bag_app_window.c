@@ -5,6 +5,7 @@
 
 #include "font.h"
 #include "move.h"
+#include "render_window.h"
 #include "text.h"
 #include "unk_0200CE7C.h"
 
@@ -312,4 +313,30 @@ void ov15_021FEB64(BagAppData *appData) {
     for (u16 i = 0; i < 16; ++i) {
         String_Delete(appData->unk_300[i]);
     }
+}
+
+void ov15_021FEB84(BagAppData *appData, u8 *a1, int a2) {
+    if (appData->bagView->pockets[appData->bagView->curPocket].pocketId == POCKET_TMHMS) {
+        FillWindowPixelBuffer(&appData->windows[1], 0);
+        ov15_021FE620(appData, appData->bagView->itemId);
+        ScheduleWindowCopyToVram(&appData->windows[0]);
+        ov15_021FF97C(appData, appData->bagView->itemId, 1);
+        ov15_021F9C78(appData, FALSE);
+    }
+    DrawFrameAndWindow2(&appData->windows[2], TRUE, 0x3E2, 12);
+    FillWindowPixelBuffer(&appData->windows[2], 15);
+    BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
+    String *r7;
+    if (appData->bagView->context == BAG_VIEW_CONTEXT_6 && !ov15_021FD3F0(pocket->pocketId, appData->bagView->itemId)) {
+        r7 = NewString_ReadMsgData(appData->msgData, msg_0010_00106);
+    } else {
+        r7 = NewString_ReadMsgData(appData->msgData, msg_0010_00043);
+    }
+    String *r6 = String_New(108, HEAP_ID_BAG);
+    ov15_021FE584(appData, pocket->scroll + appData->cursorPos - 8, 0);
+    StringExpandPlaceholders(appData->msgFormat, r6, r7);
+    AddTextPrinterParameterized(&appData->windows[2], 1, r6, 0, 0, TEXT_SPEED_NOTRANSFER, NULL);
+    String_Delete(r6);
+    String_Delete(r7);
+    ScheduleWindowCopyToVram(&appData->windows[2]);
 }

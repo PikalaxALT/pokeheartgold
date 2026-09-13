@@ -28,6 +28,17 @@ typedef enum ItemUseError {
     ITEMUSEERROR_OAKSWORDS = -1u,
 } ItemUseError;
 
+// Enum for the context in which the bag menu is displayed
+typedef enum BagViewContext {
+    BAG_VIEW_CONTEXT_NORMAL,
+    BAG_VIEW_CONTEXT_GIVE_ITEM,
+    BAG_VIEW_CONTEXT_MART_SELL,
+    BAG_VIEW_CONTEXT_DEBUG,
+    BAG_VIEW_CONTEXT_4,
+    BAG_VIEW_CONTEXT_5,
+    BAG_VIEW_CONTEXT_6,
+} BagViewContext;
+
 /*
  * The player's inventory. All items in all pockets,
  * and the two items registered to the touchscreen
@@ -74,7 +85,7 @@ typedef struct BagView {
     SaveData *saveData;       // Persistent game state
     BagViewPocket pockets[8]; // Pocket information
     u8 curPocket;
-    u8 unk65;
+    u8 context;
     u16 itemId;
     u16 unk68;
     u8 padding[2];

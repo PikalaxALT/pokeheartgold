@@ -218,6 +218,7 @@ void ov15_021FF894(BagAppData *appData);
 int ov15_021FF8D4(BagAppData *appData);
 void ov15_021FF950(BagAppData *appData);
 void ov15_021FF964(BagAppData *appData);
+void ov15_021FF97C(BagAppData *appData, u16 itemId, int a2);
 void ov15_021FFECC(BagAppData *appData, int a1);
 void ov15_021FFF24(BagAppData *appData);
 void ov15_021FFF34(BagAppData *appData, int a1);

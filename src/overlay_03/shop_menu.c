@@ -1490,7 +1490,7 @@ static void Task_Mart_OpenSellMenu(TaskManager *taskManager) {
         FieldSystem *fieldSystem = TaskManager_GetFieldSystem(taskManager);
         MartData *data = TaskManager_GetEnvironment(taskManager);
         data->bagView = Bag_CreateView(Save_Bag_Get(fieldSystem->saveData), ov03_022597F0, HEAP_ID_FIELD2);
-        sub_0207789C(data->bagView, fieldSystem->saveData, 2, fieldSystem->bagCursor, &fieldSystem->menuInputState);
+        BagView_Init(data->bagView, fieldSystem->saveData, BAG_VIEW_CONTEXT_MART_SELL, fieldSystem->bagCursor, &fieldSystem->menuInputState);
         Bag_LaunchApp(fieldSystem, data->bagView);
         TaskManager_Jump(taskManager, Task_Bag_SellMenu, data);
         data->state = TASK_MART_SELLMENU_RUN;

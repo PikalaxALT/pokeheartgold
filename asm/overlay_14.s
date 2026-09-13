@@ -6659,7 +6659,7 @@ ov14_021E8ACC: ; 0x021E8ACC
 	str r0, [sp]
 	ldr r0, [r4, #0x18]
 	ldr r1, [r1]
-	bl sub_0207789C
+	bl BagView_Init
 	ldr r0, _021E8B14 ; =FS_OVERLAY_ID(OVY_15)
 	mov r1, #2
 	bl HandleLoadOverlay

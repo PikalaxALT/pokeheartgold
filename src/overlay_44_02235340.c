@@ -725,13 +725,13 @@ void ov44_02233D8C(UnkStruct_ov44_02235340 *arg0, UnkStruct_ov44_args *arg1, enu
     s32 var_r5;
 
     if (arg0->unk4 != 0) {
-        if ((u8)(arg0->unk5 + 229) <= 2) {
+        if (arg0->unk5 == 27 || arg0->unk5 == 28 || arg0->unk5 == 29) {
             return;
         }
         if ((sub_020390C4() <= 2) && (ov44_02233F64(arg0) <= 1) && (ov44_02233E6C(arg0) == 0)) {
             return;
         }
-    } else if ((arg0->unk5 == 15) || (arg0->unk5 == 16) || (arg0->unk5 == 17) || ((u8)(arg0->unk5 + 250) <= 1)) {
+    } else if ((arg0->unk5 == 15) || (arg0->unk5 == 16) || (arg0->unk5 == 17) || arg0->unk5 == 6 || arg0->unk5 == 7) {
         return;
     }
 

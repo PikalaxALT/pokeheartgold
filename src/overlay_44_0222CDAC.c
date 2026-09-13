@@ -4118,7 +4118,7 @@ u8 ov44_0222FA80(UnkStruct_ov44_022319EC *arg0, enum HeapID heapID) {
             arg0->unkB1C.unk75 = 0;
         }
     }
-    if ((u8)(arg0->unkB1C.unk73 + 254) <= 1) {
+    if (arg0->unkB1C.unk73 == 2 || arg0->unkB1C.unk73 == 3) {
         u32 temp_r0_2 = ov44_02231788(arg0);
         if (ov44_0222FBC8(arg0, temp_r0_2) == 1) {
             arg0->unkB1C.unk77 = arg0->unkB1C.unk71;
