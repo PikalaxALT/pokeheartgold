@@ -6,6 +6,7 @@
 #include "font.h"
 #include "move.h"
 #include "text.h"
+#include "unk_0200CE7C.h"
 
 void ov15_021FE17C(BagAppData *appData);
 void ov15_021FE1D0(BagAppData *appData);
@@ -15,7 +16,9 @@ void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno);
 void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno);
 void ov15_021FE5C4(BagAppData *appData, u16 itemId);
 void ov15_021FE620(BagAppData *appData, u16 itemId);
-void ov15_021FE8C4(BagAppData *appData, int a1);
+void ov15_021FE8C4(BagAppData *appData, u16 a1, u16 a2, u32 textColor);
+void ov15_021FE914(BagAppData *appData, Window *window, ItemSlot *a2, u32 a3);
+void ov15_021FE9B0(BagAppData *appdata, Window *window, int a2);
 
 void ov15_021FE020(BagAppData *appData) {
     AddWindowParameterized(appData->bgConfig, &appData->windows[0], GF_BG_LYR_MAIN_1, 0, 18, 32, 6, 4, 0x001);
@@ -239,10 +242,23 @@ void ov15_021FE8A4(BagAppData *appData) {
     String_Delete(appData->unk_5EC);
 }
 
-void ov15_021FE8C4(BagAppData *appData, int a1) {
+void ov15_021FE8C4(BagAppData *appData, u16 a1, u16 a2, u32 textColor) {
     String *string = String_New(10, HEAP_ID_BAG);
     BufferIntegerAsString(appData->msgFormat, 0, a1, 3, PRINTING_MODE_LEFT_ALIGN, TRUE);
     StringExpandPlaceholders(appData->msgFormat, string, appData->unk_5EC);
     u32 result = FontID_String_GetWidth(0, string, 0);
     String_Delete(string);
+}
+
+void ov15_021FE914(BagAppData *appData, Window *window, ItemSlot *a2, u32 a3) {
+    u16 itemId = a2->id;
+    if (itemId < ITEM_HM01) {
+        itemId = itemId - ITEM_TM01 + 1;
+        sub_0200CE7C(appData->msgPrinter, 2, itemId, 2, PRINTING_MODE_LEADING_ZEROS, window, 0, a3 + 5);
+        ov15_021FE8C4(appData, a2->quantity, a3, MAKE_TEXT_COLOR(1, 2, 0));
+    } else {
+        itemId = itemId - ITEM_HM01 + 1;
+        PrintUIntOnWindow(appData->msgPrinter, itemId, 2, PRINTING_MODE_RIGHT_ALIGN, window, 16, a3 + 5);
+        ov15_021FE9B0(appData, window, 16);
+    }
 }
