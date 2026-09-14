@@ -195,106 +195,106 @@ static const u8 ov15_02200528[][4] = {
     { 4, 4, 3, 2 },
 };
 
-static u8 ov15_02201468[] = { 0x11, 0x12, 0x13, 0x14, 0x10 };
+static u8 ov15_02201468[] = { 17, 18, 19, 20, 16 };
 
 static const u8 ov15_02200640[][4] = {
-    { 0x0C, 0x08, 0x07, 0x01 },
-    { 0x0C, 0x08, 0x00, 0x02 },
-    { 0x0C, 0x08, 0x01, 0x03 },
-    { 0x0C, 0x08, 0x02, 0x04 },
-    { 0x10, 0x09, 0x03, 0x05 },
-    { 0x10, 0x09, 0x04, 0x06 },
-    { 0x10, 0x09, 0x05, 0x07 },
-    { 0x10, 0x09, 0x06, 0x00 },
-    { 0x11, 0x0A, 0x0E, 0x09 },
-    { 0x11, 0x0B, 0x08, 0x0F },
-    { 0x08, 0x0C, 0x0E, 0x0B },
-    { 0x09, 0x0D, 0x0A, 0x0F },
-    { 0x0A, 0x11, 0x0E, 0x0D },
-    { 0x0B, 0x10, 0x0C, 0x0F },
-    { 0x0C, 0x11, 0x10, 0x10 },
-    { 0x0C, 0x11, 0x10, 0x10 },
-    { 0x0D, 0x11, 0x10, 0x10 },
+    { 12, 8,  7,  1  },
+    { 12, 8,  0,  2  },
+    { 12, 8,  1,  3  },
+    { 12, 8,  2,  4  },
+    { 16, 9,  3,  5  },
+    { 16, 9,  4,  6  },
+    { 16, 9,  5,  7  },
+    { 16, 9,  6,  0  },
+    { 17, 10, 14, 9  },
+    { 17, 11, 8,  15 },
+    { 8,  12, 14, 11 },
+    { 9,  13, 10, 15 },
+    { 10, 17, 14, 13 },
+    { 11, 16, 12, 15 },
+    { 12, 17, 16, 16 },
+    { 12, 17, 16, 16 },
+    { 13, 17, 16, 16 },
 };
 
 static const u8 ov15_02200584[][4] = {
-    { 0x0C, 0x0A, 0x0E, 0x09 },
-    { 0x10, 0x0B, 0x08, 0x0F },
-    { 0x08, 0x0C, 0x0E, 0x0B },
-    { 0x09, 0x0D, 0x0A, 0x0F },
-    { 0x0A, 0x08, 0x0E, 0x0D },
-    { 0x0B, 0x10, 0x0C, 0x0F },
-    { 0x0C, 0x08, 0x10, 0x10 },
-    { 0x0C, 0x08, 0x10, 0x10 },
-    { 0x0D, 0x09, 0x10, 0x10 },
+    { 12, 10, 14, 9  },
+    { 16, 11, 8,  15 },
+    { 8,  12, 14, 11 },
+    { 9,  13, 10, 15 },
+    { 10, 8,  14, 13 },
+    { 11, 16, 12, 15 },
+    { 12, 8,  16, 16 },
+    { 12, 8,  16, 16 },
+    { 13, 9,  16, 16 },
 };
 
 const OverlayManagerTemplate ov15_022008B8 = {
     Bag_Init,
     Bag_Main,
     Bag_Exit,
-    0xFFFFFFFF,
+    FS_OVERLAY_ID_NONE,
 };
 
 static const TouchscreenHitbox ov15_02200684[] = {
-    { 0x00, 0x1F, 0x00, 0x1F },
-    { 0x00, 0x1F, 0x20, 0x3F },
-    { 0x00, 0x1F, 0x40, 0x5F },
-    { 0x00, 0x1F, 0x60, 0x7F },
-    { 0x00, 0x1F, 0x80, 0x9F },
-    { 0x00, 0x1F, 0xA0, 0xBF },
-    { 0x00, 0x1F, 0xC0, 0xDF },
-    { 0x00, 0x1F, 0xE0, 0xFF },
-    { 0x20, 0x49, 0x00, 0x7F },
-    { 0x20, 0x49, 0x80, 0xFF },
-    { 0x4A, 0x75, 0x00, 0x7F },
-    { 0x4A, 0x75, 0x80, 0xFF },
-    { 0x76, 0x99, 0x00, 0x7F },
-    { 0x76, 0x99, 0x80, 0xFF },
-    { 0xA8, 0xBF, 0x00, 0x27 },
-    { 0xA8, 0xBF, 0x28, 0x4F },
-    { 0xA8, 0xBF, 0xC0, 0xFF },
+    { 0, 31, 0, 31 },
+    { 0, 31, 32, 63 },
+    { 0, 31, 64, 95 },
+    { 0, 31, 96, 127 },
+    { 0, 31, 128, 159 },
+    { 0, 31, 160, 191 },
+    { 0, 31, 192, 223 },
+    { 0, 31, 224, 255 },
+    { 32, 73, 0, 127 },
+    { 32, 73, 128, 255 },
+    { 74, 117, 0, 127 },
+    { 74, 117, 128, 255 },
+    { 118, 153, 0, 127 },
+    { 118, 153, 128, 255 },
+    { 168, 191, 0, 39 },
+    { 168, 191, 40, 79 },
+    { 168, 191, 192, 255 },
     { TOUCHSCREEN_RECTLIST_END },
 };
 
 static const TouchscreenHitbox ov15_02200550[] = {
-    { 0x80, 0x9F, 0x00, 0x5D },
-    { 0x80, 0x9F, 0x60, 0xBF },
-    { 0xA0, 0xBF, 0x00, 0x5D },
-    { 0xA0, 0xBF, 0x60, 0xBF },
-    { 0xA8, 0xBF, 0xC0, 0xFF },
+    { 128, 159, 0, 93 },
+    { 128, 159, 96, 191 },
+    { 160, 191, 0, 93 },
+    { 160, 191, 96, 191 },
+    { 168, 191, 192, 255 },
     { TOUCHSCREEN_RECTLIST_END },
 };
 static const TouchscreenHitbox ov15_022005F0[] = {
-    { 0x20, 0x49, 0x00, 0x7F },
-    { 0x20, 0x49, 0x80, 0xFF },
-    { 0x4A, 0x75, 0x00, 0x7F },
-    { 0x4A, 0x75, 0x80, 0xFF },
-    { 0x76, 0x99, 0x00, 0x7F },
-    { 0x76, 0x99, 0x80, 0xFF },
-    { 0xA8, 0xBF, 0x00, 0x27 },
-    { 0xA8, 0xBF, 0x28, 0x4F },
-    { 0xA8, 0xBF, 0xC0, 0xFF },
+    { 32, 73, 0, 127 },
+    { 32, 73, 128, 255 },
+    { 74, 117, 0, 127 },
+    { 74, 117, 128, 255 },
+    { 118, 153, 0, 127 },
+    { 118, 153, 128, 255 },
+    { 168, 191, 0, 39 },
+    { 168, 191, 40, 79 },
+    { 168, 191, 192, 255 },
     { TOUCHSCREEN_RECTLIST_END },
 };
 static const TouchscreenHitbox ov15_022005A8[] = {
-    { 0x58, 0x6F, 0x78, 0x97 },
-    { 0x58, 0x6F, 0x98, 0xB7 },
-    { 0x58, 0x6F, 0xB8, 0xD7 },
-    { 0x88, 0x9F, 0x78, 0x97 },
-    { 0x88, 0x9F, 0x98, 0xB7 },
-    { 0x88, 0x9F, 0xB8, 0xD7 },
-    { 0xA8, 0xBF, 0x60, 0xAD },
-    { 0xA8, 0xBF, 0xB2, 0xFF },
+    { 88, 111, 120, 151 },
+    { 88, 111, 152, 183 },
+    { 88, 111, 184, 215 },
+    { 136, 159, 120, 151 },
+    { 136, 159, 152, 183 },
+    { 136, 159, 184, 215 },
+    { 168, 191, 96, 173 },
+    { 168, 191, 178, 255 },
     { TOUCHSCREEN_RECTLIST_END },
 };
 static const TouchscreenHitbox ov15_02200568[] = {
-    { 0x58, 0x6F, 0x78, 0x97 },
-    { 0x58, 0x6F, 0x98, 0xB7 },
-    { 0x88, 0x9F, 0x78, 0x97 },
-    { 0x88, 0x9F, 0x98, 0xB7 },
-    { 0xA8, 0xBF, 0x60, 0xAD },
-    { 0xA8, 0xBF, 0xB2, 0xFF },
+    { 88, 111, 120, 151 },
+    { 88, 111, 152, 183 },
+    { 136, 159, 120, 151 },
+    { 136, 159, 152, 183 },
+    { 168, 191, 96, 173 },
+    { 168, 191, 178, 255 },
     { TOUCHSCREEN_RECTLIST_END },
 };
 
@@ -681,7 +681,7 @@ static void ov15_021F99A4(BgConfig *bgConfig) {
     InitBgFromTemplate(bgConfig, GF_BG_LYR_MAIN_3, &ov15_022006CC[2], GF_BG_TYPE_TEXT);
     BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_MAIN_1);
     BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_MAIN_3);
-    BG_ClearCharDataRange(GF_BG_LYR_MAIN_1, 0x20, 0x000, HEAP_ID_BAG);
+    BG_ClearCharDataRange(GF_BG_LYR_MAIN_1, 32, 0x000, HEAP_ID_BAG);
 
     static const BgTemplate ov15_02200720[4] = {
         {
@@ -748,8 +748,8 @@ static void ov15_021F99A4(BgConfig *bgConfig) {
     InitBgFromTemplate(bgConfig, GF_BG_LYR_SUB_3, &ov15_02200720[3], GF_BG_TYPE_TEXT);
     BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_SUB_0);
     BgClearTilemapBufferAndCommit(bgConfig, GF_BG_LYR_SUB_3);
-    BG_ClearCharDataRange(GF_BG_LYR_SUB_0, 0x20, 0x000, HEAP_ID_BAG);
-    BG_ClearCharDataRange(GF_BG_LYR_SUB_3, 0x20, 0x000, HEAP_ID_BAG);
+    BG_ClearCharDataRange(GF_BG_LYR_SUB_0, 32, 0x000, HEAP_ID_BAG);
+    BG_ClearCharDataRange(GF_BG_LYR_SUB_3, 32, 0x000, HEAP_ID_BAG);
 
     G2_SetBlendAlpha(GX_PLANEMASK_NONE, GX_PLANEMASK_BG3, 0, 0);
 }
@@ -777,7 +777,7 @@ static void ov15_021F9AE4(BagAppData *appData) {
         GfGfxLoader_LoadScrnData(NARC_a_0_1_5, 93, appData->bgConfig, GF_BG_LYR_MAIN_3, 0, 0, FALSE, HEAP_ID_BAG);
     }
     GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 8, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_0_OFFSET, 0, HEAP_ID_BAG);
-    GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 17, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_13_OFFSET, 0x20, HEAP_ID_BAG);
+    GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 17, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_13_OFFSET, 32, HEAP_ID_BAG);
     LoadFontPal1(GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_11_OFFSET, HEAP_ID_BAG);
     LoadUserFrameGfx1(appData->bgConfig, GF_BG_LYR_MAIN_1, 0x3F7, 14, 0, HEAP_ID_BAG);
     LoadUserFrameGfx2(appData->bgConfig, GF_BG_LYR_MAIN_1, 0x3D9, 12, Options_GetFrame(appData->options), HEAP_ID_BAG);
@@ -786,7 +786,7 @@ static void ov15_021F9AE4(BagAppData *appData) {
     GfGfxLoader_LoadCharData(NARC_a_0_1_5, 46, appData->bgConfig, GF_BG_LYR_SUB_2, 0, 0, FALSE, HEAP_ID_BAG);
     appData->unk_68C = GfGfxLoader_GetPlttData(NARC_a_0_1_5, 40, &appData->unk_694[0], HEAP_ID_BAG);
     appData->unk_690 = GfGfxLoader_GetPlttData(NARC_a_0_1_5, 41, &appData->unk_694[1], HEAP_ID_BAG);
-    GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 8, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_8_OFFSET, 0x80, HEAP_ID_BAG);
+    GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 8, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_8_OFFSET, 128, HEAP_ID_BAG);
     LoadUserFrameGfx2(appData->bgConfig, GF_BG_LYR_SUB_0, 0x3E2, 12, Options_GetFrame(appData->options), HEAP_ID_BAG);
 }
 
@@ -2820,47 +2820,47 @@ BOOL ov15_021FD3F0(u8 pocketId, u16 itemId) {
 static void ov15_021FD404(BagAppData *appData, int a1, int pocket) {
     const u16 *r5 = appData->unk_694[a1]->pRawData;
     if (pocket <= 7) {
-        GXS_LoadBGPltt(r5 + 16 * pocket, 0, 0x20);
-        GXS_LoadBGPltt(r5 + 16 * pocket, 0x20, 0x40);
-        GXS_LoadBGPltt(r5 + 16 * pocket, 0x60, 0x20);
+        GXS_LoadBGPltt(r5 + 16 * pocket, 0, 32);
+        GXS_LoadBGPltt(r5 + 16 * pocket, 32, 64);
+        GXS_LoadBGPltt(r5 + 16 * pocket, 96, 32);
     }
 }
 static u8 ov15_022013A8[6][4][8] = {
     {
-     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-     { 0x02, 0x00, 0x00, 0x00, 0x04, 0x20, 0x10, 0x00 },
-     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-     { 0x00, 0x00, 0x00, 0x10, 0x04, 0x10, 0x10, 0x00 },
+     { 0, 0, 0, 0, 0, 0, 0, 0 },
+     { 2, 0, 0, 0, 4, 32, 16, 0 },
+     { 0, 0, 0, 0, 0, 0, 0, 0 },
+     { 0, 0, 0, 16, 4, 16, 16, 0 },
      },
     {
-     { 0x01, 0x00, 0x13, 0x00, 0x09, 0x10, 0x01, 0x00 },
-     { 0x02, 0x00, 0x00, 0x00, 0x0A, 0x10, 0x0A, 0x00 },
-     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-     { 0x02, 0x00, 0x00, 0x10, 0x04, 0x10, 0x10, 0x00 },
+     { 1, 0, 19, 0, 9, 16, 1, 0 },
+     { 2, 0, 0, 0, 10, 16, 10, 0 },
+     { 0, 0, 0, 0, 0, 0, 0, 0 },
+     { 2, 0, 0, 16, 4, 16, 16, 0 },
      },
     {
-     { 0x01, 0x00, 0x13, 0x00, 0x09, 0x10, 0x01, 0x00 },
-     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-     { 0x01, 0x10, 0x13, 0x10, 0x09, 0x10, 0x01, 0x00 },
-     { 0x02, 0x00, 0x00, 0x00, 0x0A, 0x20, 0x0A, 0x00 },
+     { 1, 0, 19, 0, 9, 16, 1, 0 },
+     { 0, 0, 0, 0, 0, 0, 0, 0 },
+     { 1, 16, 19, 16, 9, 16, 1, 0 },
+     { 2, 0, 0, 0, 10, 32, 10, 0 },
      },
     {
-     { 0x01, 0x00, 0x13, 0x00, 0x0E, 0x10, 0x01, 0x00 },
-     { 0x02, 0x00, 0x00, 0x00, 0x0F, 0x10, 0x05, 0x00 },
-     { 0x01, 0x10, 0x13, 0x10, 0x09, 0x10, 0x01, 0x00 },
-     { 0x02, 0x00, 0x00, 0x10, 0x0A, 0x10, 0x0A, 0x00 },
+     { 1, 0, 19, 0, 14, 16, 1, 0 },
+     { 2, 0, 0, 0, 15, 16, 5, 0 },
+     { 1, 16, 19, 16, 9, 16, 1, 0 },
+     { 2, 0, 0, 16, 10, 16, 10, 0 },
      },
     {
-     { 0x01, 0x00, 0x13, 0x00, 0x0E, 0x10, 0x01, 0x00 },
-     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-     { 0x01, 0x10, 0x13, 0x10, 0x0E, 0x10, 0x01, 0x00 },
-     { 0x02, 0x00, 0x00, 0x00, 0x0F, 0x20, 0x05, 0x00 },
+     { 1, 0, 19, 0, 14, 16, 1, 0 },
+     { 0, 0, 0, 0, 0, 0, 0, 0 },
+     { 1, 16, 19, 16, 14, 16, 1, 0 },
+     { 2, 0, 0, 0, 15, 32, 5, 0 },
      },
     {
-     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-     { 0x01, 0x10, 0x13, 0x10, 0x0E, 0x10, 0x01, 0x00 },
-     { 0x02, 0x00, 0x00, 0x10, 0x0F, 0x10, 0x05, 0x00 },
+     { 0, 0, 0, 0, 0, 0, 0, 0 },
+     { 0, 0, 0, 0, 0, 0, 0, 0 },
+     { 1, 16, 19, 16, 14, 16, 1, 0 },
+     { 2, 0, 0, 16, 15, 16, 5, 0 },
      },
 };
 
@@ -2881,34 +2881,34 @@ static void ov15_021FD43C(BgConfig *bgConfig, int bgId, int a2) {
 }
 static u8 ov15_02201340[5][2][4] = {
     {
-     { 0x00, 0x0B, 0x10, 0x09 },
-     { 0x10, 0x06, 0x10, 0x10 },
+     { 0, 11, 16, 9 },
+     { 16, 6, 16, 16 },
      },
     {
-     { 0x00, 0x0B, 0x20, 0x09 },
-     { 0x00, 0x00, 0x00, 0x00 },
+     { 0, 11, 32, 9 },
+     { 0, 0, 0, 0 },
      },
     {
-     { 0x00, 0x10, 0x10, 0x04 },
-     { 0x10, 0x0B, 0x10, 0x09 },
+     { 0, 16, 16, 4 },
+     { 16, 11, 16, 9 },
      },
     {
-     { 0x00, 0x10, 0x20, 0x04 },
-     { 0x00, 0x00, 0x00, 0x00 },
+     { 0, 16, 32, 4 },
+     { 0, 0, 0, 0 },
      },
     {
-     { 0x00, 0x00, 0x00, 0x00 },
-     { 0x10, 0x10, 0x10, 0x04 },
+     { 0, 0, 0, 0 },
+     { 16, 16, 16, 4 },
      },
 };
 
 static u8 ov15_02201328[6][4] = {
-    { 0x00, 0x04, 0x10, 0x06 },
-    { 0x10, 0x04, 0x10, 0x06 },
-    { 0x00, 0x09, 0x10, 0x06 },
-    { 0x10, 0x09, 0x10, 0x06 },
-    { 0x00, 0x0E, 0x10, 0x06 },
-    { 0x10, 0x0E, 0x10, 0x06 },
+    { 0,  4,  16, 6 },
+    { 16, 4,  16, 6 },
+    { 0,  9,  16, 6 },
+    { 16, 9,  16, 6 },
+    { 0,  14, 16, 6 },
+    { 16, 14, 16, 6 },
 };
 
 static void ov15_021FD4C0(BgConfig *bgConfig, int bgId, int a2, int a3) {

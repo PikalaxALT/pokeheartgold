@@ -12,23 +12,23 @@
 #include "unk_02005D10.h"
 #include "unk_0200CE7C.h"
 
-void ov15_021FE17C(BagAppData *appData);
-void ov15_021FE1D0(BagAppData *appData);
-void ov15_021FE3E0(BagAppData *appData);
-void ov15_021FE204(BagAppData *appData);
-void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno);
-void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno);
-void ov15_021FE5C4(BagAppData *appData, u16 itemId);
-void ov15_021FE620(BagAppData *appData, u16 itemId);
-void ov15_021FE8C4(BagAppData *appData, u16 a1, u16 a2, u32 textColor);
-void ov15_021FE914(BagAppData *appData, Window *window, ItemSlot *slot, u32 y);
-void *ov15_021FE990(BagAppData *appData, NNSG2dCharacterData **ppCharData);
-void ov15_021FE9B0(BagAppData *appData, Window *window, int a2);
-void ov15_021FE9F0(BagAppData *appData, Window *window, int y, BOOL a3);
-int BagApp_PrintMessageCallback(TextPrinterTemplate *printer, u16 cmd);
-int ov15_021FF320(BagViewPocket *pocket, int pocketId, int a2);
-void ov15_021FF570(BagAppData *appData, Window *window, String *string, BagViewPocket *pocket, int slotId);
-void ov15_021FF66C(MessageFormat *msgFormat, MsgData *msgData, Window *window, u16 quantity);
+static void BagApp_AddItemNameWindows(BagAppData *appData);
+static void BagApp_RemoveItemNameWindows(BagAppData *appData);
+static void ov15_021FE3E0(BagAppData *appData);
+static void ov15_021FE204(BagAppData *appData);
+static void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno);
+static void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno);
+static void ov15_021FE5C4(BagAppData *appData, u16 itemId);
+static void ov15_021FE620(BagAppData *appData, u16 itemId);
+static void ov15_021FE8C4(BagAppData *appData, u16 a1, u16 a2, u32 textColor);
+static void BagApp_PrintTMorHMNumberOnWindow(BagAppData *appData, Window *window, ItemSlot *slot, u32 y);
+static void *ov15_021FE990(BagAppData *appData, NNSG2dCharacterData **ppCharData);
+static void ov15_021FE9B0(BagAppData *appData, Window *window, int a2);
+static void BagApp_DrawRegisteredItemIconOnWindow(BagAppData *appData, Window *window, int y, BOOL a3);
+static int BagApp_PrintMessageCallback(TextPrinterTemplate *printer, u16 cmd);
+static int BagViewPocket_GetIndexWithAtMostXNonEmptySlots(BagViewPocket *pocket, int pocketId, int limit);
+static void BagApp_PrintItemNameAndMaybeQuantityOnWindow(BagAppData *appData, Window *window, String *string, BagViewPocket *pocket, int slotId);
+static void PrintItemQuantityOnWindow(MessageFormat *msgFormat, MsgData *msgData, Window *window, u16 quantity);
 
 static const u8 ov15_022008C8[] = {
     NUM_BAG_ITEMS,
@@ -62,25 +62,25 @@ void ov15_021FE154(BagAppData *appData) {
         RemoveWindow(&appData->windows[i]);
     }
     ov15_021FE3E0(appData);
-    ov15_021FE1D0(appData);
+    BagApp_RemoveItemNameWindows(appData);
 }
 
 static const int ov15_02200908[12][3] = {
-    { 0x00000004, 0x00000005, 0x000000BF },
-    { 0x00000014, 0x00000005, 0x000000EB },
-    { 0x00000004, 0x0000000A, 0x00000117 },
-    { 0x00000014, 0x0000000A, 0x00000143 },
-    { 0x00000004, 0x0000000F, 0x0000016F },
-    { 0x00000014, 0x0000000F, 0x0000019B },
-    { 0x00000004, 0x00000005, 0x000001C7 },
-    { 0x00000014, 0x00000005, 0x000001F3 },
-    { 0x00000004, 0x0000000A, 0x0000021F },
-    { 0x00000014, 0x0000000A, 0x0000024B },
-    { 0x00000004, 0x0000000F, 0x00000277 },
-    { 0x00000014, 0x0000000F, 0x000002A3 },
+    { 4,  5,  0x0BF },
+    { 20, 5,  0x0EB },
+    { 4,  10, 0x117 },
+    { 20, 10, 0x143 },
+    { 4,  15, 0x16F },
+    { 20, 15, 0x19B },
+    { 4,  5,  0x1C7 },
+    { 20, 5,  0x1F3 },
+    { 4,  10, 0x21F },
+    { 20, 10, 0x24B },
+    { 4,  15, 0x277 },
+    { 20, 15, 0x2A3 },
 };
 
-void ov15_021FE17C(BagAppData *appData) {
+static void BagApp_AddItemNameWindows(BagAppData *appData) {
     if (appData->windows3[0].bgConfig == NULL) {
         for (int i = 0; i < 12; ++i) {
             AddWindowParameterized(appData->bgConfig, &appData->windows3[i], GF_BG_LYR_SUB_0, ov15_02200908[i][0], ov15_02200908[i][1], 11, 4, 11, ov15_02200908[i][2]);
@@ -88,7 +88,7 @@ void ov15_021FE17C(BagAppData *appData) {
     }
 }
 
-void ov15_021FE1D0(BagAppData *appData) {
+static void BagApp_RemoveItemNameWindows(BagAppData *appData) {
     if (appData->windows3[0].bgConfig != NULL) {
         for (int i = 0; i < 12; ++i) {
             ClearWindowTilemapAndScheduleTransfer(&appData->windows3[i]);
@@ -99,19 +99,19 @@ void ov15_021FE1D0(BagAppData *appData) {
 }
 
 static const int ov15_022008E8[4][2] = {
-    { 0x00000001, 0x00000011 },
-    { 0x0000000D, 0x00000011 },
-    { 0x00000001, 0x00000015 },
-    { 0x0000000D, 0x00000015 },
+    { 1,  17 },
+    { 13, 17 },
+    { 1,  21 },
+    { 13, 21 },
 };
 
 static const int ov15_022008D0[3][2] = {
-    { 0x00000010, 0x0000000E },
-    { 0x00000014, 0x0000000E },
-    { 0x00000018, 0x0000000E },
+    { 16, 14 },
+    { 20, 14 },
+    { 24, 14 },
 };
 
-void ov15_021FE204(BagAppData *appData) {
+static void ov15_021FE204(BagAppData *appData) {
     if (appData->windows3[12].bgConfig == NULL) {
         AddWindowParameterized(appData->bgConfig, &appData->windows3[12], GF_BG_LYR_SUB_0, 12, 7, 11, 4, 11, 0x2CF);
         FillWindowPixelBuffer(&appData->windows3[12], 0);
@@ -134,7 +134,7 @@ void ov15_021FE204(BagAppData *appData) {
     }
 }
 
-void ov15_021FE3E0(BagAppData *appData) {
+static void ov15_021FE3E0(BagAppData *appData) {
     int i; // forward decl is required to match
 
     if (appData->windows3[12].bgConfig != NULL) {
@@ -189,15 +189,15 @@ void ov15_021FE528(BagAppData *appData) {
     }
 }
 
-void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno) {
+static void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno) {
     BufferItemName(appData->msgFormat, fieldno, ov15_021F9D60(appData, itemSlot, FALSE));
 }
 
-void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno) {
+static void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno) {
     BufferItemNamePlural(appData->msgFormat, fieldno, ov15_021F9D60(appData, itemSlot, FALSE));
 }
 
-void ov15_021FE5C4(BagAppData *appData, u16 itemId) {
+static void ov15_021FE5C4(BagAppData *appData, u16 itemId) {
     String *string;
     if (itemId != 0xFFFF) {
         string = String_New(130, HEAP_ID_BAG);
@@ -209,7 +209,7 @@ void ov15_021FE5C4(BagAppData *appData, u16 itemId) {
     String_Delete(string);
 }
 
-void ov15_021FE620(BagAppData *appData, u16 itemId) {
+static void ov15_021FE620(BagAppData *appData, u16 itemId) {
     Window *window = &appData->windows[1];
     u16 moveId = TMHMGetMove(itemId);
     String *string;
@@ -286,7 +286,7 @@ void ov15_021FE8A4(BagAppData *appData) {
     String_Delete(appData->unk_5EC);
 }
 
-void ov15_021FE8C4(BagAppData *appData, u16 a1, u16 a2, u32 textColor) {
+static void ov15_021FE8C4(BagAppData *appData, u16 a1, u16 a2, u32 textColor) {
     String *string = String_New(10, HEAP_ID_BAG);
     BufferIntegerAsString(appData->msgFormat, 0, a1, 3, PRINTING_MODE_LEFT_ALIGN, TRUE);
     StringExpandPlaceholders(appData->msgFormat, string, appData->unk_5EC);
@@ -294,7 +294,7 @@ void ov15_021FE8C4(BagAppData *appData, u16 a1, u16 a2, u32 textColor) {
     String_Delete(string);
 }
 
-void ov15_021FE914(BagAppData *appData, Window *window, ItemSlot *slot, u32 y) {
+static void BagApp_PrintTMorHMNumberOnWindow(BagAppData *appData, Window *window, ItemSlot *slot, u32 y) {
     u16 itemId = slot->id;
     if (itemId < ITEM_HM01) {
         itemId = itemId - ITEM_TM01 + 1;
@@ -307,20 +307,20 @@ void ov15_021FE914(BagAppData *appData, Window *window, ItemSlot *slot, u32 y) {
     }
 }
 
-void *ov15_021FE990(BagAppData *appData, NNSG2dCharacterData **ppCharData) {
+static void *ov15_021FE990(BagAppData *appData, NNSG2dCharacterData **ppCharData) {
     void *pNcgrFile = NARC_AllocAndReadWholeMember(appData->unk_244, 37, HEAP_ID_BAG);
     NNS_G2dGetUnpackedBGCharacterData(pNcgrFile, ppCharData);
     return pNcgrFile;
 }
 
-void ov15_021FE9B0(BagAppData *appData, Window *window, int a2) {
+static void ov15_021FE9B0(BagAppData *appData, Window *window, int a2) {
     NNSG2dCharacterData *pCharData;
     void *pNcgrFile = ov15_021FE990(appData, &pCharData);
     BlitBitmapRectToWindow(window, pCharData->pRawData, 0, 0, 104, 16, 0, a2, 24, 16);
     Heap_FreeExplicit(HEAP_ID_BAG, pNcgrFile);
 }
 
-void ov15_021FE9F0(BagAppData *appData, Window *window, int y, int a3) {
+static void BagApp_DrawRegisteredItemIconOnWindow(BagAppData *appData, Window *window, int y, int a3) {
     NNSG2dCharacterData *pCharData;
     void *pNcgrFile = ov15_021FE990(appData, &pCharData);
     if (a3 == 0) {
@@ -481,7 +481,7 @@ u8 BagApp_PrintMessage(BagAppData *appData, int a1) {
     return AddTextPrinterParameterized(window, 1, appData->formattedStrbuf, 0, 0, Options_GetTextFrameDelay(appData->options), BagApp_PrintMessageCallback);
 }
 
-int BagApp_PrintMessageCallback(TextPrinterTemplate *printer, u16 cmd) {
+static int BagApp_PrintMessageCallback(TextPrinterTemplate *printer, u16 cmd) {
     switch (cmd) {
     case 0:
         break;
@@ -504,7 +504,7 @@ void BagApp_CreateYesNoPrompt(BagAppData *appData) {
 
     yesnoTemplate.bgConfig = appData->bgConfig;
     yesnoTemplate.bgId = GF_BG_LYR_SUB_1;
-    yesnoTemplate.tileStart = 0x81;
+    yesnoTemplate.tileStart = 0x081;
     yesnoTemplate.plttSlot = 9;
     yesnoTemplate.x = 25;
     yesnoTemplate.y = 6;
@@ -587,13 +587,13 @@ void ov15_021FF29C(BagAppData *appData, int a1) {
     String_Delete(r4);
 }
 
-int ov15_021FF320(BagViewPocket *pocket, int pocketId, int a2) {
+static int BagViewPocket_GetIndexWithAtMostXNonEmptySlots(BagViewPocket *pocket, int pocketId, int limit) {
     int i;
-    int r5 = 0;
+    int count = 0;
     for (i = 0; i < ov15_022008C8[pocketId]; ++i) {
         if (pocket->slots[i].id != ITEM_NONE && pocket->slots[i].quantity != 0) {
-            ++r5;
-            if (r5 == a2 + 1) {
+            ++count;
+            if (count == limit + 1) {
                 break;
             }
         }
@@ -603,44 +603,48 @@ int ov15_021FF320(BagViewPocket *pocket, int pocketId, int a2) {
 
 void ov15_021FF364(BagAppData *appData, int a1, int a2, int a3) {
     int i;
-    int sp28;
+    // this variable exists for some reason
+    // apparently the dev anticipated a case
+    // where the slots array is not packed,
+    // but this is never the case at runtime
+    int count;
     BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
-    int sp20 = pocket->count - pocket->scroll;
-    u16 sp18;
-    u16 r4;
-    if (sp20 > 6) {
-        sp20 = 6;
+    int numItemsOnPage = pocket->count - pocket->scroll;
+    u16 targetWindowBase;
+    u16 offTargetWindowBase;
+    if (numItemsOnPage > 6) {
+        numItemsOnPage = 6;
     }
-    if (appData->unk_68A == 0) {
-        sp18 = 0;
-        r4 = 6;
+    if (appData->itemNamesWindowSet == 0) {
+        targetWindowBase = 0;
+        offTargetWindowBase = 6;
     } else {
-        sp18 = 6;
-        r4 = 0;
+        targetWindowBase = 6;
+        offTargetWindowBase = 0;
     }
-    appData->unk_68A ^= 1;
-    ov15_021FE17C(appData);
+    appData->itemNamesWindowSet ^= 1;
+    BagApp_AddItemNameWindows(appData);
     for (i = 0; i < 6; ++i) {
-        FillWindowPixelBuffer(&appData->windows3[sp18 + i], 0);
-        ClearWindowTilemapAndScheduleTransfer(&appData->windows3[r4 + i]);
+        FillWindowPixelBuffer(&appData->windows3[targetWindowBase + i], 0);
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows3[offTargetWindowBase + i]);
     }
-    sp28 = 0;
-    for (i = ov15_021FF320(pocket, appData->bagView->curPocket, a1); i < ov15_022008C8[appData->bagView->curPocket]; ++i) {
+    count = 0;
+    for (i = BagViewPocket_GetIndexWithAtMostXNonEmptySlots(pocket, appData->bagView->curPocket, a1); i < ov15_022008C8[appData->bagView->curPocket]; ++i) {
         if (pocket->slots[i].id != ITEM_NONE && pocket->slots[i].quantity != 0) {
             if (a3 == 0) {
-                ov15_021FF570(appData, &appData->windows3[sp18 + sp28], appData->itemNameStrings[i], pocket, i);
+                BagApp_PrintItemNameAndMaybeQuantityOnWindow(appData, &appData->windows3[targetWindowBase + count], appData->itemNameStrings[i], pocket, i);
             } else if (i == appData->unk_672) {
-                ov15_021FF570(appData, &appData->windows3[sp18 + sp28], appData->itemNameStrings[i], pocket, i);
+                BagApp_PrintItemNameAndMaybeQuantityOnWindow(appData, &appData->windows3[targetWindowBase + count], appData->itemNameStrings[i], pocket, i);
             } else {
-                AddTextPrinterParameterizedWithColor(&appData->windows3[sp18 + sp28], 0, appData->itemNameStrings[i], 0, 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
+                AddTextPrinterParameterizedWithColor(&appData->windows3[targetWindowBase + count], 0, appData->itemNameStrings[i], 0, 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
             }
-            if (++sp28 >= sp20) {
+            if (++count >= numItemsOnPage) {
                 break;
             }
         }
     }
     for (i = 0; i < 6; ++i) {
-        ScheduleWindowCopyToVram(&appData->windows3[sp18 + i]);
+        ScheduleWindowCopyToVram(&appData->windows3[targetWindowBase + i]);
     }
 }
 
@@ -650,10 +654,10 @@ void ov15_021FF4EC(BagAppData *appData, int scroll, int offset) {
     for (int i = 0; i < 6; ++i) {
         ClearWindowTilemapAndScheduleTransfer(&appData->windows3[i]);
     }
-    ov15_021FE1D0(appData);
+    BagApp_RemoveItemNameWindows(appData);
     ClearWindowTilemapAndScheduleTransfer(&appData->windows[6]);
     ov15_021FE204(appData);
-    ov15_021FF570(appData, &appData->windows3[12], appData->itemNameStrings[offset], pocket, offset);
+    BagApp_PrintItemNameAndMaybeQuantityOnWindow(appData, &appData->windows3[12], appData->itemNameStrings[offset], pocket, offset);
     ScheduleWindowCopyToVram(&appData->windows3[12]);
 }
 
@@ -661,47 +665,47 @@ void ov15_021FF560(BagAppData *appData) {
     ClearWindowTilemapAndScheduleTransfer(&appData->windows3[12]);
 }
 
-void ov15_021FF570(BagAppData *appData, Window *window, String *string, BagViewPocket *pocket, int slotId) {
+static void BagApp_PrintItemNameAndMaybeQuantityOnWindow(BagAppData *appData, Window *window, String *string, BagViewPocket *pocket, int slotId) {
     switch (pocket->pocketId) {
     case POCKET_TMHMS:
         AddTextPrinterParameterizedWithColor(window, 0, string, 0, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
-        ov15_021FE914(appData, window, &pocket->slots[slotId], 16);
+        BagApp_PrintTMorHMNumberOnWindow(appData, window, &pocket->slots[slotId], 16);
         if (pocket->slots[slotId].id >= ITEM_TM01 && pocket->slots[slotId].id <= ITEM_TM92) {
-            ov15_021FF66C(appData->msgFormat, appData->msgData, window, pocket->slots[slotId].quantity);
+            PrintItemQuantityOnWindow(appData->msgFormat, appData->msgData, window, pocket->slots[slotId].quantity);
         }
         break;
     case POCKET_KEY_ITEMS:
         AddTextPrinterParameterizedWithColor(window, 0, string, 0, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
         if (Bag_GetRegisteredItem1(appData->bag) == pocket->slots[slotId].id) {
-            ov15_021FE9F0(appData, window, 16, 0);
+            BagApp_DrawRegisteredItemIconOnWindow(appData, window, 16, 0);
         }
         if (Bag_GetRegisteredItem2(appData->bag) == pocket->slots[slotId].id) {
-            ov15_021FE9F0(appData, window, 16, 1);
+            BagApp_DrawRegisteredItemIconOnWindow(appData, window, 16, 1);
         }
         break;
     default:
         AddTextPrinterParameterizedWithColor(window, 0, string, 0, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
-        ov15_021FF66C(appData->msgFormat, appData->msgData, window, pocket->slots[slotId].quantity);
+        PrintItemQuantityOnWindow(appData->msgFormat, appData->msgData, window, pocket->slots[slotId].quantity);
     }
 }
 
-void ov15_021FF66C(MessageFormat *msgFormat, MsgData *msgData, Window *window, u16 quantity) {
+static void PrintItemQuantityOnWindow(MessageFormat *msgFormat, MsgData *msgData, Window *window, u16 quantity) {
     BufferIntegerAsString(msgFormat, 0, quantity, 3, PRINTING_MODE_LEFT_ALIGN, TRUE);
     String *string = ReadMsgData_ExpandPlaceholders(msgFormat, msgData, msg_0010_00087, HEAP_ID_BAG);
     AddTextPrinterParameterizedWithColor(window, 0, string, 48, 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
     String_Delete(string);
 }
 
-void ov15_021FF6BC(BagAppData *appData, int a1, int a2, int a3) {
-    int r6 = (a2 + a3) / 6;
-    if (a1 == 0) {
-        a1 = 1;
+void ov15_021FF6BC(BagAppData *appData, int pocketCount, int pocketScroll, int offset) {
+    int page = (pocketScroll + offset) / 6;
+    if (pocketCount == 0) {
+        pocketCount = 1;
     } else {
-        a1 = (a1 + 5) / 6;
+        pocketCount = (pocketCount + 5) / 6;
     }
     FillWindowPixelBuffer(&appData->windows[6], 0);
-    BufferIntegerAsString(appData->msgFormat, 0, r6 + 1, 3, PRINTING_MODE_RIGHT_ALIGN, TRUE);
-    BufferIntegerAsString(appData->msgFormat, 1, a1, 3, PRINTING_MODE_RIGHT_ALIGN, TRUE);
+    BufferIntegerAsString(appData->msgFormat, 0, page + 1, 3, PRINTING_MODE_RIGHT_ALIGN, TRUE);
+    BufferIntegerAsString(appData->msgFormat, 1, pocketCount, 3, PRINTING_MODE_RIGHT_ALIGN, TRUE);
     String *string = ReadMsgData_ExpandPlaceholders(appData->msgFormat, appData->msgData, msg_0010_00022, HEAP_ID_BAG);
     AddTextPrinterParameterizedWithColor(&appData->windows[6], 0, string, 0, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 1, 0), NULL);
     ScheduleWindowCopyToVram(&appData->windows[6]);

@@ -673,6 +673,7 @@ Overlay OVY_15
     After OVY_14
     Object src/application/bag/bag_app_main.o
     Object src/application/bag/bag_app_window.o
+    Object src/application/bag/bag_app_sprite.o
     Object asm/overlay_15.o
 }
 Overlay OVY_16
