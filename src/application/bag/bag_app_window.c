@@ -652,3 +652,26 @@ void ov15_021FF570(BagAppData *appData, Window *window, String *string, BagViewP
         ov15_021FF66C(appData->msgFormat, appData->msgData, window, pocket->slots[slotId].quantity);
     }
 }
+
+void ov15_021FF66C(MessageFormat *msgFormat, MsgData *msgData, Window *window, u16 quantity) {
+    BufferIntegerAsString(msgFormat, 0, quantity, 3, PRINTING_MODE_LEFT_ALIGN, TRUE);
+    String *string = ReadMsgData_ExpandPlaceholders(msgFormat, msgData, msg_0010_00087, HEAP_ID_BAG);
+    AddTextPrinterParameterizedWithColor(window, 0, string, 48, 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
+    String_Delete(string);
+}
+
+void ov15_021FF6BC(BagAppData *appData, int a1, int a2, int a3) {
+    int r6 = (a2 + a3) / 6;
+    if (a1 == 0) {
+        a1 = 1;
+    } else {
+        a1 = (a1 + 5) / 6;
+    }
+    FillWindowPixelBuffer(&appData->windows[6], 0);
+    BufferIntegerAsString(appData->msgFormat, 0, r6 + 1, 3, PRINTING_MODE_RIGHT_ALIGN, TRUE);
+    BufferIntegerAsString(appData->msgFormat, 1, a1, 3, PRINTING_MODE_RIGHT_ALIGN, TRUE);
+    String *string = ReadMsgData_ExpandPlaceholders(appData->msgFormat, appData->msgData, msg_0010_00022, HEAP_ID_BAG);
+    AddTextPrinterParameterizedWithColor(&appData->windows[6], 0, string, 0, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 1, 0), NULL);
+    ScheduleWindowCopyToVram(&appData->windows[6]);
+    String_Delete(string);
+}

@@ -206,7 +206,7 @@ void ov15_021FF29C(BagAppData *appData, int a1);
 void ov15_021FF364(BagAppData *appData, int a1, int a2, int a3);
 void ov15_021FF4EC(BagAppData *appData, int scroll, int offset);
 void ov15_021FF560(BagAppData *appData);
-void ov15_021FF6BC(BagAppData *appData, u8 a1, s16 a2, int a3);
+void ov15_021FF6BC(BagAppData *appData, int a1, int a2, int a3);
 void ov15_021FF758(Window *window, void *a2, u8 a3);
 void ov15_021FF7AC(Window *window);
 void ov15_021FF7C4(BagAppData *appData);
