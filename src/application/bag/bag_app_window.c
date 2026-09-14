@@ -30,7 +30,16 @@ int ov15_021FF320(BagViewPocket *pocket, int pocketId, int a2);
 void ov15_021FF570(BagAppData *appData, Window *window, String *string, BagViewPocket *pocket, int slotId);
 void ov15_021FF66C(MessageFormat *msgFormat, MsgData *msgData, Window *window, u16 quantity);
 
-extern const u8 ov15_022008C8[];
+static const u8 ov15_022008C8[] = {
+    NUM_BAG_ITEMS,
+    NUM_BAG_MEDICINE,
+    NUM_BAG_BALLS,
+    NUM_BAG_TMS_HMS,
+    NUM_BAG_BERRIES,
+    NUM_BAG_MAIL,
+    NUM_BAG_BATTLE_ITEMS,
+    NUM_BAG_KEY_ITEMS,
+};
 
 void ov15_021FE020(BagAppData *appData) {
     AddWindowParameterized(appData->bgConfig, &appData->windows[0], GF_BG_LYR_MAIN_1, 0, 18, 32, 6, 4, 0x001);
@@ -56,7 +65,20 @@ void ov15_021FE154(BagAppData *appData) {
     ov15_021FE1D0(appData);
 }
 
-extern const int ov15_02200908[12][3];
+static const int ov15_02200908[12][3] = {
+    { 0x00000004, 0x00000005, 0x000000BF },
+    { 0x00000014, 0x00000005, 0x000000EB },
+    { 0x00000004, 0x0000000A, 0x00000117 },
+    { 0x00000014, 0x0000000A, 0x00000143 },
+    { 0x00000004, 0x0000000F, 0x0000016F },
+    { 0x00000014, 0x0000000F, 0x0000019B },
+    { 0x00000004, 0x00000005, 0x000001C7 },
+    { 0x00000014, 0x00000005, 0x000001F3 },
+    { 0x00000004, 0x0000000A, 0x0000021F },
+    { 0x00000014, 0x0000000A, 0x0000024B },
+    { 0x00000004, 0x0000000F, 0x00000277 },
+    { 0x00000014, 0x0000000F, 0x000002A3 },
+};
 
 void ov15_021FE17C(BagAppData *appData) {
     if (appData->windows3[0].bgConfig == NULL) {
@@ -76,8 +98,18 @@ void ov15_021FE1D0(BagAppData *appData) {
     }
 }
 
-extern const int ov15_022008E8[4][2];
-extern const int ov15_022008D0[3][2];
+static const int ov15_022008E8[4][2] = {
+    { 0x00000001, 0x00000011 },
+    { 0x0000000D, 0x00000011 },
+    { 0x00000001, 0x00000015 },
+    { 0x0000000D, 0x00000015 },
+};
+
+static const int ov15_022008D0[3][2] = {
+    { 0x00000010, 0x0000000E },
+    { 0x00000014, 0x0000000E },
+    { 0x00000018, 0x0000000E },
+};
 
 void ov15_021FE204(BagAppData *appData) {
     if (appData->windows3[12].bgConfig == NULL) {
