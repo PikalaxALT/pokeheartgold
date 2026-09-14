@@ -675,3 +675,35 @@ void ov15_021FF6BC(BagAppData *appData, int a1, int a2, int a3) {
     ScheduleWindowCopyToVram(&appData->windows[6]);
     String_Delete(string);
 }
+
+void ov15_021FF758(Window *window, String **strings, int index) {
+    FillWindowPixelBuffer(window, 0);
+    if (index != 0xFF) {
+        AddTextPrinterParameterizedWithColor(window, 0, strings[index], (8 * GetWindowWidth(window) - FontID_String_GetWidth(0, strings[index], 0)) / 2, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    }
+    ScheduleWindowCopyToVram(window);
+}
+
+void ov15_021FF7AC(Window *window) {
+    for (int i = 0; i < 4; ++i) {
+        ClearWindowTilemapAndScheduleTransfer(&window[i]);
+    }
+}
+
+void ov15_021FF7C4(BagAppData *appData) {
+    AddTextPrinterParameterizedWithColor(&appData->windows3[20], 0, appData->unk_300[5], 5, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    ScheduleWindowCopyToVram(&appData->windows3[20]);
+}
+
+void ov15_021FF7FC(BagAppData *appData) {
+    AddTextPrinterParameterizedWithColor(&appData->windows3[20], 0, appData->unk_300[13], 5, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    ScheduleWindowCopyToVram(&appData->windows3[20]);
+}
+
+void ov15_021FF834(BagAppData *appData) {
+    ClearWindowTilemapAndScheduleTransfer(&appData->windows3[20]);
+}
+
+void ov15_021FF844(BagAppData *appData) {
+    ClearWindowTilemapAndScheduleTransfer(&appData->windows[7]);
+}

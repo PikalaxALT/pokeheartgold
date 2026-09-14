@@ -1694,10 +1694,10 @@ static void ov15_021FB380(BagAppData *appData, u8 *a1) {
     appData->unk_66C = 0;
     ov15_021FFECC(appData, ov15_02201468[appData->unk_66C]);
     ov15_0220023C(appData, a1);
-    ov15_021FF758(&appData->windows3[13], &appData->unk_300, a1[0]);
-    ov15_021FF758(&appData->windows3[14], &appData->unk_300, a1[1]);
-    ov15_021FF758(&appData->windows3[15], &appData->unk_300, a1[2]);
-    ov15_021FF758(&appData->windows3[16], &appData->unk_300, a1[3]);
+    ov15_021FF758(&appData->windows3[13], appData->unk_300, a1[0]);
+    ov15_021FF758(&appData->windows3[14], appData->unk_300, a1[1]);
+    ov15_021FF758(&appData->windows3[15], appData->unk_300, a1[2]);
+    ov15_021FF758(&appData->windows3[16], appData->unk_300, a1[3]);
 }
 
 static int ov15_021FB3F0(BagAppData *appData) {
