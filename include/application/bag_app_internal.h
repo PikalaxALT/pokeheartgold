@@ -71,24 +71,24 @@ typedef struct BagAppData_Sub619 {
     u8 unk_7_7 : 1;
 } BagAppData_Sub619;
 
-typedef struct BagAppData_Sub940 {
-    u8 unk_0;
-    u8 unk_1_0 : 4;
-    u8 unk_1_4 : 4;
-    u8 unk_2;
-    u8 unk_3_0 : 4;
-    u8 unk_3_4 : 4;
-    BagAppState unk_4;
-} BagAppData_Sub940;
+typedef struct BagAppSpriteAnimationTransitionManager {
+    u8 spriteId;
+    u8 plttOverride1 : 4;
+    u8 plttOverride2 : 4;
+    u8 animType;
+    u8 plttAnimState : 4;
+    u8 plttAnimFrame : 4;
+    BagAppState nextState;
+} BagAppSpriteAnimationTransitionManager;
 
 typedef struct BagAppData BagAppData;
 
 typedef BagAppState (*BagAppDataUnkFunc7F0)(BagAppData *);
 
 typedef struct BagApp3DModelData {
-    NNSG3dRenderObj unk_00;
+    NNSG3dRenderObj renderObj;
     NNSG3dResMdl *resMdl;
-    NNSG3dResFileHeader *unk_58;
+    NNSG3dResFileHeader *resHeader;
     void *unk_5C[8];
     void *unk_7C[8];
     void *unk_9C;
@@ -168,7 +168,7 @@ struct BagAppData {
     BagAppDataUnkFunc7F0 unk_7F0[5];
     YesNoPrompt *yesNoPrompt;
     BagApp3DState threeDimState;
-    BagAppData_Sub940 unk_940;
+    BagAppSpriteAnimationTransitionManager spriteAnimTransitionMgr;
     int unk_948;
 }; // size: 0x94C
 

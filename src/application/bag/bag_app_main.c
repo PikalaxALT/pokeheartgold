@@ -142,18 +142,18 @@ static void ov15_021FD4C0(BgConfig *bgConfig, int bgId, int a2, int a3);
 static void ov15_021FD574(BagAppData *appData, u32 a1, int a2, int a3);
 static void ov15_021FD774(BagAppData *appData, MenuInputState state);
 static void ov15_021FD788(BagAppData *appData, int a1);
-static BagAppState ov15_021FD7D0(BagAppData *appData, u8 a1, u8 a2, u8 a3, BagAppState a4);
-static BagAppState ov15_021FD810(BagAppData *appData, u8 a1, u8 a2, BagAppState a3);
+static BagAppState BagApp_SetSpritePaletteAnimTransitionToNextState(BagAppData *appData, u8 spriteId, u8 plttOverride1, u8 plttOverride2, BagAppState nextState);
+static BagAppState BagApp_SetSpriteAnimationTransitionToNextState(BagAppData *appData, u8 spriteId, u8 animId, BagAppState nextState);
 static BagAppState ov15_021FD850(BagAppData *appData);
-static void ov15_021FD93C(BagAppData *appData);
-static void ov15_021FDAD0(BagApp3DState *a0);
-static void BagApp3DState_BeginMoveCamera(BagApp3DState *a0, int a1, int a2);
-static void BagApp3DState_UpdateCameraPosition(BagApp3DState *a0, int a1);
-static void ov15_021FDC6C(BagAppData *appData);
+static void BagApp_Init3D(BagAppData *appData);
+static void BagApp3DState_Init(BagApp3DState *threeDimState);
+static void BagApp3DState_BeginMoveCamera(BagApp3DState *threeDimState, int cameraAnchorId, int duration);
+static void BagApp3DState_UpdateCameraPosition(BagApp3DState *threeDimState, int gender);
+static void BagApp_Teardown3D(BagAppData *appData);
 static void BagApp_Update3D(BagAppData *appData);
-static void ov15_021FDD54(NNSG3dAnmObj *animObj);
-static void ov15_021FDD70(BagAppData *appData);
-static void ov15_021FDF20(BagAppData *appData);
+static void FrameAdvance3dAnim(NNSG3dAnmObj *animObj);
+static void BagApp_Load3dAssets(BagAppData *appData);
+static void BagApp_Free3dAssets(BagAppData *appData);
 static void ov15_021FDF88(BagAppData *appData);
 
 static const BagAppCameraAnchor sCameraAnchors[][9] = {
@@ -382,7 +382,7 @@ BOOL Bag_Init(OverlayManager *man, int *state) {
     if (appData->bagView->context == 4 || appData->bagView->context == 5) {
         ov15_021FF1E0(appData);
     }
-    ov15_021FD93C(appData);
+    BagApp_Init3D(appData);
     Main_SetVBlankIntrCB(BagApp_VBlankIntrCB, appData);
     Sound_SetSceneAndPlayBGM(51, 0, 0);
     sub_0203A964();
@@ -549,7 +549,7 @@ BOOL Bag_Exit(OverlayManager *man, int *state) {
     { // scope guard here to prevent use after free
         BagAppData *appData = OverlayManager_GetData(man);
 
-        ov15_021FDC6C(appData);
+        BagApp_Teardown3D(appData);
         ov15_021FF894(appData);
         Heap_Free(appData->unk_68C);
         Heap_Free(appData->unk_690);
@@ -1122,7 +1122,7 @@ static BagAppState BagAppMainTask_HandleInput_Normal(BagAppData *appData) {
     }
 
     if (sp8 == 1) {
-        return ov15_021FD810(appData, 20, 41, BAG_APP_STATE_27);
+        return BagApp_SetSpriteAnimationTransitionToNextState(appData, 20, 41, BAG_APP_STATE_27);
     }
 
     return BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE;
@@ -1287,13 +1287,13 @@ static BagAppState ov15_021FA73C(BagAppData *appData, int input, u8 *a2, int a3,
     case 15:
         if (appData->bagView->pockets[appData->bagView->curPocket].count > 6) {
             PlaySE(SEQ_SE_DP_SELECT);
-            ret = ov15_021FD7D0(appData, 18, 9, 8, BAG_APP_STATE_30);
+            ret = BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 18, 9, 8, BAG_APP_STATE_30);
         }
         break;
     case 14:
         if (appData->bagView->pockets[appData->bagView->curPocket].count > 6) {
             PlaySE(SEQ_SE_DP_SELECT);
-            ret = ov15_021FD7D0(appData, 17, 9, 8, BAG_APP_STATE_31);
+            ret = BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 17, 9, 8, BAG_APP_STATE_31);
         }
         break;
     case 16:
@@ -1301,7 +1301,7 @@ static BagAppState ov15_021FA73C(BagAppData *appData, int input, u8 *a2, int a3,
         appData->bagView->unk68 = 5;
         ov15_021FD774(appData, inputState);
         PlaySE(SEQ_SE_GS_GEARCANCEL);
-        ret = ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_FADE_TO_EXIT);
+        ret = BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 19, 9, 8, BAG_APP_STATE_FADE_TO_EXIT);
         break;
     }
 
@@ -1567,25 +1567,25 @@ static BagAppState ov15_021FAE48(BagAppData *appData) {
     case LIST_CANCEL:
         PlaySE(SEQ_SE_GS_GEARCANCEL);
         pocket->scroll = appData->unk_672 / 6 * 6;
-        return ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_32);
+        return BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 19, 9, 8, BAG_APP_STATE_32);
     case 14:
         if (pocket->count > 6) {
             PlaySE(SEQ_SE_DP_SELECT);
-            return ov15_021FD7D0(appData, 17, 9, 8, BAG_APP_STATE_31);
+            return BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 17, 9, 8, BAG_APP_STATE_31);
         }
         break;
     case 15:
         if (pocket->count > 6) {
             PlaySE(SEQ_SE_DP_SELECT);
-            return ov15_021FD7D0(appData, 18, 9, 8, BAG_APP_STATE_30);
+            return BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 18, 9, 8, BAG_APP_STATE_30);
         }
         break;
     default:
         PlaySE(SEQ_SE_DP_SELECT);
         if (appData->unk_672 == pocket->scroll + appData->unk_66C) {
-            return ov15_021FD810(appData, 20, 41, BAG_APP_STATE_33);
+            return BagApp_SetSpriteAnimationTransitionToNextState(appData, 20, 41, BAG_APP_STATE_33);
         } else {
-            return ov15_021FD810(appData, 20, 42, BAG_APP_STATE_33);
+            return BagApp_SetSpriteAnimationTransitionToNextState(appData, 20, 42, BAG_APP_STATE_33);
         }
     }
 
@@ -1764,10 +1764,10 @@ static BagAppState ov15_021FB5AC(BagAppData *appData) {
     case LIST_NOTHING_CHOSEN:
         break;
     case LIST_CANCEL:
-        return ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_28);
+        return BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 19, 9, 8, BAG_APP_STATE_28);
     default:
         appData->unk_948 = r1;
-        return ov15_021FD7D0(appData, r1 + 28, 9, 8, BAG_APP_STATE_29);
+        return BagApp_SetSpritePaletteAnimTransitionToNextState(appData, r1 + 28, 9, 8, BAG_APP_STATE_29);
     }
 
     return BAG_APP_STATE_4;
@@ -2111,10 +2111,10 @@ static BagAppState BagAppMainTask_Toss_SelectQuantity(BagAppData *appData) {
         return BAG_APP_STATE_TOSS_SELECT_QUANTITY;
     case 3:
         PlaySE(SEQ_SE_DP_SELECT);
-        return ov15_021FD7D0(appData, 38, 9, 8, BAG_APP_STATE_CONFIRM_TOSS_PRINT_MESSAGE);
+        return BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 38, 9, 8, BAG_APP_STATE_CONFIRM_TOSS_PRINT_MESSAGE);
     case 4:
         PlaySE(SEQ_SE_GS_GEARCANCEL);
-        return ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_7);
+        return BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 19, 9, 8, BAG_APP_STATE_7);
     }
     return BAG_APP_STATE_TOSS_SELECT_QUANTITY;
 }
@@ -2394,7 +2394,7 @@ static BagAppState BagAppMainTask_HandleInput_GiveItem(BagAppData *appData) {
             return BAG_APP_STATE_GIVE_ITEM_ERROR_WAIT_MESSAGE;
         } else {
             appData->bagView->unk68 = 4;
-            return ov15_021FD810(appData, 20, 41, BAG_APP_STATE_FADE_TO_EXIT);
+            return BagApp_SetSpriteAnimationTransitionToNextState(appData, 20, 41, BAG_APP_STATE_FADE_TO_EXIT);
         }
     }
 
@@ -2530,10 +2530,10 @@ static BagAppState BagAppMainTask_HandleInput_Sell(BagAppData *appData) {
         if (appData->cursorPos >= 8 && appData->cursorPos <= 13) {
             ov15_021FA0E4(appData, appData->cursorPos);
         }
-        return ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_FADE_TO_EXIT);
+        return BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 19, 9, 8, BAG_APP_STATE_FADE_TO_EXIT);
     }
     if (sp8 == 1) {
-        return ov15_021FD810(appData, 20, 41, BAG_APP_STATE_34);
+        return BagApp_SetSpriteAnimationTransitionToNextState(appData, 20, 41, BAG_APP_STATE_34);
     }
 
     return BAG_APP_STATE_SELL_HANDLE_INPUT;
@@ -2666,10 +2666,10 @@ static BagAppState ov15_021FCDE4(BagAppData *appData) {
         return BAG_APP_STATE_18;
     case 3:
         PlaySE(SEQ_SE_DP_SELECT);
-        return ov15_021FD7D0(appData, 38, 9, 8, BAG_APP_STATE_19);
+        return BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 38, 9, 8, BAG_APP_STATE_19);
     case 4:
         PlaySE(SEQ_SE_GS_GEARCANCEL);
-        return ov15_021FD7D0(appData, 19, 9, 8, BAG_APP_STATE_20);
+        return BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 19, 9, 8, BAG_APP_STATE_20);
     }
 
     return BAG_APP_STATE_18;
@@ -3009,55 +3009,55 @@ static void ov15_021FD788(BagAppData *appData, int a1) {
     }
 }
 
-static BagAppState ov15_021FD7D0(BagAppData *appData, u8 a1, u8 a2, u8 a3, BagAppState a4) {
-    BagAppData_Sub940 *r0 = &appData->unk_940;
-    r0->unk_2 = 0;
-    r0->unk_0 = a1;
-    r0->unk_1_0 = a2;
-    r0->unk_1_4 = a3;
-    r0->unk_4 = a4;
-    r0->unk_3_0 = 0;
-    r0->unk_3_4 = 0;
+static BagAppState BagApp_SetSpritePaletteAnimTransitionToNextState(BagAppData *appData, u8 spriteId, u8 plttOverride1, u8 plttOverride2, BagAppState nextState) {
+    BagAppSpriteAnimationTransitionManager *spriteAnimTransitionMgr = &appData->spriteAnimTransitionMgr;
+    spriteAnimTransitionMgr->animType = 0;
+    spriteAnimTransitionMgr->spriteId = spriteId;
+    spriteAnimTransitionMgr->plttOverride1 = plttOverride1;
+    spriteAnimTransitionMgr->plttOverride2 = plttOverride2;
+    spriteAnimTransitionMgr->nextState = nextState;
+    spriteAnimTransitionMgr->plttAnimState = 0;
+    spriteAnimTransitionMgr->plttAnimFrame = 0;
     return BAG_APP_STATE_35;
 }
 
-static BagAppState ov15_021FD810(BagAppData *appData, u8 a1, u8 a2, BagAppState a3) {
-    BagAppData_Sub940 *r0 = &appData->unk_940;
-    r0->unk_2 = 1;
-    r0->unk_0 = a1;
-    r0->unk_4 = a3;
-    r0->unk_3_0 = 0;
-    r0->unk_3_4 = 0;
-    ManagedSprite_SetAnimationFrame(appData->sprites[a1], 0);
-    ManagedSprite_SetAnim(appData->sprites[a1], a2);
+static BagAppState BagApp_SetSpriteAnimationTransitionToNextState(BagAppData *appData, u8 spriteId, u8 animId, BagAppState nextState) {
+    BagAppSpriteAnimationTransitionManager *spriteAnimTransitionMgr = &appData->spriteAnimTransitionMgr;
+    spriteAnimTransitionMgr->animType = 1;
+    spriteAnimTransitionMgr->spriteId = spriteId;
+    spriteAnimTransitionMgr->nextState = nextState;
+    spriteAnimTransitionMgr->plttAnimState = 0;
+    spriteAnimTransitionMgr->plttAnimFrame = 0;
+    ManagedSprite_SetAnimationFrame(appData->sprites[spriteId], 0);
+    ManagedSprite_SetAnim(appData->sprites[spriteId], animId);
     return BAG_APP_STATE_35;
 }
 
 static BagAppState ov15_021FD850(BagAppData *appData) {
-    BagAppData_Sub940 *r4 = &appData->unk_940;
+    BagAppSpriteAnimationTransitionManager *spriteAnimTransitionMgr = &appData->spriteAnimTransitionMgr;
 
-    if (r4->unk_2 == 1) {
-        if (!ManagedSprite_IsAnimated(appData->sprites[r4->unk_0])) {
-            return r4->unk_4;
+    if (spriteAnimTransitionMgr->animType == 1) {
+        if (!ManagedSprite_IsAnimated(appData->sprites[spriteAnimTransitionMgr->spriteId])) {
+            return spriteAnimTransitionMgr->nextState;
         }
     } else {
-        switch (r4->unk_3_0) {
+        switch (spriteAnimTransitionMgr->plttAnimState) {
         case 0:
-            ManagedSprite_SetPaletteOverride(appData->sprites[r4->unk_0], r4->unk_1_0);
-            ++r4->unk_3_0;
+            ManagedSprite_SetPaletteOverride(appData->sprites[spriteAnimTransitionMgr->spriteId], spriteAnimTransitionMgr->plttOverride1);
+            ++spriteAnimTransitionMgr->plttAnimState;
             break;
         case 1:
-            ++r4->unk_3_4;
-            if (r4->unk_3_4 == 4) {
-                ManagedSprite_SetPaletteOverride(appData->sprites[r4->unk_0], r4->unk_1_4);
-                r4->unk_3_4 = 0;
-                ++r4->unk_3_0;
+            ++spriteAnimTransitionMgr->plttAnimFrame;
+            if (spriteAnimTransitionMgr->plttAnimFrame == 4) {
+                ManagedSprite_SetPaletteOverride(appData->sprites[spriteAnimTransitionMgr->spriteId], spriteAnimTransitionMgr->plttOverride2);
+                spriteAnimTransitionMgr->plttAnimFrame = 0;
+                ++spriteAnimTransitionMgr->plttAnimState;
             }
             break;
         case 2:
-            ++r4->unk_3_4;
-            if (r4->unk_3_4 == 2) {
-                return r4->unk_4;
+            ++spriteAnimTransitionMgr->plttAnimFrame;
+            if (spriteAnimTransitionMgr->plttAnimFrame == 2) {
+                return spriteAnimTransitionMgr->nextState;
             }
             break;
         }
@@ -3077,8 +3077,7 @@ static const VecFx32 sTranslationVec = { 0, FX32_CONST(-45), 0 };
 
 static const VecFx32 sCameraTargetVec = { 0, 0, 0 };
 
-static void ov15_021FD93C(BagAppData *appData) {
-
+static void BagApp_Init3D(BagAppData *appData) {
     GF3dRender_InitSimpleManager(HEAP_ID_BAG);
     G3X_AntiAlias(TRUE);
     G3X_SetFog(FALSE, GX_FOGBLEND_COLOR_ALPHA, GX_FOGSLOPE_0x8000, 0);
@@ -3096,7 +3095,7 @@ static void ov15_021FD93C(BagAppData *appData) {
     appData->threeDimState.cameraParam = sCameraParam;
     Camera_Init_FromTargetDistanceAndAngle(&appData->threeDimState.cameraTarget, appData->threeDimState.cameraParam.distance, &appData->threeDimState.cameraParam.angle, appData->threeDimState.cameraParam.perspective, appData->threeDimState.cameraParam.perspectiveType, TRUE, appData->threeDimState.camera);
     appData->threeDimState.translation = sTranslationVec;
-    ov15_021FDAD0(&appData->threeDimState);
+    BagApp3DState_Init(&appData->threeDimState);
     BagApp3DState_BeginMoveCamera(&appData->threeDimState, appData->bagView->curPocket + 1, 7);
     Camera_SetPerspectiveClippingPlane(FX32_CONST(123), FX32_CONST(1700), appData->threeDimState.camera);
     Camera_SetStaticPtr(appData->threeDimState.camera);
@@ -3105,12 +3104,12 @@ static void ov15_021FD93C(BagAppData *appData) {
         NNS_G3dGlbLightColor((GXLightId)i, RGB_WHITE);
     }
 
-    ov15_021FDD70(appData);
+    BagApp_Load3dAssets(appData);
     GfGfx_EngineATogglePlanes(GX_PLANEMASK_BG0, GF_PLANE_TOGGLE_ON); // didn't we just do this?
     G2_SetBG0Priority(2);
 }
 
-static void ov15_021FDAD0(BagApp3DState *threeDimState) {
+static void BagApp3DState_Init(BagApp3DState *threeDimState) {
     threeDimState->cameraAnchorsQueue[0] = 0;
     threeDimState->cameraAnchorsQueue[1] = 0;
     threeDimState->cameraAnchorsQueue[2] = -1;
@@ -3170,8 +3169,8 @@ static void BagApp3DState_UpdateCameraPosition(BagApp3DState *threeDimState, int
     }
 }
 
-static void ov15_021FDC6C(BagAppData *appData) {
-    ov15_021FDF20(appData);
+static void BagApp_Teardown3D(BagAppData *appData) {
+    BagApp_Free3dAssets(appData);
     Camera_Delete(appData->threeDimState.camera);
     GF3dRender_DeleteSimpleManager();
 }
@@ -3192,14 +3191,14 @@ static void BagApp_Update3D(BagAppData *appData) {
     Thunk_G3X_Reset();
     Camera_PushLookAtToNNSGlb();
     BagApp3DModelData *r4 = &appData->threeDimState.obj;
-    ov15_021FDD54(r4->unk_A0[r4->pocketIdx]);
-    ov15_021FDD54(r4->unk_C0[r4->pocketIdx]);
-    ov15_021FDD54(r4->unk_E0);
-    GF3dRender_DrawModel(&r4->unk_00, &appData->threeDimState.translation, &rotation, &scale);
+    FrameAdvance3dAnim(r4->unk_A0[r4->pocketIdx]);
+    FrameAdvance3dAnim(r4->unk_C0[r4->pocketIdx]);
+    FrameAdvance3dAnim(r4->unk_E0);
+    GF3dRender_DrawModel(&r4->renderObj, &appData->threeDimState.translation, &rotation, &scale);
     RequestSwap3DBuffers(GX_SORTMODE_AUTO, GX_BUFFERMODE_Z);
 }
 
-static void ov15_021FDD54(NNSG3dAnmObj *animObj) {
+static void FrameAdvance3dAnim(NNSG3dAnmObj *animObj) {
     if (animObj->frame + FX32_ONE < NNS_G3dAnmObjGetNumFrame(animObj)) {
         animObj->frame += FX32_ONE;
     } else {
@@ -3207,81 +3206,81 @@ static void ov15_021FDD54(NNSG3dAnmObj *animObj) {
     }
 }
 
-static void ov15_021FDD70(BagAppData *appData) {
+static void BagApp_Load3dAssets(BagAppData *appData) {
     NARC *narc;
-    BagApp3DModelData *r4;
+    BagApp3DModelData *modelData;
     NNSG3dResTex *tex;
     void *pResAnm;
-    u32 sp8, sp4, sp0, r1;
+    u32 sp8, sp4, sp0, resHeaderFileID;
     u32 i;
 
     narc = NARC_New(NARC_a_0_1_5, HEAP_ID_BAG);
     HeapExp_FndInitAllocator(&appData->threeDimState.allocator, HEAP_ID_BAG, 4);
-    r4 = &appData->threeDimState.obj;
-    if (appData->gender == 0) {
-        r1 = 55;
+    modelData = &appData->threeDimState.obj;
+    if (appData->gender == PLAYER_GENDER_MALE) {
+        resHeaderFileID = 55;
         sp8 = 57;
         sp4 = 65;
         sp0 = 73;
     } else {
-        r1 = 74;
+        resHeaderFileID = 74;
         sp8 = 76;
         sp4 = 84;
         sp0 = 92;
     }
-    r4->unk_58 = NARC_AllocAndReadWholeMember(narc, r1, HEAP_ID_BAG);
-    GF3dRender_InitObjFromHeader(&r4->unk_00, &r4->resMdl, &r4->unk_58);
-    tex = NNS_G3dGetTex(r4->unk_58);
-    NNS_G3dMdlUseMdlDiff(r4->resMdl);
-    NNS_G3dMdlUseMdlAmb(r4->resMdl);
-    NNS_G3dMdlUseMdlSpec(r4->resMdl);
-    NNS_G3dMdlUseMdlEmi(r4->resMdl);
-    NNS_G3dMdlUseMdlPolygonID(r4->resMdl);
+    modelData->resHeader = NARC_AllocAndReadWholeMember(narc, resHeaderFileID, HEAP_ID_BAG);
+    GF3dRender_InitObjFromHeader(&modelData->renderObj, &modelData->resMdl, &modelData->resHeader);
+    tex = NNS_G3dGetTex(modelData->resHeader);
+    NNS_G3dMdlUseMdlDiff(modelData->resMdl);
+    NNS_G3dMdlUseMdlAmb(modelData->resMdl);
+    NNS_G3dMdlUseMdlSpec(modelData->resMdl);
+    NNS_G3dMdlUseMdlEmi(modelData->resMdl);
+    NNS_G3dMdlUseMdlPolygonID(modelData->resMdl);
     for (i = 0; i < 8; ++i) {
-        r4->unk_5C[i] = NARC_AllocAndReadWholeMember(narc, sp8 + i, HEAP_ID_BAG);
-        pResAnm = NNS_G3dGetAnmByIdx(r4->unk_5C[i], 0);
-        r4->unk_A0[i] = NNS_G3dAllocAnmObj(&appData->threeDimState.allocator, pResAnm, r4->resMdl);
-        NNS_G3dAnmObjInit(r4->unk_A0[i], pResAnm, r4->resMdl, tex);
-        r4->unk_7C[i] = NARC_AllocAndReadWholeMember(narc, sp4 + i, HEAP_ID_BAG);
-        pResAnm = NNS_G3dGetAnmByIdx(r4->unk_7C[i], 0);
-        r4->unk_C0[i] = NNS_G3dAllocAnmObj(&appData->threeDimState.allocator, pResAnm, r4->resMdl);
-        NNS_G3dAnmObjInit(r4->unk_C0[i], pResAnm, r4->resMdl, tex);
+        modelData->unk_5C[i] = NARC_AllocAndReadWholeMember(narc, sp8 + i, HEAP_ID_BAG);
+        pResAnm = NNS_G3dGetAnmByIdx(modelData->unk_5C[i], 0);
+        modelData->unk_A0[i] = NNS_G3dAllocAnmObj(&appData->threeDimState.allocator, pResAnm, modelData->resMdl);
+        NNS_G3dAnmObjInit(modelData->unk_A0[i], pResAnm, modelData->resMdl, tex);
+        modelData->unk_7C[i] = NARC_AllocAndReadWholeMember(narc, sp4 + i, HEAP_ID_BAG);
+        pResAnm = NNS_G3dGetAnmByIdx(modelData->unk_7C[i], 0);
+        modelData->unk_C0[i] = NNS_G3dAllocAnmObj(&appData->threeDimState.allocator, pResAnm, modelData->resMdl);
+        NNS_G3dAnmObjInit(modelData->unk_C0[i], pResAnm, modelData->resMdl, tex);
     }
-    r4->unk_9C = NARC_AllocAndReadWholeMember(narc, sp0, HEAP_ID_BAG);
-    pResAnm = NNS_G3dGetAnmByIdx(r4->unk_9C, 0);
-    r4->unk_E0 = NNS_G3dAllocAnmObj(&appData->threeDimState.allocator, pResAnm, r4->resMdl);
-    NNS_G3dAnmObjInit(r4->unk_E0, pResAnm, r4->resMdl, tex);
+    modelData->unk_9C = NARC_AllocAndReadWholeMember(narc, sp0, HEAP_ID_BAG);
+    pResAnm = NNS_G3dGetAnmByIdx(modelData->unk_9C, 0);
+    modelData->unk_E0 = NNS_G3dAllocAnmObj(&appData->threeDimState.allocator, pResAnm, modelData->resMdl);
+    NNS_G3dAnmObjInit(modelData->unk_E0, pResAnm, modelData->resMdl, tex);
 
-    r4->pocketIdx = appData->bagView->curPocket;
-    NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_A0[r4->pocketIdx]);
-    NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_C0[r4->pocketIdx]);
-    NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_E0);
+    modelData->pocketIdx = appData->bagView->curPocket;
+    NNS_G3dRenderObjAddAnmObj(&modelData->renderObj, modelData->unk_A0[modelData->pocketIdx]);
+    NNS_G3dRenderObjAddAnmObj(&modelData->renderObj, modelData->unk_C0[modelData->pocketIdx]);
+    NNS_G3dRenderObjAddAnmObj(&modelData->renderObj, modelData->unk_E0);
     NARC_Delete(narc);
 }
 
-static void ov15_021FDF20(BagAppData *appData) {
-    BagApp3DModelData *sp0 = &appData->threeDimState.obj;
+static void BagApp_Free3dAssets(BagAppData *appData) {
+    BagApp3DModelData *modelData = &appData->threeDimState.obj;
 
     for (u32 i = 0; i < 8; ++i) {
-        NNS_G3dFreeAnmObj(&appData->threeDimState.allocator, sp0->unk_A0[i]);
-        NNS_G3dFreeAnmObj(&appData->threeDimState.allocator, sp0->unk_C0[i]);
-        Heap_Free(sp0->unk_5C[i]);
-        Heap_Free(sp0->unk_7C[i]);
+        NNS_G3dFreeAnmObj(&appData->threeDimState.allocator, modelData->unk_A0[i]);
+        NNS_G3dFreeAnmObj(&appData->threeDimState.allocator, modelData->unk_C0[i]);
+        Heap_Free(modelData->unk_5C[i]);
+        Heap_Free(modelData->unk_7C[i]);
     }
-    NNS_G3dFreeAnmObj(&appData->threeDimState.allocator, sp0->unk_E0);
-    Heap_Free(sp0->unk_9C);
-    Heap_Free(sp0->unk_58);
+    NNS_G3dFreeAnmObj(&appData->threeDimState.allocator, modelData->unk_E0);
+    Heap_Free(modelData->unk_9C);
+    Heap_Free(modelData->resHeader);
 }
 
 static void ov15_021FDF88(BagAppData *appData) {
-    BagApp3DModelData *r4 = &appData->threeDimState.obj;
+    BagApp3DModelData *modelData = &appData->threeDimState.obj;
 
-    NNS_G3dRenderObjRemoveAnmObj(&r4->unk_00, r4->unk_C0[r4->pocketIdx]);
-    NNS_G3dRenderObjRemoveAnmObj(&r4->unk_00, r4->unk_A0[r4->pocketIdx]);
-    r4->pocketIdx = appData->bagView->curPocket;
-    r4->unk_A0[r4->pocketIdx]->frame = 0;
-    r4->unk_C0[r4->pocketIdx]->frame = 0;
-    r4->unk_E0->frame = 0;
-    NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_A0[r4->pocketIdx]);
-    NNS_G3dRenderObjAddAnmObj(&r4->unk_00, r4->unk_C0[r4->pocketIdx]);
+    NNS_G3dRenderObjRemoveAnmObj(&modelData->renderObj, modelData->unk_C0[modelData->pocketIdx]);
+    NNS_G3dRenderObjRemoveAnmObj(&modelData->renderObj, modelData->unk_A0[modelData->pocketIdx]);
+    modelData->pocketIdx = appData->bagView->curPocket;
+    modelData->unk_A0[modelData->pocketIdx]->frame = 0;
+    modelData->unk_C0[modelData->pocketIdx]->frame = 0;
+    modelData->unk_E0->frame = 0;
+    NNS_G3dRenderObjAddAnmObj(&modelData->renderObj, modelData->unk_A0[modelData->pocketIdx]);
+    NNS_G3dRenderObjAddAnmObj(&modelData->renderObj, modelData->unk_C0[modelData->pocketIdx]);
 }
