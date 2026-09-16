@@ -377,7 +377,7 @@ void ov15_021FEB84(BagAppData *appData, u8 *stringIndices, int a2) {
         FillWindowPixelBuffer(&appData->windows[1], 0);
         BagApp_PrintTMHMDetails(appData, appData->bagView->itemId);
         ScheduleWindowCopyToVram(&appData->windows[0]);
-        ov15_021FF97C(appData, appData->bagView->itemId, 1);
+        ov15_021FF97C(appData, appData->bagView->itemId, TRUE);
         ov15_021F9C78(appData, FALSE);
     }
     DrawFrameAndWindow2(&appData->windows[2], TRUE, 0x3E2, 12);
@@ -427,7 +427,7 @@ void ov15_021FED24(BagAppData *appData) {
 void ov15_021FED3C(BagAppData *appData) {
     ov15_021FED24(appData);
     ov15_021FE3E0(appData);
-    ov15_021FF97C(appData, ITEM_NONE, 0);
+    ov15_021FF97C(appData, ITEM_NONE, FALSE);
 }
 
 void ov15_021FED58(BagAppData *appData) {

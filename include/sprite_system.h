@@ -129,7 +129,7 @@ BOOL SpriteManager_UnloadCharObjById(SpriteManager *spriteManager, u32 character
 BOOL SpriteManager_UnloadPlttObjById(SpriteManager *spriteManager, u32 pal);
 BOOL SpriteManager_UnloadCellObjById(SpriteManager *spriteManager, u32 cell);
 BOOL SpriteManager_UnloadAnimObjById(SpriteManager *spriteManager, u32 animation);
-void SpriteSystem_FreeResourcesAndManager(SpriteSystem *spriteSystem, SpriteManager *);
+void SpriteSystem_FreeResourcesAndManager(SpriteSystem *spriteSystem, SpriteManager *spriteManager);
 void Sprite_DeleteAndFreeResources(ManagedSprite *managedSprite);
 void Sprite_TickFrame(Sprite *sprite);
 void ManagedSprite_TickFrame(ManagedSprite *managedSprite);

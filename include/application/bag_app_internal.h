@@ -120,7 +120,7 @@ struct BagAppData {
     PlayerProfile *playerProfile;
     Options *options;
     NARC *unk_244;
-    u8 filler_248[4];
+    SpriteSystem *spriteSystem;
     SpriteManager *spriteManager;
     ManagedSprite *sprites[39];
     MessagePrinter *msgPrinter;
@@ -146,7 +146,11 @@ struct BagAppData {
     BagAppData_Sub619 unk_619;
     u8 filler_624[0x20];
     int cursorPos;
-    u8 filler_648[0x24];
+    u8 unk_648;
+    u8 unk_649;
+    u8 unk_64A;
+    u8 unk_64B;
+    u8 filler_64C[32];
     int unk_66C;
     u8 unk_670;
     u8 unk_671;
@@ -163,8 +167,9 @@ struct BagAppData {
     void *unk_68C;
     void *unk_690;
     NNSG2dPaletteData *unk_694[2];
-    u8 filler_69C[8];
-    u16 unk_6A4[165];
+    void *unk_69C;
+    u8 filler_6A0[4];
+    u16 unk_6A4[NUM_BAG_STRINGS];
     BagAppDataUnkFunc7F0 unk_7F0[5];
     YesNoPrompt *yesNoPrompt;
     BagApp3DState threeDimState;
@@ -216,7 +221,7 @@ void ov15_021FF844(BagAppData *appData);
 
 void ov15_021FF850(BagAppData *appData);
 void ov15_021FF894(BagAppData *appData);
-int ov15_021FF8D4(BagAppData *appData);
+void ov15_021FF8D4(BagAppData *appData);
 void ov15_021FF950(BagAppData *appData);
 void ov15_021FF964(BagAppData *appData);
 void ov15_021FF97C(BagAppData *appData, u16 itemId, int a2);
