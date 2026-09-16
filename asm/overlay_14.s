@@ -1,3 +1,4 @@
+#include "constants/items.h"
 #include "constants/pokemon.h"
 	.include "asm/macros.inc"
 	.include "overlay_14.inc"
@@ -6653,7 +6654,7 @@ ov14_021E8ACC: ; 0x021E8ACC
 	bl Bag_CreateView
 	str r0, [r4, #0x18]
 	ldr r1, [r4]
-	mov r2, #1
+	mov r2, #1  // BAG_VIEW_CONTEXT_GIVE_ITEM
 	ldr r0, [r1, #4]
 	mov r3, #0
 	str r0, [sp]
@@ -36929,7 +36930,14 @@ ov14_021F7D0C: ; 0x021F7D0C
 	.byte 0x04, 0x00, 0x00, 0x00
 
 ov14_021F7D14: ; 0x021F7D14
-	.byte 0x00, 0x01, 0x02, 0x03, 0x04, 0x06, 0x07, 0xFF
+	.byte POCKET_ITEMS
+	.byte POCKET_MEDICINE
+	.byte POCKET_BALLS
+	.byte POCKET_TMHMS
+	.byte POCKET_BERRIES
+	.byte POCKET_BATTLE_ITEMS
+	.byte POCKET_KEY_ITEMS
+	.byte 0xFF
 
 ov14_021F7D1C: ; 0x021F7D1C
 	.byte 0x46, 0x00, 0x00, 0x00

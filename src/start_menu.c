@@ -905,7 +905,7 @@ BOOL Task_StartMenu_HandleReturn_Pokemon(TaskManager *taskManager) {
         startMenu->exitTaskEnvironment2 = sub_0203D818(partyMenuArgs->itemId, 2, partyMenuArgs->partySlot);
         StartMenu_SetExitTaskFunc(startMenu, Task_ReturnToMenuFromMail);
         break;
-    case 3: {
+    case PARTY_MENU_ACTION_RETURN_GIVE_ITEM: {
         StartMenuAfterEvoPartySlotBak *afterEvoPartySlot = Heap_Alloc(HEAP_ID_FIELD2, sizeof(StartMenuAfterEvoPartySlotBak));
         afterEvoPartySlot->partySlot = partyMenuArgs->partySlot;
         startMenu->exitTaskEnvironment2 = afterEvoPartySlot;
@@ -913,7 +913,7 @@ BOOL Task_StartMenu_HandleReturn_Pokemon(TaskManager *taskManager) {
         PlayerProfile *playerProfile = Save_PlayerData_GetProfile(fieldSystem->saveData);
         (void)playerProfile;
         startMenu->exitTaskEnvironment = Bag_CreateView(bag, sPockets, HEAP_ID_FIELD2);
-        BagView_Init(startMenu->exitTaskEnvironment, fieldSystem->saveData, 1, fieldSystem->bagCursor, &fieldSystem->menuInputState);
+        BagView_Init(startMenu->exitTaskEnvironment, fieldSystem->saveData, BAG_VIEW_CONTEXT_GIVE_ITEM, fieldSystem->bagCursor, &fieldSystem->menuInputState);
         Bag_LaunchApp(fieldSystem, startMenu->exitTaskEnvironment);
         StartMenu_SetExitTaskFunc(startMenu, Task_StartMenu_HandleReturn);
         break;

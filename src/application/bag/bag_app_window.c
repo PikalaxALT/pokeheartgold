@@ -19,7 +19,7 @@ static void ov15_021FE204(BagAppData *appData);
 static void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno);
 static void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno);
 static void ov15_021FE5C4(BagAppData *appData, u16 itemId);
-static void ov15_021FE620(BagAppData *appData, u16 itemId);
+static void BagApp_PrintTMHMDetails(BagAppData *appData, u16 itemId);
 static void ov15_021FE8C4(BagAppData *appData, u16 a1, u16 a2, u32 textColor);
 static void BagApp_PrintTMorHMNumberOnWindow(BagAppData *appData, Window *window, ItemSlot *slot, u32 y);
 static void *ov15_021FE990(BagAppData *appData, NNSG2dCharacterData **ppCharData);
@@ -209,7 +209,7 @@ static void ov15_021FE5C4(BagAppData *appData, u16 itemId) {
     String_Delete(string);
 }
 
-static void ov15_021FE620(BagAppData *appData, u16 itemId) {
+static void BagApp_PrintTMHMDetails(BagAppData *appData, u16 itemId) {
     Window *window = &appData->windows[1];
     u16 moveId = TMHMGetMove(itemId);
     String *string;
@@ -331,35 +331,51 @@ static void BagApp_DrawRegisteredItemIconOnWindow(BagAppData *appData, Window *w
     Heap_FreeExplicit(HEAP_ID_BAG, pNcgrFile);
 }
 
-void ov15_021FEA5C(BagAppData *appData) {
-    appData->unk_300[0] = NewString_ReadMsgData(appData->msgData, msg_0010_00000);
-    appData->unk_300[1] = NewString_ReadMsgData(appData->msgData, msg_0010_00006);
-    appData->unk_300[2] = NewString_ReadMsgData(appData->msgData, msg_0010_00016);
-    appData->unk_300[3] = NewString_ReadMsgData(appData->msgData, msg_0010_00098);
-    appData->unk_300[4] = NewString_ReadMsgData(appData->msgData, msg_0010_00099);
-    appData->unk_300[5] = NewString_ReadMsgData(appData->msgData, msg_0010_00001);
-    appData->unk_300[6] = NewString_ReadMsgData(appData->msgData, msg_0010_00002);
-    appData->unk_300[7] = NewString_ReadMsgData(appData->msgData, msg_0010_00018);
-    appData->unk_300[8] = NewString_ReadMsgData(appData->msgData, msg_0010_00003);
-    appData->unk_300[9] = NewString_ReadMsgData(appData->msgData, msg_0010_00004);
-    appData->unk_300[10] = NewString_ReadMsgData(appData->msgData, msg_0010_00005);
-    appData->unk_300[11] = NewString_ReadMsgData(appData->msgData, msg_0010_00008);
-    appData->unk_300[12] = NewString_ReadMsgData(appData->msgData, msg_0010_00075);
-    appData->unk_300[13] = NewString_ReadMsgData(appData->msgData, msg_0010_00086);
-    appData->unk_300[14] = NewString_ReadMsgData(appData->msgData, msg_0010_00000);
-    appData->unk_300[15] = NewString_ReadMsgData(appData->msgData, msg_0010_00128);
+void BagApp_LoadContextMenuStrings(BagAppData *appData) {
+    // USE
+    appData->contextMenuStrings[0] = NewString_ReadMsgData(appData->msgData, msg_0010_00000);
+    // WALK
+    appData->contextMenuStrings[1] = NewString_ReadMsgData(appData->msgData, msg_0010_00006);
+    // CHECK
+    appData->contextMenuStrings[2] = NewString_ReadMsgData(appData->msgData, msg_0010_00016);
+    // (japan only)
+    appData->contextMenuStrings[3] = NewString_ReadMsgData(appData->msgData, msg_0010_00098);
+    // (japan only)
+    appData->contextMenuStrings[4] = NewString_ReadMsgData(appData->msgData, msg_0010_00099);
+    // TRASH
+    appData->contextMenuStrings[5] = NewString_ReadMsgData(appData->msgData, msg_0010_00001);
+    // REGISTER
+    appData->contextMenuStrings[6] = NewString_ReadMsgData(appData->msgData, msg_0010_00002);
+    // DESELECT
+    appData->contextMenuStrings[7] = NewString_ReadMsgData(appData->msgData, msg_0010_00018);
+    // GIVE
+    appData->contextMenuStrings[8] = NewString_ReadMsgData(appData->msgData, msg_0010_00003);
+    // (japan only)
+    appData->contextMenuStrings[9] = NewString_ReadMsgData(appData->msgData, msg_0010_00004);
+    // CONFIRM
+    appData->contextMenuStrings[10] = NewString_ReadMsgData(appData->msgData, msg_0010_00005);
+    // CANCEL
+    appData->contextMenuStrings[11] = NewString_ReadMsgData(appData->msgData, msg_0010_00008);
+    // MOVE
+    appData->contextMenuStrings[12] = NewString_ReadMsgData(appData->msgData, msg_0010_00075);
+    // SELL
+    appData->contextMenuStrings[13] = NewString_ReadMsgData(appData->msgData, msg_0010_00086);
+    // USE
+    appData->contextMenuStrings[14] = NewString_ReadMsgData(appData->msgData, msg_0010_00000);
+    // STOP
+    appData->contextMenuStrings[15] = NewString_ReadMsgData(appData->msgData, msg_0010_00128);
 }
 
-void ov15_021FEB64(BagAppData *appData) {
+void BagApp_UnloadContextMenuStrings(BagAppData *appData) {
     for (u16 i = 0; i < 16; ++i) {
-        String_Delete(appData->unk_300[i]);
+        String_Delete(appData->contextMenuStrings[i]);
     }
 }
 
-void ov15_021FEB84(BagAppData *appData, u8 *a1, int a2) {
+void ov15_021FEB84(BagAppData *appData, u8 *stringIndices, int a2) {
     if (appData->bagView->pockets[appData->bagView->curPocket].pocketId == POCKET_TMHMS) {
         FillWindowPixelBuffer(&appData->windows[1], 0);
-        ov15_021FE620(appData, appData->bagView->itemId);
+        BagApp_PrintTMHMDetails(appData, appData->bagView->itemId);
         ScheduleWindowCopyToVram(&appData->windows[0]);
         ov15_021FF97C(appData, appData->bagView->itemId, 1);
         ov15_021F9C78(appData, FALSE);
@@ -367,18 +383,20 @@ void ov15_021FEB84(BagAppData *appData, u8 *a1, int a2) {
     DrawFrameAndWindow2(&appData->windows[2], TRUE, 0x3E2, 12);
     FillWindowPixelBuffer(&appData->windows[2], 15);
     BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
-    String *r7;
-    if (appData->bagView->context == BAG_VIEW_CONTEXT_6 && !ov15_021FD3F0(pocket->pocketId, appData->bagView->itemId)) {
-        r7 = NewString_ReadMsgData(appData->msgData, msg_0010_00106);
+    String *itemIsSelectedMsg;
+    if (appData->bagView->context == BAG_VIEW_CONTEXT_BERRY_POTS && !IsBerryOrMulch(pocket->pocketId, appData->bagView->itemId)) {
+        // Can't use the {item}.
+        itemIsSelectedMsg = NewString_ReadMsgData(appData->msgData, msg_0010_00106);
     } else {
-        r7 = NewString_ReadMsgData(appData->msgData, msg_0010_00043);
+        // The {item} item is selected.
+        itemIsSelectedMsg = NewString_ReadMsgData(appData->msgData, msg_0010_00043);
     }
-    String *r6 = String_New(108, HEAP_ID_BAG);
+    String *formattedStrbuf = String_New(108, HEAP_ID_BAG);
     ov15_021FE584(appData, pocket->scroll + appData->cursorPos - 8, 0);
-    StringExpandPlaceholders(appData->msgFormat, r6, r7);
-    AddTextPrinterParameterized(&appData->windows[2], 1, r6, 0, 0, TEXT_SPEED_NOTRANSFER, NULL);
-    String_Delete(r6);
-    String_Delete(r7);
+    StringExpandPlaceholders(appData->msgFormat, formattedStrbuf, itemIsSelectedMsg);
+    AddTextPrinterParameterized(&appData->windows[2], 1, formattedStrbuf, 0, 0, TEXT_SPEED_NOTRANSFER, NULL);
+    String_Delete(formattedStrbuf);
+    String_Delete(itemIsSelectedMsg);
     ScheduleWindowCopyToVram(&appData->windows[2]);
 }
 
@@ -712,7 +730,7 @@ void ov15_021FF6BC(BagAppData *appData, int pocketCount, int pocketScroll, int o
     String_Delete(string);
 }
 
-void ov15_021FF758(Window *window, String **strings, int index) {
+void BagApp_PrintContextMenuStringOnWindowCentered(Window *window, String **strings, int index) {
     FillWindowPixelBuffer(window, 0);
     if (index != 0xFF) {
         AddTextPrinterParameterizedWithColor(window, 0, strings[index], (8 * GetWindowWidth(window) - FontID_String_GetWidth(0, strings[index], 0)) / 2, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
@@ -726,13 +744,13 @@ void ov15_021FF7AC(Window *window) {
     }
 }
 
-void ov15_021FF7C4(BagAppData *appData) {
-    AddTextPrinterParameterizedWithColor(&appData->windows3[20], 0, appData->unk_300[5], 5, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+void BagApp_PrintTrashContextOptionOnWindow(BagAppData *appData) {
+    AddTextPrinterParameterizedWithColor(&appData->windows3[20], 0, appData->contextMenuStrings[5], 5, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
     ScheduleWindowCopyToVram(&appData->windows3[20]);
 }
 
-void ov15_021FF7FC(BagAppData *appData) {
-    AddTextPrinterParameterizedWithColor(&appData->windows3[20], 0, appData->unk_300[13], 5, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+void BagApp_PrintSellContextOptionOnWindow(BagAppData *appData) {
+    AddTextPrinterParameterizedWithColor(&appData->windows3[20], 0, appData->contextMenuStrings[13], 5, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
     ScheduleWindowCopyToVram(&appData->windows3[20]);
 }
 

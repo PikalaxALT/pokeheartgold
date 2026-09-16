@@ -36,7 +36,7 @@ typedef enum BagViewContext {
     BAG_VIEW_CONTEXT_DEBUG,
     BAG_VIEW_CONTEXT_4,
     BAG_VIEW_CONTEXT_5,
-    BAG_VIEW_CONTEXT_6,
+    BAG_VIEW_CONTEXT_BERRY_POTS,
 } BagViewContext;
 
 /*

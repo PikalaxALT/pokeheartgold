@@ -20,7 +20,7 @@
 typedef enum BagAppState {
     BAG_APP_STATE_WAIT_FADE_AND_ENTER,
     BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE,
-    BAG_APP_STATE_RETURN_FROM_SUBMENU,
+    BAG_APP_STATE_DEBUG_2,
     BAG_APP_STATE_3,
     BAG_APP_STATE_4,
     BAG_APP_STATE_TOSS_SELECT_QUANTITY,
@@ -48,8 +48,8 @@ typedef enum BagAppState {
     BAG_APP_STATE_27,
     BAG_APP_STATE_28,
     BAG_APP_STATE_29,
-    BAG_APP_STATE_30,
-    BAG_APP_STATE_31,
+    BAG_APP_STATE_TURN_POCKET_PAGE_RIGHT,
+    BAG_APP_STATE_TURN_POCKET_PAGE_LEFT,
     BAG_APP_STATE_32,
     BAG_APP_STATE_33,
     BAG_APP_STATE_34,
@@ -128,7 +128,7 @@ struct BagAppData {
     MessageFormat *msgFormat;
     MsgData *itemNamesMsgdata;
     MsgData *moveNamesMsgData;
-    String *unk_300[16];
+    String *contextMenuStrings[16];
     u8 filler_340[8];
     int unk_348;
     u8 filler_34C[4];
@@ -174,7 +174,7 @@ struct BagAppData {
 
 void ov15_021F9C78(BagAppData *appData, BOOL a1);
 u16 ov15_021F9D60(BagAppData *appData, u16 slot, BOOL fetchQuantity);
-BOOL ov15_021FD3F0(u8 pocketId, u16 itemId);
+BOOL IsBerryOrMulch(u8 pocketId, u16 itemId);
 
 void ov15_021FE020(BagAppData *appData);
 void ov15_021FE154(BagAppData *appData);
@@ -184,9 +184,9 @@ void ov15_021FE528(BagAppData *appData);
 void ov15_021FE868(BagAppData *appData);
 void ov15_021FE874(BagAppData *appData);
 void ov15_021FE8A4(BagAppData *appData);
-void ov15_021FEA5C(BagAppData *appData);
-void ov15_021FEB64(BagAppData *appData);
-void ov15_021FEB84(BagAppData *appData, u8 *a1, int a2);
+void BagApp_LoadContextMenuStrings(BagAppData *appData);
+void BagApp_UnloadContextMenuStrings(BagAppData *appData);
+void ov15_021FEB84(BagAppData *appData, u8 *stringIndices, int a2);
 void ov15_021FECA0(BagAppData *appData, Window *window, int itemId);
 void ov15_021FECC4(BagAppData *appData, Window *window);
 void ov15_021FECD8(BagAppData *appData, Window *window, int pocket);
@@ -207,10 +207,10 @@ void ov15_021FF364(BagAppData *appData, int a1, int a2, int a3);
 void ov15_021FF4EC(BagAppData *appData, int scroll, int offset);
 void ov15_021FF560(BagAppData *appData);
 void ov15_021FF6BC(BagAppData *appData, int pocketCount, int pocketScroll, int offset);
-void ov15_021FF758(Window *window, String **strings, int index);
+void BagApp_PrintContextMenuStringOnWindowCentered(Window *window, String **strings, int index);
 void ov15_021FF7AC(Window *window);
-void ov15_021FF7C4(BagAppData *appData);
-void ov15_021FF7FC(BagAppData *appData);
+void BagApp_PrintTrashContextOptionOnWindow(BagAppData *appData);
+void BagApp_PrintSellContextOptionOnWindow(BagAppData *appData);
 void ov15_021FF834(BagAppData *appData);
 void ov15_021FF844(BagAppData *appData);
 
