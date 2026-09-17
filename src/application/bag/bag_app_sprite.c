@@ -68,3 +68,40 @@ void ov15_021FF97C(BagAppData *appData, u16 itemId, int drawFlag) {
         ManagedSprite_SetPaletteOverride(appData->sprites[8], sub_02077818(category) + 4);
     }
 }
+
+void ov15_021FFA40(BagAppData *appData) {
+    // SpriteResourceCountsListUnion sp34 = {
+    //     .numChar = 12,
+    //     .numPltt = 10,
+    //     .numCell = 6,
+    //     .numAnim = 7,
+    // };
+    extern const SpriteResourceCountsListUnion ov15_022009BC;
+    SpriteResourceCountsListUnion sp34 = ov15_022009BC;
+    appData->spriteSystem = SpriteSystem_Alloc(HEAP_ID_BAG);
+    appData->spriteManager = SpriteManager_New(appData->spriteSystem);
+    // OamManagerParam sp14 = {
+    //     .fromOBJmain = 0,
+    //     .numOBJmain = 128,
+    //     .fromAffineMain = 0,
+    //     .numAffineMain = 32,
+    //     .fromOBJsub = 0,
+    //     .numOBJsub = 128,
+    //     .fromAffineSub = 0,
+    //     .numAffineSub = 32,
+    // };
+    extern const OamManagerParam ov15_022009F4;
+    OamManagerParam sp14 = ov15_022009F4;
+    // OamCharTransferParam sp0 = {
+    //     .maxTasks = 39,
+    //     .sizeMain = 0x20000,
+    //     .sizeSub = 0x4000,
+    //     .charModeMain = GX_OBJVRAMMODE_CHAR_1D_32K,
+    //     .charModeSub = GX_OBJVRAMMODE_CHAR_1D_32K,
+    // };
+    extern const OamCharTransferParam ov15_022009A8;
+    OamCharTransferParam sp0 = ov15_022009A8;
+    SpriteSystem_Init(appData->spriteSystem, &sp14, &sp0, 32);
+    SpriteSystem_InitSprites(appData->spriteSystem, appData->spriteManager, 39);
+    SpriteSystem_InitManagerWithCapacities(appData->spriteSystem, appData->spriteManager, &sp34);
+}
