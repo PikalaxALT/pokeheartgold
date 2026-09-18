@@ -168,7 +168,7 @@ struct BagAppData {
     void *unk_690;
     NNSG2dPaletteData *unk_694[2];
     void *unk_69C;
-    u8 filler_6A0[4];
+    NNSG2dPaletteData *unk_6A0;
     u16 unk_6A4[NUM_BAG_STRINGS];
     BagAppDataUnkFunc7F0 unk_7F0[5];
     YesNoPrompt *yesNoPrompt;
