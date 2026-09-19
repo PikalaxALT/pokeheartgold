@@ -224,27 +224,27 @@ void ov15_02200030(BagAppData *appData, int pocket) {
     }
 }
 
-void ov15_0220005C(BagAppData *appdata, int a1, int a2, int a3) {
+void ov15_0220005C(BagAppData *appData, int a1, int a2, int a3) {
     int i;
 
     if (a1 == 0) {
         for (i = 0; i < 6; ++i) {
-            ManagedSprite_SetDrawFlag(appdata->sprites[21 + i], FALSE);
+            ManagedSprite_SetDrawFlag(appData->sprites[21 + i], FALSE);
         }
-        ManagedSprite_SetDrawFlag(appdata->sprites[27], FALSE);
+        ManagedSprite_SetDrawFlag(appData->sprites[27], FALSE);
     } else {
         for (i = 0; i < 6; ++i) {
             if (i < a1) {
-                ManagedSprite_SetDrawFlag(appdata->sprites[21 + i], TRUE);
+                ManagedSprite_SetDrawFlag(appData->sprites[21 + i], TRUE);
             } else {
-                ManagedSprite_SetDrawFlag(appdata->sprites[21 + i], FALSE);
+                ManagedSprite_SetDrawFlag(appData->sprites[21 + i], FALSE);
             }
         }
         if (a2 >= 0) {
-            ManagedSprite_SetDrawFlag(appdata->sprites[21 + a2], FALSE);
+            ManagedSprite_SetDrawFlag(appData->sprites[21 + a2], FALSE);
         }
         if (a3) {
-            ManagedSprite_SetDrawFlag(appdata->sprites[27], FALSE);
+            ManagedSprite_SetDrawFlag(appData->sprites[27], FALSE);
         }
     }
 }
@@ -272,4 +272,127 @@ void ov15_02200140(BagAppData *appData, BagViewPocket *pocket, int a2, int a3) {
         }
     }
     ov15_022000F4(appData);
+}
+
+void ov15_022001C4(BagAppData *appData, BagViewPocket *pocket, int a2) {
+    int r7 = -1;
+    int r2 = (a2 / 6) * 6;
+    if (pocket->scroll == r2) {
+        r7 = a2 % 6;
+    }
+    for (int i = 0; i < 6; ++i) {
+        ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[1 + i], ov15_02200B0C[1 + i].x, ov15_02200B0C[1 + i].y, FX32_CONST(256));
+        if (i == r7) {
+            ManagedSprite_SetDrawFlag(appData->sprites[1 + i], TRUE);
+        } else {
+            ManagedSprite_SetDrawFlag(appData->sprites[1 + i], FALSE);
+        }
+    }
+    ov15_022000F4(appData);
+}
+
+void ov15_0220023C(BagAppData *appData, u8 *a1) {
+    ManagedSprite_SetDrawFlag(appData->sprites[20], TRUE);
+    for (int i = 0; i < 4; ++i) {
+        if (a1[i] != 0xFF) {
+            ManagedSprite_SetDrawFlag(appData->sprites[28 + i], TRUE);
+        } else {
+            ManagedSprite_SetDrawFlag(appData->sprites[28 + i], FALSE);
+        }
+    }
+    ManagedSprite_SetDrawFlag(appData->sprites[17], FALSE);
+    ManagedSprite_SetDrawFlag(appData->sprites[18], FALSE);
+}
+
+void ov15_02200294(BagAppData *appData) {
+    for (int i = 0; i < 4; ++i) {
+        ManagedSprite_SetDrawFlag(appData->sprites[28 + i], FALSE);
+    }
+}
+
+void ov15_022002B4(BagAppData *appData, int a1) {
+    for (int i = 0; i < 6; ++i) {
+        if (a1 != i) {
+            ManagedSprite_SetDrawFlag(appData->sprites[1 + i], FALSE);
+        } else {
+            ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[1 + i], 86, 76, FX32_CONST(256));
+        }
+    }
+}
+
+int ov15_022002EC(int a0) {
+    int result = 0;
+    if (a0 < 100) {
+        result = 1;
+    }
+    if (a0 < 10) {
+        result = 2;
+    }
+    return result;
+}
+
+extern const int ov15_02200998[2];
+extern const int ov15_02200A58[2][6];
+extern const int ov15_02200A88[2][6];
+extern const int ov15_022009A0[];
+extern const int ov15_02200A14[][4];
+
+void ov15_02200300(BagAppData *appData, int a1, int a2) {
+    int i;
+    if (a1 == 2 && a2 > 99) {
+        a2 = 99;
+    }
+    for (i = 0; i < ov15_02200998[a1 - 2]; ++i) {
+        ManagedSprite_SetDrawFlag(appData->sprites[32 + ov15_02200A58[a1 - 2][i]], TRUE);
+        ManagedSprite_SetAnim(appData->sprites[32 + ov15_02200A58[a1 - 2][i]], ov15_02200A88[a1 - 2][i]);
+    }
+    int r0 = ov15_022002EC(a2);
+    if (r0 != 0) {
+        if (a1 - 2 == 0 && r0 == 2) {
+            ManagedSprite_SetDrawFlag(appData->sprites[32], FALSE);
+            ManagedSprite_SetDrawFlag(appData->sprites[35], FALSE);
+        } else if (a1 - 2 == 1) {
+            for (i = 0; i < ov15_022009A0[r0 - 1]; ++i) {
+                ManagedSprite_SetDrawFlag(appData->sprites[32 + ov15_02200A14[r0 - 1][i]], FALSE);
+            }
+        }
+    }
+    ManagedSprite_SetDrawFlag(appData->sprites[38], TRUE);
+    ManagedSprite_SetAnimationFrame(appData->sprites[38], 0);
+    ManagedSprite_SetAnim(appData->sprites[38], 37);
+    ManagedSprite_SetAnimationFrame(appData->sprites[19], 0);
+    ManagedSprite_SetAnim(appData->sprites[19], 39);
+}
+
+void ov15_02200428(BagAppData *appData) {
+    for (int i = 0; i < 6; ++i) {
+        ManagedSprite_SetDrawFlag(appData->sprites[32 + i], FALSE);
+    }
+    ManagedSprite_SetDrawFlag(appData->sprites[38], FALSE);
+}
+
+void ov15_02200458(BagAppData *appData, int a1) {
+    int i;
+    u8 sp0[POCKETS_COUNT];
+
+    GF_ASSERT(a1 == 1 || a1 == 0);
+
+    MI_CpuClear8(sp0, POCKETS_COUNT);
+    for (i = 0; i < POCKETS_COUNT; ++i) {
+        GF_ASSERT(appData->bagView->pockets[i].pocketId < POCKETS_COUNT);
+        if (appData->bagView->pockets[i].slots != NULL) {
+            sp0[appData->bagView->pockets[i].pocketId] = 1;
+        }
+    }
+    for (i = 0; i < POCKETS_COUNT; ++i) {
+        if (sp0[i]) {
+            ManagedSprite_SetDrawFlag(appData->sprites[9 + i], a1);
+        } else {
+            ManagedSprite_SetDrawFlag(appData->sprites[9 + i], FALSE);
+        }
+    }
+}
+
+void ov15_022004DC(BagAppData *appData, int a1) {
+    ManagedSprite_SetDrawFlag(appData->sprites[19], a1);
 }
