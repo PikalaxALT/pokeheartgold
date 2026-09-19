@@ -609,7 +609,6 @@ Overlay OVY_15
     Object main.nef.p/src_application_bag_bag_app_main.c.o
     Object main.nef.p/src_application_bag_bag_app_window.c.o
     Object main.nef.p/src_application_bag_bag_app_sprite.c.o
-    Object main.nef.p/asm_overlay_15.s.o
 }
 Overlay OVY_16
 {
