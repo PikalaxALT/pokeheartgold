@@ -167,3 +167,20 @@ void ov15_021FFDD8(BagAppData *appData) {
     ManagedSprite_SetDrawFlag(appData->sprites[38], FALSE);
     ManagedSprite_SetPriority(appData->sprites[38], 1);
 }
+
+void ov15_021FFEC0(BagAppData *appData) {
+    appData->unk_648 = 0;
+}
+
+extern const u8 ov15_02200AB8[][4];
+
+void ov15_021FFECC(BagAppData *appData, int a1) {
+    ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[20], ov15_02200AB8[a1][0], ov15_02200AB8[a1][1], FX32_CONST(256));
+    ManagedSprite_SetAnim(appData->sprites[20], ov15_02200AB8[a1][2]);
+    ManagedSprite_SetPaletteOverride(appData->sprites[20], ov15_02200AB8[a1][3]);
+    ManagedSprite_SetDrawFlag(appData->sprites[20], TRUE);
+}
+
+void ov15_021FFF24(BagAppData *appData) {
+    ManagedSprite_SetDrawFlag(appData->sprites[20], FALSE);
+}
