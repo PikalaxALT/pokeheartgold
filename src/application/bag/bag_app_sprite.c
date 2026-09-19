@@ -138,3 +138,32 @@ void ov15_021FFAD0(BagAppData *appData) {
     sub_0207775C(appData->spriteSystem, appData->spriteManager, 49406, 49407);
     appData->unk_69C = GfGfxLoader_GetPlttData(NARC_a_0_1_5, 48, &appData->unk_6A0, HEAP_ID_BAG);
 }
+
+extern const ManagedSpriteTemplate ov15_02200B0C[39];
+
+void ov15_021FFDD8(BagAppData *appData) {
+    u32 i;
+
+    for (i = 0; i < 39; ++i) {
+        appData->sprites[i] = SpriteSystem_NewSpriteWithYOffset(appData->spriteSystem, appData->spriteManager, &ov15_02200B0C[i], FX32_CONST(256));
+    }
+    ManagedSprite_SetPriority(appData->sprites[19], 1);
+    for (i = 0; i < 4; ++i) {
+        ManagedSprite_SetPriority(appData->sprites[28 + i], 1);
+    }
+    for (i = 0; i < 8; ++i) {
+        ManagedSprite_SetPriority(appData->sprites[9 + i], 1);
+    }
+    ov15_02200458(appData, 1);
+    ManagedSprite_SetDrawFlag(appData->sprites[0], FALSE);
+    ManagedSprite_SetDrawFlag(appData->sprites[7], FALSE);
+    ManagedSprite_SetDrawFlag(appData->sprites[8], FALSE);
+    for (i = 0; i < 4; ++i) {
+        ManagedSprite_SetDrawFlag(appData->sprites[28 + i], FALSE);
+    }
+    for (i = 0; i < 6; ++i) {
+        ManagedSprite_SetDrawFlag(appData->sprites[32 + i], FALSE);
+    }
+    ManagedSprite_SetDrawFlag(appData->sprites[38], FALSE);
+    ManagedSprite_SetPriority(appData->sprites[38], 1);
+}
