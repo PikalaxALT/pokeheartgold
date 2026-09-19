@@ -110,15 +110,15 @@ release: rom
 .NOTPARALLEL: heartgold
 heartgold: setup_heartgold
 	$(NINJA) -C $(BUILD) pokeheartgold.us.nds
-	$(MESON) test -C $(BUILD)
+	$(MESON) test -C $(BUILD) --verbose
 
 .NOTPARALLEL: soulsilver
 soulsilver: setup_soulsilver
 	$(NINJA) -C $(BUILD) pokesoulsilver.us.nds
-	$(MESON) test -C $(BUILD)
+	$(MESON) test -C $(BUILD) --verbose
 
 check: rom
-	$(MESON) test -C $(BUILD)
+	$(MESON) test -C $(BUILD) --verbose
 
 rom: setup_$(target_name)
 	$(NINJA) -C $(BUILD) poke$(target_name).$(target_region).nds

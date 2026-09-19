@@ -184,3 +184,24 @@ void ov15_021FFECC(BagAppData *appData, int a1) {
 void ov15_021FFF24(BagAppData *appData) {
     ManagedSprite_SetDrawFlag(appData->sprites[20], FALSE);
 }
+
+extern const u8 ov15_02200A34[][4];
+
+void ov15_021FFF34(BagAppData *appData, int a1) {
+    GF_ASSERT(a1 < 9);
+    if (a1 == 8) {
+        ManagedSprite_SetAnim(appData->sprites[20], ov15_02200A34[a1][2]);
+    } else {
+        BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
+        int itemSlot = pocket->scroll + a1;
+        if (itemSlot == appData->unk_672) {
+            ManagedSprite_SetAnim(appData->sprites[20], 10);
+        } else if (itemSlot >= pocket->count) {
+            ManagedSprite_SetAnim(appData->sprites[20], 40);
+        } else {
+            ManagedSprite_SetAnim(appData->sprites[20], 20);
+        }
+    }
+    ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[20], ov15_02200A34[a1][0], ov15_02200A34[a1][1], FX32_CONST(256));
+    ManagedSprite_SetPaletteOverride(appData->sprites[20], ov15_02200A34[a1][3]);
+}
