@@ -41,6 +41,7 @@ MESON_DIR := $(SUBPROJ_DIR)/meson-$(MESON_VER)
 MESON_SUB := $(MESON_DIR)/meson.py
 
 MESON ?= $(MESON_SUB)
+NINJA ?= ninja
 GIT ?= git
 
 BUILD ?= build
@@ -83,7 +84,6 @@ else
     CROSS := cross_unix.ini
     SKREW_SYS := wine
     SKREW_EXE := $(SKREW_DIR)/bin/skrewrap
-	NINJA ?= ninja -j4
   else
     ifneq (,$(findstring BSD, $(UNAME_S)))
       NATIVE := native.ini
@@ -98,7 +98,6 @@ else
     endif
   endif
 endif
-NINJA ?= ninja
 
 export NINJA_STATUS := [%p %f/%t]
 
