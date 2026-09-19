@@ -169,7 +169,7 @@ static void ov15_021FE3E0(BagAppData *appData) {
 }
 
 void ov15_021FE4C8(BagAppData *appData) {
-    MsgData *msgData = NewMsgDataFromNarc(MSGDATA_LOAD_LAZY, NARC_msgdata_msg, NARC_msg_msg_0225_bin, HEAP_ID_BAG);
+    MsgData *msgData = NewMsgDataFromNarc(MSGDATA_LOAD_LAZY, NARC_msgdata_msg, msg_0225, HEAP_ID_BAG);
     for (u16 i = 0; i < 8; ++i) {
         appData->unk_5F4[i] = NewString_ReadMsgData(msgData, msg_0225_00000 + i);
     }

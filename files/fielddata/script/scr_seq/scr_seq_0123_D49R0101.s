@@ -2,7 +2,7 @@
 #include "fielddata/script/scr_seq/event_D49R0101.h"
 #include "msgdata/msg/msg_0138_D49R0101.h"
 #include "msgdata/msg/msg_0191.h"
-	.include "asm/macros/script.inc"
+	.include "macros/script.inc"
 
 	.rodata
 

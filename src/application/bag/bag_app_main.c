@@ -799,11 +799,11 @@ void ov15_021F9C78(BagAppData *appData, BOOL a1) {
 }
 
 static void BagApp_InitMsgSystem(BagAppData *appData) {
-    appData->msgData = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, NARC_msg_msg_0010_bin, HEAP_ID_BAG);
+    appData->msgData = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, msg_0010, HEAP_ID_BAG);
     appData->msgPrinter = MessagePrinter_New(1, 2, 0, HEAP_ID_BAG);
     appData->msgFormat = MessageFormat_New(HEAP_ID_BAG);
-    appData->itemNamesMsgdata = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, NARC_msg_msg_0222_bin, HEAP_ID_BAG);
-    appData->moveNamesMsgData = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, NARC_msg_msg_0750_bin, HEAP_ID_BAG);
+    appData->itemNamesMsgdata = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, msg_0222, HEAP_ID_BAG);
+    appData->moveNamesMsgData = NewMsgDataFromNarc(MSGDATA_LOAD_DIRECT, NARC_msgdata_msg, msg_0750, HEAP_ID_BAG);
     appData->formattedStrbuf = String_New(256, HEAP_ID_BAG);
 }
 
