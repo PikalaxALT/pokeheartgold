@@ -10,6 +10,7 @@ void ov15_021FFA40(BagAppData *appData);
 void ov15_021FFAD0(BagAppData *appData);
 void ov15_021FFDD8(BagAppData *appData);
 void ov15_021FFEC0(BagAppData *appData);
+void ov15_022000F4(BagAppData *appData);
 
 void ov15_021FF850(BagAppData *appData) {
     GfGfx_EngineATogglePlanes(GX_PLANEMASK_OBJ, GF_PLANE_TOGGLE_ON);
@@ -204,4 +205,71 @@ void ov15_021FFF34(BagAppData *appData, int a1) {
     }
     ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[20], ov15_02200A34[a1][0], ov15_02200A34[a1][1], FX32_CONST(256));
     ManagedSprite_SetPaletteOverride(appData->sprites[20], ov15_02200A34[a1][3]);
+}
+
+extern const u8 ov15_022009D4[][4];
+
+void ov15_021FFFDC(BagAppData *appData, int a1) {
+    GF_ASSERT(a1 < 8);
+    ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[20], ov15_022009D4[a1][0], ov15_022009D4[a1][1], FX32_CONST(256));
+    ManagedSprite_SetAnim(appData->sprites[20], ov15_022009D4[a1][2]);
+    ManagedSprite_SetPaletteOverride(appData->sprites[20], ov15_022009D4[a1][3]);
+}
+
+void ov15_02200030(BagAppData *appData, int pocket) {
+    if (pocket <= 7) {
+        u16 *pRawData = appData->unk_6A0->pRawData;
+        GXS_LoadOBJPltt(pRawData + 128, 0, 128 * 2);
+        GXS_LoadOBJPltt(pRawData + 16 * pocket, 16 * pocket * 2, 16 * 2);
+    }
+}
+
+void ov15_0220005C(BagAppData *appdata, int a1, int a2, int a3) {
+    int i;
+
+    if (a1 == 0) {
+        for (i = 0; i < 6; ++i) {
+            ManagedSprite_SetDrawFlag(appdata->sprites[21 + i], FALSE);
+        }
+        ManagedSprite_SetDrawFlag(appdata->sprites[27], FALSE);
+    } else {
+        for (i = 0; i < 6; ++i) {
+            if (i < a1) {
+                ManagedSprite_SetDrawFlag(appdata->sprites[21 + i], TRUE);
+            } else {
+                ManagedSprite_SetDrawFlag(appdata->sprites[21 + i], FALSE);
+            }
+        }
+        if (a2 >= 0) {
+            ManagedSprite_SetDrawFlag(appdata->sprites[21 + a2], FALSE);
+        }
+        if (a3) {
+            ManagedSprite_SetDrawFlag(appdata->sprites[27], FALSE);
+        }
+    }
+}
+
+void ov15_022000F4(BagAppData *appData) {
+    if (appData->bagView->pockets[appData->bagView->curPocket].count <= 6) {
+        ManagedSprite_SetDrawFlag(appData->sprites[17], FALSE);
+        ManagedSprite_SetDrawFlag(appData->sprites[18], FALSE);
+    } else {
+        ManagedSprite_SetDrawFlag(appData->sprites[17], TRUE);
+        ManagedSprite_SetDrawFlag(appData->sprites[18], TRUE);
+    }
+}
+
+void ov15_02200140(BagAppData *appData, BagViewPocket *pocket, int a2, int a3) {
+    for (int i = 0; i < 6; ++i) {
+        ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[1 + i], ov15_02200B0C[1 + i].x, ov15_02200B0C[1 + i].y, FX32_CONST(256));
+        if (i < a2) {
+            if (a3) {
+                ov15_021FF8F0(appData, i, appData->unk_6A4[pocket->scroll + i]);
+            }
+            ManagedSprite_SetDrawFlag(appData->sprites[i + 1], TRUE);
+        } else {
+            ManagedSprite_SetDrawFlag(appData->sprites[i + 1], FALSE);
+        }
+    }
+    ov15_022000F4(appData);
 }
