@@ -4,9 +4,9 @@
 
 #include "constants/items.h"
 
-#include "files/msgdata/msg.naix"
-#include "files/msgdata/msg/msg_0010.h"
-#include "files/msgdata/msg/msg_0040.h"
+#include "msgdata/msg.naix"
+#include "msgdata/msg/msg_0010.h"
+#include "msgdata/msg/msg_0040.h"
 
 #include "coins.h"
 #include "fashion_case.h"
@@ -58,7 +58,7 @@ void BagView_SetItem(BagView *bagView, ItemSlot *slots, u8 pocketId, u8 position
 }
 
 void sub_020778C8(BagView *bagView) {
-    bagView->unk76_0 = TRUE;
+    bagView->onBike = TRUE;
 }
 
 void BagView_SetCheckUseData(BagView *bagView, ItemCheckUseData *checkUseData) {
@@ -66,7 +66,7 @@ void BagView_SetCheckUseData(BagView *bagView, ItemCheckUseData *checkUseData) {
 }
 
 void sub_020778E0(BagView *bagView, u8 a1) {
-    bagView->unk74 = a1;
+    bagView->partySlot = a1;
 }
 
 void sub_020778E8(BagView *bagView, u16 a1) {
@@ -77,12 +77,12 @@ u16 BagView_GetItemId(BagView *bagView) {
     return bagView->itemId;
 }
 
-u16 sub_0207790C(BagView *bagView) {
-    return bagView->unk68;
+u16 BagView_GetReturnCode(BagView *bagView) {
+    return bagView->returnCode;
 }
 
-u8 sub_02077914(BagView *bagView) {
-    return bagView->unk74;
+u8 BagView_GetPartySlot(BagView *bagView) {
+    return bagView->partySlot;
 }
 
 u8 sub_0207791C(BagView *bagView) {

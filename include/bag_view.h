@@ -7,6 +7,19 @@
 #include "player_data.h"
 #include "save.h"
 
+/**
+ * Return code from using the bag
+ * Processed by the start menu
+ */
+typedef enum BagViewReturnCode {
+    BAG_VIEW_RETURN_CODE_USE_ON_PARTYMON,
+    BAG_VIEW_RETURN_CODE_CHECK_BERRY_TAG,
+    BAG_VIEW_RETURN_CODE_GIVE_ITEM,
+    BAG_VIEW_RETURN_CODE_POFFIN_BERRY_CHOSEN,
+    BAG_VIEW_RETURN_CODE_GIVE_FROM_MON_MENU,
+    BAG_VIEW_RETURN_CODE_DONE,
+} BagViewReturnCode;
+
 /*
  * BagView *BagView_New(u8 heapID)
  *
@@ -48,8 +61,8 @@ void BagView_SetCheckUseData(BagView *bagView, ItemCheckUseData *checkUseData);
 void sub_020778E0(BagView *bagView, u8 a1);
 void sub_020778E8(BagView *bagView, u16 a1);
 u16 BagView_GetItemId(BagView *bagView);
-u16 sub_0207790C(BagView *bagView);
-u8 sub_02077914(BagView *bagView);
+u16 BagView_GetReturnCode(BagView *bagView);
+u8 BagView_GetPartySlot(BagView *bagView);
 u8 sub_0207791C(BagView *bagView);
 
 /*

@@ -226,7 +226,7 @@ BagView *Bag_LaunchApp_WithPocket(FieldSystem *fieldSystem, u8 pocketType) {
 
 int BagView_SelectResult(BagView *bagView) {
     int result = BagView_GetItemId(bagView);
-    GF_ASSERT(result == 0 || sub_0207790C(bagView) != 5);
+    GF_ASSERT(result == 0 || BagView_GetReturnCode(bagView) != 5);
     return result;
 }
 
@@ -250,7 +250,7 @@ static PartyMenuArgs *PartyMenu_CreateArgs(enum HeapID heapID, FieldSystem *fiel
 }
 
 PartyMenuArgs *PartyMenu_LaunchApp_Unk1(FieldSystem *fieldSystem, FieldMoveCheckData *fieldMoveCheckData, u8 partySlot) {
-    PartyMenuArgs *args = PartyMenu_CreateArgs(HEAP_ID_FIELD2, fieldSystem, 0, PARTY_MENU_CONTEXT_0);
+    PartyMenuArgs *args = PartyMenu_CreateArgs(HEAP_ID_FIELD2, fieldSystem, 0, PARTY_MENU_CONTEXT_FIELD);
     args->fieldMoveCheckData = fieldMoveCheckData;
     args->partySlot = partySlot;
     FieldSystem_LaunchApplication(fieldSystem, &gOverlayTemplate_PartyMenu, args);
@@ -258,7 +258,7 @@ PartyMenuArgs *PartyMenu_LaunchApp_Unk1(FieldSystem *fieldSystem, FieldMoveCheck
 }
 
 PartyMenuArgs *PartyMenu_LaunchApp_Unk2(enum HeapID heapID, FieldSystem *fieldSystem) {
-    PartyMenuArgs *args = PartyMenu_CreateArgs(HEAP_ID_FIELD2, fieldSystem, 0, PARTY_MENU_CONTEXT_3);
+    PartyMenuArgs *args = PartyMenu_CreateArgs(HEAP_ID_FIELD2, fieldSystem, 0, PARTY_MENU_CONTEXT_SELECT_MON_NO_PROMPT);
     FieldSystem_LaunchApplication(fieldSystem, &gOverlayTemplate_PartyMenu, args);
     return args;
 }
@@ -274,7 +274,7 @@ int PartyMenuArgs_GetSlot(PartyMenuArgs *partyMenuArgs) {
 }
 
 PartyMenuArgs *PartyMenu_LaunchApp_Unk4(enum HeapID heapID, FieldSystem *fieldSystem, u16 partySlot) {
-    PartyMenuArgs *args = PartyMenu_CreateArgs(HEAP_ID_FIELD2, fieldSystem, 0, PARTY_MENU_CONTEXT_18);
+    PartyMenuArgs *args = PartyMenu_CreateArgs(HEAP_ID_FIELD2, fieldSystem, 0, PARTY_MENU_CONTEXT_DAYCARE);
     args->partySlot = partySlot;
     FieldSystem_LaunchApplication(fieldSystem, &gOverlayTemplate_PartyMenu, args);
     return args;

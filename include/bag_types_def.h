@@ -87,13 +87,13 @@ typedef struct BagView {
     u8 curPocket;
     u8 context;
     u16 itemId;
-    u16 unk68;
+    u16 returnCode;
     u8 padding[2];
     BagCursor *cursor; // State of last selection
     ItemCheckUseData *checkUseData;
-    u8 unk74;
+    u8 partySlot;
     u8 unk75;
-    u16 unk76_0 : 1;
+    u16 onBike : 1;
     u16 unk76_1 : 15;
     MenuInputStateMgr *menuInputStateMgr;
 } BagView; // size: 0x7C

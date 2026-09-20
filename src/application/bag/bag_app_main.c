@@ -3,8 +3,6 @@
 #include "application/bag_app_internal.h"
 #include "msgdata/msg.naix"
 #include "msgdata/msg/msg_0010.h"
-#include "msgdata/msg/msg_0222.h"
-#include "msgdata/msg/msg_0750.h"
 
 #include "bag.h"
 #include "bag_types_def.h"
@@ -96,19 +94,19 @@ static void ov15_021FB518(BagAppData *appData);
 static BagAppState ov15_021FB5AC(BagAppData *appData);
 static BagAppState ov15_021FB604(BagAppData *appData);
 static BagAppState ov15_021FB654(BagAppData *appData);
-static BagAppState ov15_021FB680(BagAppData *appData);
+static BagAppState BagApp_ItemContextMenu_Use(BagAppData *appData);
 static BagAppState ov15_021FB700(BagAppData *appData);
 static BagAppState ov15_021FB784(BagAppData *appData);
 static BagAppState ov15_021FB820(BagAppData *appData);
-static BagAppState ov15_021FB830(BagAppData *appData);
+static BagAppState BagApp_UseTMHM(BagAppData *appData);
 static BOOL BagApp_TryUseItemInPlace(BagAppData *appData, u16 itemId);
 static String *BagApp_TryUseRepel(BagAppData *appData, u16 itemId);
 static String *BagApp_ToggleGBSounds(BagAppData *appData, u16 itemId);
 static void ov15_021FBB28(BagAppData *appData);
-static BagAppState ov15_021FBBB0(BagAppData *appData);
-static BagAppState ov15_021FBC6C(BagAppData *appData);
-static BagAppState ov15_021FBC8C(BagAppData *appData);
-static BagAppState ov15_021FBCAC(BagAppData *appData);
+static BagAppState BagApp_UseItemInPlaceMessage(BagAppData *appData);
+static BagAppState BagApp_ItemContextMenu_Unk9(BagAppData *appData);
+static BagAppState BagApp_ItemContextMenu_Confirm(BagAppData *appData);
+static BagAppState BagApp_ItemContextMenu_Trash(BagAppData *appData);
 static int ov15_021FBD28(int a0, int a1, int a2);
 static BagAppState BagAppMainTask_Toss_SelectQuantity(BagAppData *appData);
 static BagAppState BagAppMainTask_ConfirmToss_PrintMessage(BagAppData *appData);
@@ -117,11 +115,11 @@ static BagAppState BagAppMainTask_ConfirmToss_WaitMessage(BagAppData *appData);
 static BagAppState BagAppMainTask_ConfirmToss_HandleYesNo(BagAppData *appData);
 static BagAppState BagAppMainTask_CompleteToss_WaitMessage(BagAppData *appData);
 static BagAppState BagAppMainTask_CompleteToss_WaitButton(BagAppData *appData);
-static BagAppState ov15_021FC224(BagAppData *appData);
+static BagAppState BagApp_ItemContextMenu_Register(BagAppData *appData);
 static BagAppState ov15_021FC2E0(BagAppData *appData);
-static BagAppState ov15_021FC37C(BagAppData *appData);
-static BagAppState ov15_021FC3E0(BagAppData *appData);
-static BagAppState ov15_021FC3EC(BagAppData *appData);
+static BagAppState BagApp_ItemContextMenu_Deselect(BagAppData *appData);
+static BagAppState BagApp_ItemContextMenu_Move(BagAppData *appData);
+static BagAppState BagApp_ItemContextMenu_Give(BagAppData *appData);
 static BagAppState BagAppMainTask_HandleInput_GiveItem(BagAppData *appData);
 static BagAppState BagAppMainTask_GiveItemError_WaitMessage(BagAppData *appData);
 static BagAppState BagAppMainTask_HandleInput_Sell(BagAppData *appData);
@@ -135,7 +133,7 @@ static BagAppState BagAppMainTask_ConfirmSale_HandleYesNo(BagAppData *appData);
 static BagAppState BagAppMainTask_CompleteSale(BagAppData *appData);
 static BagAppState BagAppMainTask_CompleteSale_WaitMessage(BagAppData *appData);
 static BagAppState BagAppMainTask_Debug(BagAppData *appData);
-static BagAppState ov15_021FD3C0(BagAppData *appData);
+static BagAppState BagApp_ItemContextMenu_UseInBerryPots(BagAppData *appData);
 static void ov15_021FD404(BagAppData *appData, int a1, int pocket);
 static void ov15_021FD43C(BgConfig *bgConfig, int bgId, int a2);
 static void ov15_021FD4C0(BgConfig *bgConfig, int bgId, int a2, int a3);
@@ -298,7 +296,7 @@ static const TouchscreenHitbox ov15_02200568[] = {
     { TOUCHSCREEN_RECTLIST_END },
 };
 
-static const u8 ov15_022008B0[8] = {
+static const u8 sPocketCapacities[8] = {
     NUM_BAG_ITEMS,
     NUM_BAG_MEDICINE,
     NUM_BAG_BALLS,
@@ -309,23 +307,21 @@ static const u8 ov15_022008B0[8] = {
     NUM_BAG_KEY_ITEMS,
 };
 
-static BagAppDataUnkFunc7F0 ov15_02201368[] = {
-    ov15_021FB680,
-    ov15_021FB680,
-    ov15_021FB680,
-    ov15_021FB680,
-    ov15_021FB680,
-    ov15_021FBCAC,
-    ov15_021FC224,
-    ov15_021FC37C,
-    ov15_021FC3EC,
-    ov15_021FBC6C,
-    ov15_021FBC8C,
-    NULL,
-    ov15_021FC3E0,
-    NULL,
-    ov15_021FD3C0,
-    ov15_021FB680,
+static BagItemContextMenuFunc sContextMenuFuncs[] = {
+    [BAG_ITEM_CONTEXT_MENU_ACTION_USE] = BagApp_ItemContextMenu_Use,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_WALK] = BagApp_ItemContextMenu_Use,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_CHECK] = BagApp_ItemContextMenu_Use,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_PLANT] = BagApp_ItemContextMenu_Use,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_POFFIN_CASE_OPEN] = BagApp_ItemContextMenu_Use,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_TRASH] = BagApp_ItemContextMenu_Trash,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_REGISTER] = BagApp_ItemContextMenu_Register,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_DESELECT] = BagApp_ItemContextMenu_Deselect,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_GIVE] = BagApp_ItemContextMenu_Give,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_9] = BagApp_ItemContextMenu_Unk9,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_CONFIRM] = BagApp_ItemContextMenu_Confirm,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_MOVE] = BagApp_ItemContextMenu_Move,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_USE_IN_BERRY_POTS] = BagApp_ItemContextMenu_UseInBerryPots,
+    [BAG_ITEM_CONTEXT_MENU_ACTION_STOP_GBSOUNDS] = BagApp_ItemContextMenu_Use,
 };
 
 BOOL Bag_Init(OverlayManager *man, int *state) {
@@ -369,7 +365,7 @@ BOOL Bag_Init(OverlayManager *man, int *state) {
 
     ov15_021FA044(&appData->bagView->pockets[appData->bagView->curPocket].scroll, &appData->bagView->pockets[appData->bagView->curPocket].position, appData->bagView->pockets[appData->bagView->curPocket].count);
     ov15_021FA070(&appData->bagView->pockets[appData->bagView->curPocket].scroll, &appData->bagView->pockets[appData->bagView->curPocket].position, appData->bagView->pockets[appData->bagView->curPocket].count, HEAP_ID_BAG);
-    ov15_021FF850(appData);
+    BagApp_InitSpriteRendererAndSystem(appData);
     ov15_021FD574(appData, 0, BagApp_GetNumItemsOnCurrentPage(appData), 0);
     ov15_021FF364(appData, appData->bagView->pockets[appData->bagView->curPocket].scroll, -1, 0);
     ov15_02200030(appData, appData->bagView->curPocket);
@@ -550,7 +546,7 @@ BOOL Bag_Exit(OverlayManager *man, int *state) {
         BagAppData *appData = OverlayManager_GetData(man);
 
         BagApp_Teardown3D(appData);
-        ov15_021FF894(appData);
+        BagApp_FreeSpriteSystem(appData);
         Heap_Free(appData->unk_68C);
         Heap_Free(appData->unk_690);
         ov15_021FA0D8(appData);
@@ -569,7 +565,7 @@ BOOL Bag_Exit(OverlayManager *man, int *state) {
         DestroyMsgData(appData->msgData);
         MessagePrinter_Delete(appData->msgPrinter);
         MessageFormat_Delete(appData->msgFormat);
-        NARC_Delete(appData->unk_244);
+        NARC_Delete(appData->narc_a_0_1_5);
     }
     OverlayManager_FreeData(man);
     // possible UB: a vblank intr here results in use after free
@@ -768,7 +764,7 @@ static void ov15_021F9A8C(BgConfig *bgConfig) {
 }
 
 static void ov15_021F9AE4(BagAppData *appData) {
-    appData->unk_244 = NARC_New(NARC_a_0_1_5, HEAP_ID_BAG);
+    appData->narc_a_0_1_5 = NARC_New(NARC_a_0_1_5, HEAP_ID_BAG);
     GfGfxLoader_LoadCharData(NARC_a_0_1_5, 7, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
     GfGfxLoader_LoadScrnData(NARC_a_0_1_5, 54, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
     if (appData->gender == PLAYER_GENDER_MALE) {
@@ -894,21 +890,21 @@ static void ov15_021F9F08(BagAppData *appData) {
     BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
 
     if (pocket->pocketId == POCKET_TMHMS) {
-        for (i = 0; i < ov15_022008B0[pocket->pocketId]; ++i) {
+        for (i = 0; i < sPocketCapacities[pocket->pocketId]; ++i) {
             if (pocket->slots[i].id == ITEM_NONE || pocket->slots[i].quantity == 0) {
                 break;
             }
             ov15_021F9D9C(appData->moveNamesMsgData, appData->itemNameStrings[i], pocket->slots[i].id, HEAP_ID_BAG);
-            appData->unk_6A4[i] = pocket->slots[i].id;
+            appData->itemsInPocket[i] = pocket->slots[i].id;
         }
         pocket->count = i;
     } else {
-        for (i = 0; i < ov15_022008B0[pocket->pocketId]; ++i) {
+        for (i = 0; i < sPocketCapacities[pocket->pocketId]; ++i) {
             if (pocket->slots[i].id == ITEM_NONE || pocket->slots[i].quantity == 0) {
                 break;
             }
             ov15_021F9D8C(appData->itemNamesMsgdata, appData->itemNameStrings[i], pocket->slots[i].id, HEAP_ID_BAG);
-            appData->unk_6A4[i] = pocket->slots[i].id;
+            appData->itemsInPocket[i] = pocket->slots[i].id;
         }
         pocket->count = i;
     }
@@ -988,7 +984,7 @@ static BOOL ov15_021FA104(BagAppData *appData, int a1) {
 static u16 ov15_021FA12C(BagAppData *appData) {
     BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
     u32 r3 = pocket->scroll + appData->cursorPos - 8;
-    if (ov15_022008B0[appData->bagView->curPocket] <= r3) {
+    if (sPocketCapacities[appData->bagView->curPocket] <= r3) {
         return ITEM_NONE;
     }
     return pocket->slots[r3].id;
@@ -998,14 +994,14 @@ static void ov15_021FA170(BagAppData *appData) {
     if (appData->cursorPos >= 8 && appData->cursorPos <= 13) {
         u16 itemId = ov15_021FA12C(appData);
         if (itemId != ITEM_NONE) {
-            ov15_021FECA0(appData, &appData->windows[0], itemId);
+            ov15_021FECA0(appData, &appData->windows_main[BAG_APP_WINDOW_MAIN_0], itemId);
         } else {
-            ov15_021FECC4(appData, &appData->windows[0]);
+            ov15_021FECC4(appData, &appData->windows_main[BAG_APP_WINDOW_MAIN_0]);
         }
     } else if (appData->cursorPos >= 0 && appData->cursorPos <= 7) {
-        ov15_021FECD8(appData, &appData->windows[0], appData->cursorPos);
+        ov15_021FECD8(appData, &appData->windows_main[BAG_APP_WINDOW_MAIN_0], appData->cursorPos);
     } else {
-        ov15_021FECC4(appData, &appData->windows[0]);
+        ov15_021FECC4(appData, &appData->windows_main[BAG_APP_WINDOW_MAIN_0]);
     }
 }
 
@@ -1298,7 +1294,7 @@ static BagAppState ov15_021FA73C(BagAppData *appData, int input, u8 *a2, int a3,
         break;
     case 16:
         appData->bagView->itemId = ITEM_NONE;
-        appData->bagView->unk68 = 5;
+        appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_DONE;
         ov15_021FD774(appData, inputState);
         PlaySE(SEQ_SE_GS_GEARCANCEL);
         ret = BagApp_SetSpritePaletteAnimTransitionToNextState(appData, 19, 9, 8, BAG_APP_STATE_FADE_TO_EXIT);
@@ -1457,7 +1453,7 @@ static void ov15_021FAC48(BagAppData *appData) {
     ov15_021FB114(appData);
     ov15_02200294(appData);
     ov15_021FF560(appData);
-    ov15_021FF7AC(&appData->windows3[13]);
+    ov15_021FF7AC(&appData->windows_sub[BAG_APP_WINDOW_SUB_13]);
     ov15_021FED58(appData);
 
     {
@@ -1626,7 +1622,7 @@ static BagAppState ov15_021FB060(BagAppData *appData) {
 static void ov15_021FB114(BagAppData *appData) {
     BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
     if (appData->unk_671 != 0) {
-        ManagedSprite_SetPositionXY(appData->sprites[0], 177, 16 * (pocket->position - 1) + 16);
+        ManagedSprite_SetPositionXY(appData->sprites[BAG_APP_SPRITE_0], 177, 16 * (pocket->position - 1) + 16);
     }
 }
 
@@ -1636,53 +1632,53 @@ static void ov15_021FB14C(BagAppData *appData) {
     ItemData *itemData = LoadItemDataOrGfx(appData->bagView->itemId, ITEMNARC_PARAM, HEAP_ID_BAG);
     u8 pocketId = appData->bagView->pockets[appData->bagView->curPocket].pocketId;
     for (i = 0; i < 5; ++i) {
-        appData->unk_7F0[i] = NULL;
+        appData->contextMenuActions[i] = NULL;
     }
     if (appData->bagView->context == BAG_VIEW_CONTEXT_NORMAL) {
         if (appData->bagView->unk76_1 == 2 || appData->bagView->unk76_1 == 3) {
             if (appData->bagView->pockets[appData->bagView->curPocket].pocketId == POCKET_MAIL) {
-                stringIndices[0] = 2;
+                stringIndices[0] = BAG_ITEM_CONTEXT_MENU_ACTION_CHECK;
             }
         } else if ((ItemFieldUseFunc)GetItemAttr_PreloadedItemData(itemData, ITEMATTR_FIELDUSEFUNC) != NULL) {
-            if (appData->bagView->itemId == ITEM_BICYCLE && appData->bagView->unk76_0 == TRUE) {
-                stringIndices[0] = 1;
+            if (appData->bagView->itemId == ITEM_BICYCLE && appData->bagView->onBike == TRUE) {
+                stringIndices[0] = BAG_ITEM_CONTEXT_MENU_ACTION_WALK;
             } else if (appData->bagView->pockets[appData->bagView->curPocket].pocketId == POCKET_MAIL) {
-                stringIndices[0] = 2;
+                stringIndices[0] = BAG_ITEM_CONTEXT_MENU_ACTION_CHECK;
             } else if (appData->bagView->itemId == ITEM_POFFIN_CASE) {
-                stringIndices[0] = 4;
+                stringIndices[0] = BAG_ITEM_CONTEXT_MENU_ACTION_POFFIN_CASE_OPEN;
             } else if (appData->bagView->pockets[appData->bagView->curPocket].pocketId == POCKET_BERRIES && Leftover_CanPlantBerry(appData->bagView->checkUseData) == TRUE) {
-                stringIndices[0] = 3;
+                stringIndices[0] = BAG_ITEM_CONTEXT_MENU_ACTION_PLANT;
             } else if (appData->bagView->itemId == ITEM_GB_SOUNDS && SoundSys_GetGBSoundsState() == TRUE) {
-                stringIndices[0] = 15;
+                stringIndices[0] = BAG_ITEM_CONTEXT_MENU_ACTION_STOP_GBSOUNDS;
             } else {
-                stringIndices[0] = 0;
+                stringIndices[0] = BAG_ITEM_CONTEXT_MENU_ACTION_USE;
             }
         }
         if (!GetItemAttr_PreloadedItemData(itemData, ITEMATTR_PREVENT_TOSS)) {
             if (ItemIdIsNotJohtoBall(appData->bagView->itemId) == TRUE) {
-                stringIndices[2] = 8;
+                stringIndices[2] = BAG_ITEM_CONTEXT_MENU_ACTION_GIVE;
             }
             if (pocketId != POCKET_TMHMS) {
-                stringIndices[1] = 5;
+                stringIndices[1] = BAG_ITEM_CONTEXT_MENU_ACTION_TRASH;
             }
         }
         if (GetItemAttr_PreloadedItemData(itemData, ITEMATTR_SELECTABLE)) {
             if (appData->bagView->itemId == Bag_GetRegisteredItem1(appData->bag) || appData->bagView->itemId == Bag_GetRegisteredItem2(appData->bag)) {
-                stringIndices[1] = 7;
+                stringIndices[1] = BAG_ITEM_CONTEXT_MENU_ACTION_DESELECT;
             } else {
-                stringIndices[1] = 6;
+                stringIndices[1] = BAG_ITEM_CONTEXT_MENU_ACTION_REGISTER;
             }
         }
     } else if (appData->bagView->context == BAG_VIEW_CONTEXT_BERRY_POTS && IsBerryOrMulch(pocketId, appData->bagView->itemId) == TRUE) {
-        stringIndices[0] = 14;
+        stringIndices[0] = BAG_ITEM_CONTEXT_MENU_ACTION_USE_IN_BERRY_POTS;
     }
     if (appData->bagView->context != BAG_VIEW_CONTEXT_BERRY_POTS && pocketId != POCKET_TMHMS && pocketId != POCKET_BERRIES) {
-        stringIndices[3] = 12;
+        stringIndices[3] = BAG_ITEM_CONTEXT_MENU_ACTION_MOVE;
     }
-    stringIndices[4] = 11;
+    stringIndices[4] = BAG_ITEM_CONTEXT_MENU_ACTION_CANCEL;
     for (i = 0; i < 5; ++i) {
         if (stringIndices[i] != 0xFF) {
-            appData->unk_7F0[i] = ov15_02201368[stringIndices[i]];
+            appData->contextMenuActions[i] = sContextMenuFuncs[stringIndices[i]];
         }
     }
     ov15_021FEB84(appData, stringIndices, 5);
@@ -1694,10 +1690,10 @@ static void BagApp_PrintContextMenuStrings(BagAppData *appData, u8 *indices) {
     appData->unk_66C = 0;
     ov15_021FFECC(appData, ov15_02201468[appData->unk_66C]);
     ov15_0220023C(appData, indices);
-    BagApp_PrintContextMenuStringOnWindowCentered(&appData->windows3[13], appData->contextMenuStrings, indices[0]);
-    BagApp_PrintContextMenuStringOnWindowCentered(&appData->windows3[14], appData->contextMenuStrings, indices[1]);
-    BagApp_PrintContextMenuStringOnWindowCentered(&appData->windows3[15], appData->contextMenuStrings, indices[2]);
-    BagApp_PrintContextMenuStringOnWindowCentered(&appData->windows3[16], appData->contextMenuStrings, indices[3]);
+    BagApp_PrintContextMenuStringOnWindowCentered(&appData->windows_sub[BAG_APP_WINDOW_SUB_13], appData->contextMenuStrings, indices[0]);
+    BagApp_PrintContextMenuStringOnWindowCentered(&appData->windows_sub[BAG_APP_WINDOW_SUB_14], appData->contextMenuStrings, indices[1]);
+    BagApp_PrintContextMenuStringOnWindowCentered(&appData->windows_sub[BAG_APP_WINDOW_SUB_15], appData->contextMenuStrings, indices[2]);
+    BagApp_PrintContextMenuStringOnWindowCentered(&appData->windows_sub[BAG_APP_WINDOW_SUB_16], appData->contextMenuStrings, indices[3]);
 }
 
 static int ov15_021FB3F0(BagAppData *appData) {
@@ -1725,12 +1721,12 @@ static int ov15_021FB3F0(BagAppData *appData) {
         if (r6 == 4) {
             PlaySE(SEQ_SE_GS_GEARCANCEL);
             return LIST_CANCEL;
-        } else if (appData->unk_7F0[r6] != NULL) {
+        } else if (appData->contextMenuActions[r6] != NULL) {
             PlaySE(SEQ_SE_DP_SELECT);
             return r6;
         }
     } else if (gSystem.newKeys & PAD_BUTTON_A) {
-        if (appData->unk_7F0[r4] != NULL) {
+        if (appData->contextMenuActions[r4] != NULL) {
             PlaySE(SEQ_SE_DP_SELECT);
             ov15_021FD774(appData, MENU_INPUT_STATE_BUTTONS);
             return r4;
@@ -1776,7 +1772,7 @@ static BagAppState ov15_021FB5AC(BagAppData *appData) {
 static BagAppState ov15_021FB604(BagAppData *appData) {
     ov15_02200294(appData);
     ov15_021FF560(appData);
-    ov15_021FF7AC(&appData->windows3[13]);
+    ov15_021FF7AC(&appData->windows_sub[BAG_APP_WINDOW_SUB_13]);
     ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
     ov15_021FE868(appData);
     ov15_021FED3C(appData);
@@ -1786,11 +1782,11 @@ static BagAppState ov15_021FB604(BagAppData *appData) {
 
 static BagAppState ov15_021FB654(BagAppData *appData) {
     ov15_02200294(appData);
-    ov15_021FF7AC(&appData->windows3[13]);
-    return appData->unk_7F0[appData->unk_948](appData);
+    ov15_021FF7AC(&appData->windows_sub[BAG_APP_WINDOW_SUB_13]);
+    return appData->contextMenuActions[appData->unk_948](appData);
 }
 
-static BagAppState ov15_021FB680(BagAppData *appData) {
+static BagAppState BagApp_ItemContextMenu_Use(BagAppData *appData) {
     ov15_021FD788(appData, 0);
     ov15_021FFF24(appData);
     ItemCheckUseFunc func = GetItemFieldUseFunc(USE_ITEM_TASK_CHECK, GetItemAttr(appData->bagView->itemId, ITEMATTR_FIELDUSEFUNC, HEAP_ID_BAG));
@@ -1810,9 +1806,9 @@ static BagAppState ov15_021FB700(BagAppData *appData) {
         if (appData->bagView->context != BAG_VIEW_CONTEXT_DEBUG) {
             ov15_021FED3C(appData);
         }
-        ClearFrameAndWindow2(&appData->windows[3], TRUE);
-        ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
-        ScheduleWindowCopyToVram(&appData->windows[0]);
+        ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
+        ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_0]);
         ov15_021FD788(appData, 1);
         ov15_021FB518(appData);
         if (appData->bagView->context == BAG_VIEW_CONTEXT_DEBUG) {
@@ -1827,9 +1823,9 @@ static BagAppState ov15_021FB700(BagAppData *appData) {
 
 static BagAppState ov15_021FB784(BagAppData *appData) {
     BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
-    appData->unk_67B = 0;
+    appData->customCallbackState = 0;
     if (pocket->pocketId == POCKET_TMHMS) {
-        appData->unk_67C = ov15_021FB830;
+        appData->customCallback = BagApp_UseTMHM;
         return BAG_APP_STATE_13;
     }
     if (TryFormatRegisteredKeyItemUseMessage(appData->bagView->saveData, appData->formattedStrbuf, appData->bagView->itemId, HEAP_ID_BAG) == TRUE) {
@@ -1837,20 +1833,20 @@ static BagAppState ov15_021FB784(BagAppData *appData) {
         return BAG_APP_STATE_12;
     }
     if (BagApp_TryUseItemInPlace(appData, appData->bagView->itemId) == TRUE) {
-        appData->unk_67C = ov15_021FBBB0;
+        appData->customCallback = BagApp_UseItemInPlaceMessage;
         return BAG_APP_STATE_13;
     }
     sub_020880CC(1, HEAP_ID_BAG);
-    appData->bagView->unk68 = 0;
+    appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_USE_ON_PARTYMON;
     return BAG_APP_STATE_WAIT_FADE_AND_EXIT;
 }
 
 static BagAppState ov15_021FB820(BagAppData *appData) {
-    return appData->unk_67C(appData);
+    return appData->customCallback(appData);
 }
 
-static BagAppState ov15_021FB830(BagAppData *appData) {
-    switch (appData->unk_67B) {
+static BagAppState BagApp_UseTMHM(BagAppData *appData) {
+    switch (appData->customCallbackState) {
     case 0: {
         u16 move = TMHMGetMove(appData->bagView->itemId);
         BufferMoveName(appData->msgFormat, 0, move);
@@ -1860,37 +1856,39 @@ static BagAppState ov15_021FB830(BagAppData *appData) {
             ReadMsgDataIntoString(appData->msgData, msg_0010_00059, appData->formattedStrbuf);
         }
         appData->textPrinterId = BagApp_PrintMessage(appData, 0);
-        appData->unk_67B = 1;
+        appData->customCallbackState = 1;
     } break;
     case 1:
         if (!TextPrinterCheckActive(appData->textPrinterId) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
             String *r5 = NewString_ReadMsgData(appData->msgData, msg_0010_00061);
-            FillWindowPixelBuffer(&appData->windows[3], 15);
+            FillWindowPixelBuffer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], 15);
             StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, r5);
             String_Delete(r5);
             appData->textPrinterId = BagApp_PrintMessage(appData, 0);
-            appData->unk_67B = 2;
+            appData->customCallbackState = 2;
         }
         break;
     case 2:
         if (!TextPrinterCheckActive(appData->textPrinterId)) {
             BagApp_CreateYesNoPrompt(appData);
-            appData->unk_67B = 3;
+            appData->customCallbackState = 3;
         }
         break;
     case 3:
         switch (YesNoPrompt_HandleInput(appData->yesNoPrompt)) {
+        default:
+            break;
         case YESNORESPONSE_YES:
             BagApp_DestroyYesNoPrompt(appData);
             sub_020880CC(1, HEAP_ID_BAG);
-            appData->bagView->unk68 = 0;
+            appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_USE_ON_PARTYMON;
             return BAG_APP_STATE_WAIT_FADE_AND_EXIT;
         case YESNORESPONSE_NO:
             BagApp_DestroyYesNoPrompt(appData);
             ov15_021FED3C(appData);
-            ClearFrameAndWindow2(&appData->windows[3], TRUE);
-            ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
-            ScheduleWindowCopyToVram(&appData->windows[0]);
+            ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
+            ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
+            ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_0]);
             ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
             ov15_021FE868(appData);
             ov15_02200294(appData);
@@ -1958,24 +1956,24 @@ static void ov15_021FBB28(BagAppData *appData) {
     ov15_021FA070(&appData->bagView->pockets[appData->bagView->curPocket].scroll, &appData->bagView->pockets[appData->bagView->curPocket].position, appData->bagView->pockets[appData->bagView->curPocket].count, HEAP_ID_BAG);
 }
 
-static BagAppState ov15_021FBBB0(BagAppData *appData) {
-    switch (appData->unk_67B) {
+static BagAppState BagApp_UseItemInPlaceMessage(BagAppData *appData) {
+    switch (appData->customCallbackState) {
     case 0:
         appData->textPrinterId = BagApp_PrintMessage(appData, 0);
-        appData->unk_67B = 1;
+        appData->customCallbackState = 1;
         break;
     case 1:
         if (!TextPrinterCheckActive(appData->textPrinterId) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
             ov15_021FED3C(appData);
-            ClearFrameAndWindow2(&appData->windows[3], TRUE);
-            ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
+            ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
+            ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
             ov15_021FBB28(appData);
             ov15_021FB518(appData);
             ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 1);
             ov15_021FA170(appData);
-            ScheduleWindowCopyToVram(&appData->windows[0]);
+            ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_0]);
             ov15_021FD788(appData, 1);
-            appData->unk_67B = 0;
+            appData->customCallbackState = 0;
             return BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE;
         }
         break;
@@ -1984,21 +1982,21 @@ static BagAppState ov15_021FBBB0(BagAppData *appData) {
     return BAG_APP_STATE_13;
 }
 
-static BagAppState ov15_021FBC6C(BagAppData *appData) {
+static BagAppState BagApp_ItemContextMenu_Unk9(BagAppData *appData) {
     ov15_021FED3C(appData);
     sub_020880CC(1, HEAP_ID_BAG);
-    appData->bagView->unk68 = 1;
+    appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_CHECK_BERRY_TAG;
     return BAG_APP_STATE_WAIT_FADE_AND_EXIT;
 }
 
-static BagAppState ov15_021FBC8C(BagAppData *appData) {
+static BagAppState BagApp_ItemContextMenu_Confirm(BagAppData *appData) {
     ov15_021FED3C(appData);
     sub_020880CC(1, HEAP_ID_BAG);
-    appData->bagView->unk68 = 3;
+    appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_POFFIN_BERRY_CHOSEN;
     return BAG_APP_STATE_WAIT_FADE_AND_EXIT;
 }
 
-static BagAppState ov15_021FBCAC(BagAppData *appData) {
+static BagAppState BagApp_ItemContextMenu_Trash(BagAppData *appData) {
     appData->quantity = 1;
     ov15_021FFF24(appData);
     if (Pocket_GetQuantity(appData->bagView->pockets[appData->bagView->curPocket].slots, appData->bagView->pockets[appData->bagView->curPocket].count, appData->bagView->itemId, HEAP_ID_BAG) == 1) {
@@ -2050,38 +2048,38 @@ static BagAppState BagAppMainTask_Toss_SelectQuantity(BagAppData *appData) {
         switch (r5) {
         case 0:
             appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, 100);
-            ManagedSprite_SetAnimationFrame(appData->sprites[32], 0);
-            ManagedSprite_SetAnim(appData->sprites[32], 26);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_32], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_32], 26);
             r6 = 1;
             break;
         case 1:
             appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, 10);
-            ManagedSprite_SetAnimationFrame(appData->sprites[33], 0);
-            ManagedSprite_SetAnim(appData->sprites[33], 26);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_33], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_33], 26);
             r6 = 1;
             break;
         case 2:
             appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, 1);
-            ManagedSprite_SetAnimationFrame(appData->sprites[34], 0);
-            ManagedSprite_SetAnim(appData->sprites[34], 26);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_34], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_34], 26);
             r6 = 1;
             break;
         case 3:
             appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, -100);
-            ManagedSprite_SetAnimationFrame(appData->sprites[35], 0);
-            ManagedSprite_SetAnim(appData->sprites[35], 28);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_35], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_35], 28);
             r6 = 2;
             break;
         case 4:
             appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, -10);
-            ManagedSprite_SetAnimationFrame(appData->sprites[36], 0);
-            ManagedSprite_SetAnim(appData->sprites[36], 28);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_36], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_36], 28);
             r6 = 2;
             break;
         case 5:
             appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, -1);
-            ManagedSprite_SetAnimationFrame(appData->sprites[37], 0);
-            ManagedSprite_SetAnim(appData->sprites[37], 28);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_37], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_37], 28);
             r6 = 2;
             break;
         case 6:
@@ -2133,8 +2131,8 @@ static BagAppState ov15_021FBFC0(BagAppData *appData) {
     ov15_021FB518(appData);
     ov15_02200428(appData);
     ov15_021FF29C(appData, 0);
-    ManagedSprite_SetAnimationFrame(appData->sprites[19], 0);
-    ManagedSprite_SetAnim(appData->sprites[19], 16);
+    ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_19], 0);
+    ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_19], 16);
     return BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE;
 }
 
@@ -2162,16 +2160,16 @@ static BagAppState BagAppMainTask_ConfirmToss_HandleYesNo(BagAppData *appData) {
             StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
             String_Delete(string);
         }
-        FillWindowPixelBuffer(&appData->windows[3], 15);
+        FillWindowPixelBuffer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], 15);
         appData->textPrinterId = BagApp_PrintMessage(appData, 0);
         return BAG_APP_STATE_COMPLETE_TOSS_WAIT_MESSAGE;
     case LIST_NOTHING_CHOSEN:
         break;
     case YESNORESPONSE_NO:
         BagApp_DestroyYesNoPrompt(appData);
-        ClearFrameAndWindow2(&appData->windows[3], TRUE);
-        ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
-        ScheduleWindowCopyToVram(&appData->windows[0]);
+        ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
+        ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_0]);
         ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
@@ -2187,15 +2185,15 @@ static BagAppState BagAppMainTask_CompleteToss_WaitMessage(BagAppData *appData) 
     if (TextPrinterCheckActive(appData->textPrinterId)) {
         return BAG_APP_STATE_COMPLETE_TOSS_WAIT_MESSAGE;
     }
-    ScheduleWindowCopyToVram(&appData->windows[3]);
+    ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
     return BAG_APP_STATE_COMPLETE_TOSS_WAIT_BUTTON;
 }
 
 static BagAppState BagAppMainTask_CompleteToss_WaitButton(BagAppData *appData) {
     if (!TextPrinterCheckActive(appData->textPrinterId) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
-        ClearFrameAndWindow2(&appData->windows[3], TRUE);
-        ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
-        ScheduleWindowCopyToVram(&appData->windows[0]);
+        ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
+        ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_0]);
         Pocket_TakeItem(appData->bagView->pockets[appData->bagView->curPocket].slots, appData->bagView->pockets[appData->bagView->curPocket].count, appData->bagView->itemId, appData->quantity, HEAP_ID_BAG);
         ov15_021F9F08(appData);
         ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 1);
@@ -2210,10 +2208,10 @@ static BagAppState BagAppMainTask_CompleteToss_WaitButton(BagAppData *appData) {
     return BAG_APP_STATE_COMPLETE_TOSS_WAIT_BUTTON;
 }
 
-static BagAppState ov15_021FC224(BagAppData *appData) {
+static BagAppState BagApp_ItemContextMenu_Register(BagAppData *appData) {
     if (!Bag_TryRegisterItem(appData->bag, appData->bagView->itemId)) {
         String *string = NewString_ReadMsgData(appData->msgData, msg_0010_00103);
-        FillWindowPixelBuffer(&appData->windows[3], 15);
+        FillWindowPixelBuffer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], 15);
         StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
         String_Delete(string);
         BagApp_PrintMessage(appData, 0);
@@ -2224,7 +2222,7 @@ static BagAppState ov15_021FC224(BagAppData *appData) {
     } else {
         ov15_02200294(appData);
         ov15_021FF560(appData);
-        ov15_021FF7AC(&appData->windows3[13]);
+        ov15_021FF7AC(&appData->windows_sub[BAG_APP_WINDOW_SUB_13]);
         ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
@@ -2235,11 +2233,11 @@ static BagAppState ov15_021FC224(BagAppData *appData) {
 
 static BagAppState ov15_021FC2E0(BagAppData *appData) {
     if (!TextPrinterCheckActive(appData->textPrinterId) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
-        ClearFrameAndWindow2(&appData->windows[3], TRUE);
-        ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
+        ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
         ov15_02200294(appData);
         ov15_021FF560(appData);
-        ov15_021FF7AC(&appData->windows3[13]);
+        ov15_021FF7AC(&appData->windows_sub[BAG_APP_WINDOW_SUB_13]);
         ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
@@ -2251,11 +2249,11 @@ static BagAppState ov15_021FC2E0(BagAppData *appData) {
     return BAG_APP_STATE_25;
 }
 
-static BagAppState ov15_021FC37C(BagAppData *appData) {
+static BagAppState BagApp_ItemContextMenu_Deselect(BagAppData *appData) {
     Bag_UnregisterItem(appData->bag, appData->bagView->itemId);
     ov15_02200294(appData);
     ov15_021FF560(appData);
-    ov15_021FF7AC(&appData->windows3[13]);
+    ov15_021FF7AC(&appData->windows_sub[BAG_APP_WINDOW_SUB_13]);
     ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
     ov15_021FE868(appData);
     ov15_021FED3C(appData);
@@ -2263,17 +2261,17 @@ static BagAppState ov15_021FC37C(BagAppData *appData) {
     return BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE;
 }
 
-static BagAppState ov15_021FC3E0(BagAppData *appData) {
+static BagAppState BagApp_ItemContextMenu_Move(BagAppData *appData) {
     ov15_021FAC48(appData);
     return BAG_APP_STATE_3;
 }
 
-static BagAppState ov15_021FC3EC(BagAppData *appData) {
+static BagAppState BagApp_ItemContextMenu_Give(BagAppData *appData) {
     ov15_021FED3C(appData);
     ov15_021FD788(appData, 0);
     ov15_021FFF24(appData);
     sub_020880CC(1, HEAP_ID_BAG);
-    appData->bagView->unk68 = 2;
+    appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_GIVE_ITEM;
     return BAG_APP_STATE_WAIT_FADE_AND_EXIT;
 }
 
@@ -2363,7 +2361,7 @@ static BagAppState BagAppMainTask_HandleInput_GiveItem(BagAppData *appData) {
         }
         BagAppState r1 = ov15_021FA73C(appData, r4_2, &sp8, 0, 2, MENU_INPUT_STATE_TOUCH);
         if (r1 != BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE) {
-            appData->bagView->unk68 = 4;
+            appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_GIVE_FROM_MON_MENU;
             return r1;
         }
     } else if (gSystem.newKeys & PAD_BUTTON_A) {
@@ -2372,12 +2370,12 @@ static BagAppState BagAppMainTask_HandleInput_GiveItem(BagAppData *appData) {
             ov15_021FA0E4(appData, appData->cursorPos);
         }
         if (r4_3 != BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE) {
-            appData->bagView->unk68 = 4;
+            appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_GIVE_FROM_MON_MENU;
             return r4_3;
         }
     } else if (gSystem.newKeys & PAD_BUTTON_B) {
         BagAppState r4_4 = ov15_021FA73C(appData, 16, &sp8, 0, 2, MENU_INPUT_STATE_BUTTONS);
-        appData->bagView->unk68 = 4;
+        appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_GIVE_FROM_MON_MENU;
         if (appData->cursorPos >= 8 && appData->cursorPos <= 13) {
             ov15_021FA0E4(appData, appData->cursorPos);
         }
@@ -2390,10 +2388,10 @@ static BagAppState BagAppMainTask_HandleInput_GiveItem(BagAppData *appData) {
             StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
             String_Delete(string);
             appData->textPrinterId = BagApp_PrintMessage(appData, 0);
-            appData->bagView->unk68 = 5;
+            appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_DONE;
             return BAG_APP_STATE_GIVE_ITEM_ERROR_WAIT_MESSAGE;
         } else {
-            appData->bagView->unk68 = 4;
+            appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_GIVE_FROM_MON_MENU;
             return BagApp_SetSpriteAnimationTransitionToNextState(appData, 20, 41, BAG_APP_STATE_FADE_TO_EXIT);
         }
     }
@@ -2403,8 +2401,8 @@ static BagAppState BagAppMainTask_HandleInput_GiveItem(BagAppData *appData) {
 
 static BagAppState BagAppMainTask_GiveItemError_WaitMessage(BagAppData *appData) {
     if (!TextPrinterCheckActive(appData->textPrinterId) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
-        ClearFrameAndWindow2(&appData->windows[3], TRUE);
-        ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
+        ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
         ov15_021FF364(appData, appData->bagView->pockets[appData->bagView->curPocket].scroll, -1, 0);
         return BAG_APP_STATE_HANDLE_INPUT_GIVE_ITEM;
     }
@@ -2510,7 +2508,7 @@ static BagAppState BagAppMainTask_HandleInput_Sell(BagAppData *appData) {
         }
         BagAppState r1 = ov15_021FA73C(appData, r4_2, &sp8, 1, 4, MENU_INPUT_STATE_TOUCH);
         if (r1 != BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE) {
-            appData->bagView->unk68 = 5;
+            appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_DONE;
             return r1;
         }
     } else if (gSystem.newKeys & PAD_BUTTON_A) {
@@ -2519,12 +2517,12 @@ static BagAppState BagAppMainTask_HandleInput_Sell(BagAppData *appData) {
             ov15_021FA0E4(appData, appData->cursorPos);
         }
         if (r4_3 != BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE) {
-            appData->bagView->unk68 = 5;
+            appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_DONE;
             return r4_3;
         }
     } else if (gSystem.newKeys & PAD_BUTTON_B) {
         appData->bagView->itemId = ITEM_NONE;
-        appData->bagView->unk68 = 5;
+        appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_DONE;
         ov15_021FD774(appData, MENU_INPUT_STATE_BUTTONS);
         PlaySE(SEQ_SE_GS_GEARCANCEL);
         if (appData->cursorPos >= 8 && appData->cursorPos <= 13) {
@@ -2547,13 +2545,13 @@ static BagAppState ov15_021FCB64(BagAppData *appData) {
     appData->unitSellPrice = GetItemAttr(appData->bagView->itemId, ITEMATTR_PRICE, HEAP_ID_BAG) >> 1;
     ov15_021FD43C(appData->bgConfig, GF_BG_LYR_SUB_1, 0);
     ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_1);
-    ManagedSprite_SetDrawFlag(appData->sprites[17], FALSE);
-    ManagedSprite_SetDrawFlag(appData->sprites[18], FALSE);
+    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_17], FALSE);
+    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_18], FALSE);
     ov15_02200458(appData, 0);
     ov15_021FD788(appData, 0);
     ov15_021FF4EC(appData, pocket->scroll, appData->cursorPos - 8);
     ov15_022002B4(appData, appData->cursorPos - 8);
-    ov15_021FECA0(appData, &appData->windows[0], appData->bagView->itemId);
+    ov15_021FECA0(appData, &appData->windows_main[BAG_APP_WINDOW_MAIN_0], appData->bagView->itemId);
     ov15_021FFF24(appData);
     if (GetItemAttr(appData->bagView->itemId, ITEMATTR_PREVENT_TOSS, HEAP_ID_BAG) || appData->unitSellPrice == 0) {
         String *string = NewString_ReadMsgData(appData->msgData, msg_0010_00076);
@@ -2612,26 +2610,26 @@ static BagAppState ov15_021FCDE4(BagAppData *appData) {
         switch (r6) {
         case 0:
             appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, 10);
-            ManagedSprite_SetAnimationFrame(appData->sprites[32], 0);
-            ManagedSprite_SetAnim(appData->sprites[32], 26);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_32], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_32], 26);
             r5 = 1;
             break;
         case 1:
             appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, 1);
-            ManagedSprite_SetAnimationFrame(appData->sprites[33], 0);
-            ManagedSprite_SetAnim(appData->sprites[33], 26);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_33], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_33], 26);
             r5 = 1;
             break;
         case 2:
             appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, -10);
-            ManagedSprite_SetAnimationFrame(appData->sprites[35], 0);
-            ManagedSprite_SetAnim(appData->sprites[35], 28);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_35], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_35], 28);
             r5 = 2;
             break;
         case 3:
             appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, -1);
-            ManagedSprite_SetAnimationFrame(appData->sprites[36], 0);
-            ManagedSprite_SetAnim(appData->sprites[36], 28);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_36], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_36], 28);
             r5 = 2;
             break;
         case 4:
@@ -2676,9 +2674,9 @@ static BagAppState ov15_021FCDE4(BagAppData *appData) {
 }
 
 static BagAppState ov15_021FCFC8(BagAppData *appData) {
-    sub_0200E5D4(&appData->windows[4], TRUE);
+    sub_0200E5D4(&appData->windows_main[BAG_APP_WINDOW_MAIN_4], TRUE);
     ov15_021FF834(appData);
-    FillWindowPixelBuffer(&appData->windows[3], 15);
+    FillWindowPixelBuffer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], 15);
     String *string = NewString_ReadMsgData(appData->msgData, msg_0010_00078);
     BufferIntegerAsString(appData->msgFormat, 0, appData->quantity * appData->unitSellPrice, 6, PRINTING_MODE_LEFT_ALIGN, TRUE);
     StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
@@ -2692,11 +2690,11 @@ static BagAppState ov15_021FCFC8(BagAppData *appData) {
 
 static BagAppState ov15_021FD058(BagAppData *appData) {
     appData->unitSellPrice = 0;
-    sub_0200E5D4(&appData->windows3[22], TRUE);
-    sub_0200E5D4(&appData->windows[4], TRUE);
-    ClearFrameAndWindow2(&appData->windows[3], TRUE);
-    ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
-    ScheduleWindowCopyToVram(&appData->windows[0]);
+    sub_0200E5D4(&appData->windows_sub[BAG_APP_WINDOW_SUB_22], TRUE);
+    sub_0200E5D4(&appData->windows_main[BAG_APP_WINDOW_MAIN_4], TRUE);
+    ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
+    ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
+    ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_0]);
     ov15_02200428(appData);
     ov15_021FFF24(appData);
     ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
@@ -2740,10 +2738,10 @@ static BagAppState BagAppMainTask_ConfirmSale_HandleYesNo(BagAppData *appData) {
     case YESNORESPONSE_NO:
         BagApp_DestroyYesNoPrompt(appData);
         appData->unitSellPrice = 0;
-        sub_0200E5D4(&appData->windows3[22], TRUE);
-        ClearFrameAndWindow2(&appData->windows[3], TRUE);
-        ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
-        ScheduleWindowCopyToVram(&appData->windows[0]);
+        sub_0200E5D4(&appData->windows_sub[BAG_APP_WINDOW_SUB_22], TRUE);
+        ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
+        ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_0]);
         ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
@@ -2771,17 +2769,17 @@ static BagAppState BagAppMainTask_CompleteSale(BagAppData *appData) {
     }
     Pocket_TakeItem(appData->bagView->pockets[appData->bagView->curPocket].slots, appData->bagView->pockets[appData->bagView->curPocket].count, appData->bagView->itemId, appData->quantity, HEAP_ID_BAG);
     ov15_021F9F08(appData);
-    ScheduleWindowCopyToVram(&appData->windows[3]);
+    ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
     return BAG_APP_STATE_COMPLETE_SALE_WAIT_MESSAGE;
 }
 
 static BagAppState BagAppMainTask_CompleteSale_WaitMessage(BagAppData *appData) {
     if (!TextPrinterCheckActive(appData->textPrinterId) && (gSystem.newKeys & (PAD_BUTTON_A | PAD_BUTTON_B) || gSystem.touchNew)) {
         appData->unitSellPrice = 0;
-        sub_0200E5D4(&appData->windows3[22], TRUE);
-        ClearFrameAndWindow2(&appData->windows[3], TRUE);
-        ClearWindowTilemapAndScheduleTransfer(&appData->windows[3]);
-        ScheduleWindowCopyToVram(&appData->windows[0]);
+        sub_0200E5D4(&appData->windows_sub[BAG_APP_WINDOW_SUB_22], TRUE);
+        ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
+        ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_0]);
         ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 1);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
@@ -2804,12 +2802,12 @@ static BagAppState BagAppMainTask_Debug(BagAppData *appData) {
     return BAG_APP_STATE_DEBUG;
 }
 
-static BagAppState ov15_021FD3C0(BagAppData *appData) {
+static BagAppState BagApp_ItemContextMenu_UseInBerryPots(BagAppData *appData) {
     ov15_021FED3C(appData);
     ov15_021FD788(appData, 0);
     ov15_021FFF24(appData);
     sub_020880CC(1, HEAP_ID_BAG);
-    appData->bagView->unk68 = 4;
+    appData->bagView->returnCode = BAG_VIEW_RETURN_CODE_GIVE_FROM_MON_MENU;
     return BAG_APP_STATE_WAIT_FADE_AND_EXIT;
 }
 
@@ -3001,9 +2999,9 @@ static void ov15_021FD788(BagAppData *appData, int a1) {
     if (a1 == 1) {
         ov15_022004DC(appData, 1);
         ov15_021FF29C(appData, 0);
-        ScheduleWindowCopyToVram(&appData->windows[7]);
-        ManagedSprite_SetAnimationFrame(appData->sprites[19], 0);
-        ManagedSprite_SetAnim(appData->sprites[19], 16);
+        ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_7]);
+        ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_19], 0);
+        ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_19], 16);
     } else {
         ov15_022004DC(appData, 0);
         ov15_021FF844(appData);

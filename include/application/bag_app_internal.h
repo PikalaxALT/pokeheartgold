@@ -58,6 +58,107 @@ typedef enum BagAppState {
     BAG_APP_STATE_WAIT_FADE_AND_EXIT,
 } BagAppState;
 
+typedef enum BagItemContextMenuAction {
+    BAG_ITEM_CONTEXT_MENU_ACTION_USE,
+    BAG_ITEM_CONTEXT_MENU_ACTION_WALK,
+    BAG_ITEM_CONTEXT_MENU_ACTION_CHECK,
+    BAG_ITEM_CONTEXT_MENU_ACTION_PLANT,
+    BAG_ITEM_CONTEXT_MENU_ACTION_POFFIN_CASE_OPEN,
+    BAG_ITEM_CONTEXT_MENU_ACTION_TRASH,
+    BAG_ITEM_CONTEXT_MENU_ACTION_REGISTER,
+    BAG_ITEM_CONTEXT_MENU_ACTION_DESELECT,
+    BAG_ITEM_CONTEXT_MENU_ACTION_GIVE,
+    BAG_ITEM_CONTEXT_MENU_ACTION_9,
+    BAG_ITEM_CONTEXT_MENU_ACTION_CONFIRM,
+    BAG_ITEM_CONTEXT_MENU_ACTION_CANCEL,
+    BAG_ITEM_CONTEXT_MENU_ACTION_MOVE,
+    BAG_ITEM_CONTEXT_MENU_ACTION_13,
+    BAG_ITEM_CONTEXT_MENU_ACTION_USE_IN_BERRY_POTS,
+    BAG_ITEM_CONTEXT_MENU_ACTION_STOP_GBSOUNDS,
+    BAG_ITEM_CONTEXT_MENU_ACTION_MAX,
+} BagItemContextMenuAction;
+
+typedef enum BagAppWindowId {
+    BAG_APP_WINDOW_MAIN_0 = 0,
+    BAG_APP_WINDOW_MAIN_1,
+    BAG_APP_WINDOW_MAIN_2,
+    BAG_APP_WINDOW_MAIN_3,
+    BAG_APP_WINDOW_MAIN_4,
+    BAG_APP_WINDOW_MAIN_5,
+    BAG_APP_WINDOW_MAIN_6,
+    BAG_APP_WINDOW_MAIN_7,
+    BAG_APP_WINDOW_MAIN_MAX,
+
+    BAG_APP_WINDOW_SUB_0 = 0,
+    BAG_APP_WINDOW_SUB_1,
+    BAG_APP_WINDOW_SUB_2,
+    BAG_APP_WINDOW_SUB_3,
+    BAG_APP_WINDOW_SUB_4,
+    BAG_APP_WINDOW_SUB_5,
+    BAG_APP_WINDOW_SUB_6,
+    BAG_APP_WINDOW_SUB_7,
+    BAG_APP_WINDOW_SUB_8,
+    BAG_APP_WINDOW_SUB_9,
+    BAG_APP_WINDOW_SUB_10,
+    BAG_APP_WINDOW_SUB_11,
+    BAG_APP_WINDOW_SUB_12,
+    BAG_APP_WINDOW_SUB_13,
+    BAG_APP_WINDOW_SUB_14,
+    BAG_APP_WINDOW_SUB_15,
+    BAG_APP_WINDOW_SUB_16,
+    BAG_APP_WINDOW_SUB_17,
+    BAG_APP_WINDOW_SUB_18,
+    BAG_APP_WINDOW_SUB_19,
+    BAG_APP_WINDOW_SUB_20,
+    BAG_APP_WINDOW_SUB_21,
+    BAG_APP_WINDOW_SUB_22,
+    BAG_APP_WINDOW_SUB_23,
+    BAG_APP_WINDOW_SUB_MAX,
+} BagAppWindowId;
+
+typedef enum BagAppSpriteId {
+    BAG_APP_SPRITE_0 = 0,
+    BAG_APP_SPRITE_1,
+    BAG_APP_SPRITE_2,
+    BAG_APP_SPRITE_3,
+    BAG_APP_SPRITE_4,
+    BAG_APP_SPRITE_5,
+    BAG_APP_SPRITE_6,
+    BAG_APP_SPRITE_7,
+    BAG_APP_SPRITE_8,
+    BAG_APP_SPRITE_9,
+    BAG_APP_SPRITE_10,
+    BAG_APP_SPRITE_11,
+    BAG_APP_SPRITE_12,
+    BAG_APP_SPRITE_13,
+    BAG_APP_SPRITE_14,
+    BAG_APP_SPRITE_15,
+    BAG_APP_SPRITE_16,
+    BAG_APP_SPRITE_17,
+    BAG_APP_SPRITE_18,
+    BAG_APP_SPRITE_19,
+    BAG_APP_SPRITE_20,
+    BAG_APP_SPRITE_21,
+    BAG_APP_SPRITE_22,
+    BAG_APP_SPRITE_23,
+    BAG_APP_SPRITE_24,
+    BAG_APP_SPRITE_25,
+    BAG_APP_SPRITE_26,
+    BAG_APP_SPRITE_27,
+    BAG_APP_SPRITE_28,
+    BAG_APP_SPRITE_29,
+    BAG_APP_SPRITE_30,
+    BAG_APP_SPRITE_31,
+    BAG_APP_SPRITE_32,
+    BAG_APP_SPRITE_33,
+    BAG_APP_SPRITE_34,
+    BAG_APP_SPRITE_35,
+    BAG_APP_SPRITE_36,
+    BAG_APP_SPRITE_37,
+    BAG_APP_SPRITE_38,
+    BAG_APP_SPRITE_MAX,
+} BagAppSpriteId;
+
 typedef struct BagAppData_Sub619 {
     u8 unk_0;
     u8 unk_1;
@@ -83,7 +184,7 @@ typedef struct BagAppSpriteAnimationTransitionManager {
 
 typedef struct BagAppData BagAppData;
 
-typedef BagAppState (*BagAppDataUnkFunc7F0)(BagAppData *);
+typedef BagAppState (*BagItemContextMenuFunc)(BagAppData *);
 
 typedef struct BagApp3DModelData {
     NNSG3dRenderObj renderObj;
@@ -112,23 +213,23 @@ typedef struct BagApp3DState {
 
 struct BagAppData {
     BgConfig *bgConfig;
-    Window windows[8];
-    Window windows2[3];
-    Window windows3[24];
+    Window windows_main[BAG_APP_WINDOW_MAIN_MAX];
+    Window windows_unused[3];
+    Window windows_sub[BAG_APP_WINDOW_SUB_MAX];
     BagView *bagView;
     Bag *bag;
     PlayerProfile *playerProfile;
     Options *options;
-    NARC *unk_244;
+    NARC *narc_a_0_1_5;
     SpriteSystem *spriteSystem;
     SpriteManager *spriteManager;
-    ManagedSprite *sprites[39];
+    ManagedSprite *sprites[BAG_APP_SPRITE_MAX];
     MessagePrinter *msgPrinter;
     MsgData *msgData;
     MessageFormat *msgFormat;
     MsgData *itemNamesMsgdata;
     MsgData *moveNamesMsgData;
-    String *contextMenuStrings[16];
+    String *contextMenuStrings[BAG_ITEM_CONTEXT_MENU_ACTION_MAX];
     u8 filler_340[8];
     int unk_348;
     u8 filler_34C[4];
@@ -157,8 +258,8 @@ struct BagAppData {
     u8 unk_672;
     int unk_674;
     u8 filler_678[3];
-    u8 unk_67B;
-    BagAppDataUnkFunc7F0 unk_67C;
+    u8 customCallbackState;
+    BagItemContextMenuFunc customCallback;
     s16 quantity;
     u16 maxQuantity;
     int unitSellPrice;
@@ -169,8 +270,8 @@ struct BagAppData {
     NNSG2dPaletteData *unk_694[2];
     void *unk_69C;
     NNSG2dPaletteData *unk_6A0;
-    u16 unk_6A4[NUM_BAG_STRINGS];
-    BagAppDataUnkFunc7F0 unk_7F0[5];
+    u16 itemsInPocket[NUM_BAG_STRINGS];
+    BagItemContextMenuFunc contextMenuActions[5];
     YesNoPrompt *yesNoPrompt;
     BagApp3DState threeDimState;
     BagAppSpriteAnimationTransitionManager spriteAnimTransitionMgr;
@@ -219,8 +320,8 @@ void BagApp_PrintSellContextOptionOnWindow(BagAppData *appData);
 void ov15_021FF834(BagAppData *appData);
 void ov15_021FF844(BagAppData *appData);
 
-void ov15_021FF850(BagAppData *appData);
-void ov15_021FF894(BagAppData *appData);
+void BagApp_InitSpriteRendererAndSystem(BagAppData *appData);
+void BagApp_FreeSpriteSystem(BagAppData *appData);
 void ov15_021FF8D4(BagAppData *appData);
 void ov15_021FF950(BagAppData *appData);
 void ov15_021FF964(BagAppData *appData);

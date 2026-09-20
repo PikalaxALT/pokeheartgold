@@ -2,7 +2,7 @@
 
 #include "global.h"
 
-#include "files/msgdata/msg/msg_0300.h"
+#include "msgdata/msg/msg_0300.h"
 
 #include "font.h"
 #include "party_menu_items.h"
@@ -412,7 +412,7 @@ void PartyMenu_AddAllWindows(PartyMenu *partyMenu) {
     AddWindow(partyMenu->bgConfig, &partyMenu->windows[PARTY_MENU_WINDOW_ID_37], &templates[45]);
     AddWindow(partyMenu->bgConfig, &partyMenu->windows[PARTY_MENU_WINDOW_ID_38], &templates[46]);
     AddWindow(partyMenu->bgConfig, &partyMenu->windows[PARTY_MENU_WINDOW_ID_39], &templates[47]);
-    if (partyMenu->args->context == PARTY_MENU_CONTEXT_UNION_ROOM_BATTLE_SELECT || partyMenu->args->context == PARTY_MENU_CONTEXT_17 || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_HALL || partyMenu->args->context == PARTY_MENU_CONTEXT_23) {
+    if (partyMenu->args->context == PARTY_MENU_CONTEXT_UNION_ROOM_BATTLE_SELECT || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_TOWER || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_HALL || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_CASTLE) {
         WindowTemplate template = sAdditionalWindowTemplates[0];
         template.top = 22;
         AddWindow(partyMenu->bgConfig, &partyMenu->windows[PARTY_MENU_WINDOW_ID_31], &template);
@@ -705,7 +705,7 @@ void sub_0207D8EC(PartyMenu *partyMenu, u8 partySlot) {
             sub_0207DD7C(partyMenu, partySlot, 8);
             return;
         }
-    } else if (partyMenu->args->context == PARTY_MENU_CONTEXT_23) {
+    } else if (partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_CASTLE) {
         if (sub_0207B4A0(partyMenu, partySlot) == 0) {
             sub_0207DD7C(partyMenu, partySlot, 8);
             return;
@@ -1100,7 +1100,7 @@ PartyMenuContextMenuCursor *PartyMenu_CreateContextMenuCursor(PartyMenu *partyMe
     sub_0207E358(partyMenu, &ret->menu, ret->menu.numItems, ret->prevSelection, ret->state);
     PartyMenu_SetBlendBrightness_ForYesNo();
     Sprite_SetDrawFlag(partyMenu->sprites[PARTY_MENU_SPRITE_ID_9], FALSE);
-    if (partyMenu->args->context == PARTY_MENU_CONTEXT_UNION_ROOM_BATTLE_SELECT || partyMenu->args->context == PARTY_MENU_CONTEXT_17 || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_HALL || partyMenu->args->context == PARTY_MENU_CONTEXT_23) {
+    if (partyMenu->args->context == PARTY_MENU_CONTEXT_UNION_ROOM_BATTLE_SELECT || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_TOWER || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_HALL || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_CASTLE) {
         Sprite_SetDrawFlag(partyMenu->sprites[PARTY_MENU_SPRITE_ID_8], FALSE);
     }
     return ret;
@@ -1114,7 +1114,7 @@ void PartyMenu_CloseContextMenu(PartyMenu *partyMenu, PartyMenuContextMenuCursor
     } else {
         Sprite_SetDrawFlag(partyMenu->sprites[PARTY_MENU_SPRITE_ID_9], TRUE);
     }
-    if (partyMenu->args->context == PARTY_MENU_CONTEXT_UNION_ROOM_BATTLE_SELECT || partyMenu->args->context == PARTY_MENU_CONTEXT_17 || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_HALL || partyMenu->args->context == PARTY_MENU_CONTEXT_23) {
+    if (partyMenu->args->context == PARTY_MENU_CONTEXT_UNION_ROOM_BATTLE_SELECT || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_TOWER || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_HALL || partyMenu->args->context == PARTY_MENU_CONTEXT_BATTLE_CASTLE) {
         Sprite_SetDrawFlag(partyMenu->sprites[PARTY_MENU_SPRITE_ID_8], TRUE);
     }
 }

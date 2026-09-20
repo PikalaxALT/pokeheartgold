@@ -21,7 +21,7 @@
 #include "battle/battle_controller_player.h"
 #include "battle/battle_system.h"
 #include "battle/overlay_12_0224E4FC.h"
-#include "files/msgdata/msg/msg_0197.h"
+#include "msgdata/msg/msg_0197.h"
 
 #include "assert.h"
 #include "gf_gfx_loader.h"

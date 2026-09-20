@@ -4,7 +4,7 @@
 
 #include "constants/moves.h"
 
-#include "files/msgdata/msg/msg_0300.h"
+#include "msgdata/msg/msg_0300.h"
 
 #include "bag.h"
 #include "field_system.h"

@@ -5,7 +5,7 @@
 #include "constants/scrcmd.h"
 
 #include "field/hblank_system.h"
-#include "files/graphic/camera_viewfinder.naix"
+#include "graphic/camera_viewfinder.naix"
 
 #include "field_warp_tasks.h"
 #include "follow_mon.h"
