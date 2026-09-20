@@ -821,7 +821,7 @@ static void BagApp_CreateSprites(BagAppData *appData) {
         ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_28 + i], FALSE);
     }
     for (i = 0; i < 6; ++i) {
-        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_32 + i], FALSE);
+        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP + i], FALSE);
     }
     ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_38], FALSE);
     ManagedSprite_SetPriority(appData->sprites[BAG_APP_SPRITE_38], 1);
@@ -1055,17 +1055,17 @@ void ov15_02200300(BagAppData *appData, int a1, int a2) {
         a2 = 99;
     }
     for (i = 0; i < ov15_02200998[a1 - 2]; ++i) {
-        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_32 + ov15_02200A58[a1 - 2][i]], TRUE);
-        ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_32 + ov15_02200A58[a1 - 2][i]], ov15_02200A88[a1 - 2][i]);
+        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP + ov15_02200A58[a1 - 2][i]], TRUE);
+        ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP + ov15_02200A58[a1 - 2][i]], ov15_02200A88[a1 - 2][i]);
     }
     int r0 = ov15_022002EC(a2);
     if (r0 != 0) {
         if (a1 - 2 == 0 && r0 == 2) {
-            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_32], FALSE);
-            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_35], FALSE);
+            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP], FALSE);
+            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_HUNDREDS_PLACE_DOWN], FALSE);
         } else if (a1 - 2 == 1) {
             for (i = 0; i < ov15_022009A0[r0 - 1]; ++i) {
-                ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_32 + ov15_02200A14[r0 - 1][i]], FALSE);
+                ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP + ov15_02200A14[r0 - 1][i]], FALSE);
             }
         }
     }
@@ -1078,7 +1078,7 @@ void ov15_02200300(BagAppData *appData, int a1, int a2) {
 
 void ov15_02200428(BagAppData *appData) {
     for (int i = 0; i < 6; ++i) {
-        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_32 + i], FALSE);
+        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP + i], FALSE);
     }
     ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_38], FALSE);
 }

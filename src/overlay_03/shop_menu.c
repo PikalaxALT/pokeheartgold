@@ -778,7 +778,7 @@ static u8 ov03_02257A70(MartData *data) {
 }
 
 static u8 ov03_02257ADC(MartData *data) {
-    if (sub_020881C0(&data->quantity, data->maxInBudget)) {
+    if (AdjustQuantityUsingDPad(&data->quantity, data->maxInBudget)) {
         PlaySE(SEQ_SE_DP_BAG_004);
         data->unk298 = 6;
         return TASK_MART_7;

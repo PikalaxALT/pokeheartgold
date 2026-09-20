@@ -196,7 +196,7 @@
 .public BagCursor_Field_PocketSetPosition
 .public BagCursor_Field_SetPocket
 .public sub_020880CC
-.public sub_020881C0
+.public AdjustQuantityUsingDPad
 .public NNS_G2dGetUnpackedBGCharacterData
 .public NNS_G3dAnmObjInit
 .public NNS_G3dRenderObjAddAnmObj

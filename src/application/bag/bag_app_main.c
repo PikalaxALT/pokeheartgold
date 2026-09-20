@@ -107,7 +107,7 @@ static BagAppState BagApp_UseItemInPlaceMessage(BagAppData *appData);
 static BagAppState BagApp_ItemContextMenu_Unk9(BagAppData *appData);
 static BagAppState BagApp_ItemContextMenu_Confirm(BagAppData *appData);
 static BagAppState BagApp_ItemContextMenu_Trash(BagAppData *appData);
-static int ov15_021FBD28(int a0, int a1, int a2);
+static int addWrapped(int base, int limit, int addend);
 static BagAppState BagAppMainTask_Toss_SelectQuantity(BagAppData *appData);
 static BagAppState BagAppMainTask_ConfirmToss_PrintMessage(BagAppData *appData);
 static BagAppState ov15_021FBFC0(BagAppData *appData);
@@ -2012,21 +2012,21 @@ static BagAppState BagApp_ItemContextMenu_Trash(BagAppData *appData) {
     return BAG_APP_STATE_TOSS_SELECT_QUANTITY;
 }
 
-static int ov15_021FBD28(int a0, int a1, int a2) {
-    if (a2 > 0) {
-        if (a0 == a1) {
+static int addWrapped(int base, int limit, int addend) {
+    if (addend > 0) {
+        if (base == limit) {
             return 1;
-        } else if (a0 + a2 > a1) {
-            return a1;
+        } else if (base + addend > limit) {
+            return limit;
         }
     } else {
-        if (a0 == 1) {
-            return a1;
-        } else if (a0 + a2 <= 0) {
+        if (base == 1) {
+            return limit;
+        } else if (base + addend <= 0) {
             return 1;
         }
     }
-    return a0 + a2;
+    return base + addend;
 }
 
 static BagAppState BagAppMainTask_Toss_SelectQuantity(BagAppData *appData) {
@@ -2047,39 +2047,39 @@ static BagAppState BagAppMainTask_Toss_SelectQuantity(BagAppData *appData) {
         }
         switch (r5) {
         case 0:
-            appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, 100);
-            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_32], 0);
-            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_32], 26);
+            appData->quantity = addWrapped(appData->quantity, appData->maxQuantity, 100);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP], 26);
             r6 = 1;
             break;
         case 1:
-            appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, 10);
-            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_33], 0);
-            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_33], 26);
+            appData->quantity = addWrapped(appData->quantity, appData->maxQuantity, 10);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_TENS_PLACE_UP], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_TENS_PLACE_UP], 26);
             r6 = 1;
             break;
         case 2:
-            appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, 1);
-            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_34], 0);
-            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_34], 26);
+            appData->quantity = addWrapped(appData->quantity, appData->maxQuantity, 1);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_ONES_PLACE_UP], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_ONES_PLACE_UP], 26);
             r6 = 1;
             break;
         case 3:
-            appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, -100);
-            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_35], 0);
-            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_35], 28);
+            appData->quantity = addWrapped(appData->quantity, appData->maxQuantity, -100);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_TOSS_HUNDREDS_PLACE_DOWN], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_TOSS_HUNDREDS_PLACE_DOWN], 28);
             r6 = 2;
             break;
         case 4:
-            appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, -10);
-            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_36], 0);
-            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_36], 28);
+            appData->quantity = addWrapped(appData->quantity, appData->maxQuantity, -10);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_TOSS_TENS_PLACE_DOWN], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_TOSS_TENS_PLACE_DOWN], 28);
             r6 = 2;
             break;
         case 5:
-            appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, -1);
-            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_37], 0);
-            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_37], 28);
+            appData->quantity = addWrapped(appData->quantity, appData->maxQuantity, -1);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_ONES_PLACE_DOWN], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_ONES_PLACE_DOWN], 28);
             r6 = 2;
             break;
         case 6:
@@ -2090,7 +2090,7 @@ static BagAppState BagAppMainTask_Toss_SelectQuantity(BagAppData *appData) {
             break;
         }
     } else {
-        r6 = sub_020881C0(&appData->quantity, appData->maxQuantity);
+        r6 = AdjustQuantityUsingDPad(&appData->quantity, appData->maxQuantity);
         if (r6 == 0) {
             if (gSystem.newKeys & PAD_BUTTON_A) {
                 r6 = 3;
@@ -2609,27 +2609,27 @@ static BagAppState ov15_021FCDE4(BagAppData *appData) {
         }
         switch (r6) {
         case 0:
-            appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, 10);
-            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_32], 0);
-            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_32], 26);
+            appData->quantity = addWrapped(appData->quantity, appData->maxQuantity, 10);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP], 26);
             r5 = 1;
             break;
         case 1:
-            appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, 1);
-            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_33], 0);
-            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_33], 26);
+            appData->quantity = addWrapped(appData->quantity, appData->maxQuantity, 1);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_TENS_PLACE_UP], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_TENS_PLACE_UP], 26);
             r5 = 1;
             break;
         case 2:
-            appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, -10);
-            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_35], 0);
-            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_35], 28);
+            appData->quantity = addWrapped(appData->quantity, appData->maxQuantity, -10);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_TOSS_HUNDREDS_PLACE_DOWN], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_TOSS_HUNDREDS_PLACE_DOWN], 28);
             r5 = 2;
             break;
         case 3:
-            appData->quantity = ov15_021FBD28(appData->quantity, appData->maxQuantity, -1);
-            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_36], 0);
-            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_36], 28);
+            appData->quantity = addWrapped(appData->quantity, appData->maxQuantity, -1);
+            ManagedSprite_SetAnimationFrame(appData->sprites[BAG_APP_SPRITE_TOSS_TENS_PLACE_DOWN], 0);
+            ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_TOSS_TENS_PLACE_DOWN], 28);
             r5 = 2;
             break;
         case 4:
@@ -2640,7 +2640,7 @@ static BagAppState ov15_021FCDE4(BagAppData *appData) {
             break;
         }
     } else {
-        r5 = sub_020881C0(&appData->quantity, appData->maxQuantity);
+        r5 = AdjustQuantityUsingDPad(&appData->quantity, appData->maxQuantity);
         if (r5 == 0) {
             if (gSystem.newKeys & PAD_BUTTON_A) {
                 r5 = 3;
