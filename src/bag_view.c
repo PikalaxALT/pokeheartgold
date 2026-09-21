@@ -57,7 +57,7 @@ void BagView_SetItem(BagView *bagView, ItemSlot *slots, u8 pocketId, u8 position
     bagView->pockets[pocketId].pocketId = pocketId;
 }
 
-void sub_020778C8(BagView *bagView) {
+void BagView_SetOnBike(BagView *bagView) {
     bagView->onBike = TRUE;
 }
 
@@ -65,12 +65,12 @@ void BagView_SetCheckUseData(BagView *bagView, ItemCheckUseData *checkUseData) {
     bagView->checkUseData = checkUseData;
 }
 
-void sub_020778E0(BagView *bagView, u8 a1) {
-    bagView->partySlot = a1;
+void BagView_SetPartySlot(BagView *bagView, u8 partySlot) {
+    bagView->partySlot = partySlot;
 }
 
-void sub_020778E8(BagView *bagView, u16 a1) {
-    bagView->unk76_1 = a1;
+void BagView_SetMapLoadType(BagView *bagView, u16 mapLoadType) {
+    bagView->mapLoadType = mapLoadType;
 }
 
 u16 BagView_GetItemId(BagView *bagView) {

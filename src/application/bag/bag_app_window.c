@@ -666,7 +666,7 @@ void ov15_021FF364(BagAppData *appData, int a1, int a2, int a3) {
     }
 }
 
-void ov15_021FF4EC(BagAppData *appData, int scroll, int offset) {
+void BagApp_SwitchItemButtonWindowsToContextMenuMode(BagAppData *appData, int scroll, int offset) {
     BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
     offset = scroll + offset;
     for (int i = 0; i < 6; ++i) {

@@ -118,12 +118,12 @@ typedef enum BagAppWindowId {
 
 typedef enum BagAppSpriteId {
     BAG_APP_SPRITE_0 = 0,
-    BAG_APP_SPRITE_1,
-    BAG_APP_SPRITE_2,
-    BAG_APP_SPRITE_3,
-    BAG_APP_SPRITE_4,
-    BAG_APP_SPRITE_5,
-    BAG_APP_SPRITE_6,
+    BAG_APP_SPRITE_ITEM_ICON_1,
+    BAG_APP_SPRITE_ITEM_ICON_2,
+    BAG_APP_SPRITE_ITEM_ICON_3,
+    BAG_APP_SPRITE_ITEM_ICON_4,
+    BAG_APP_SPRITE_ITEM_ICON_5,
+    BAG_APP_SPRITE_ITEM_ICON_6,
     BAG_APP_SPRITE_7,
     BAG_APP_SPRITE_8,
     BAG_APP_SPRITE_9,
@@ -310,7 +310,7 @@ void ov15_021FF0FC(BagAppData *appData, int a1);
 void ov15_021FF1E0(BagAppData *appData);
 void ov15_021FF29C(BagAppData *appData, int a1);
 void ov15_021FF364(BagAppData *appData, int a1, int a2, int a3);
-void ov15_021FF4EC(BagAppData *appData, int scroll, int offset);
+void BagApp_SwitchItemButtonWindowsToContextMenuMode(BagAppData *appData, int scroll, int offset);
 void ov15_021FF560(BagAppData *appData);
 void ov15_021FF6BC(BagAppData *appData, int pocketCount, int pocketScroll, int offset);
 void BagApp_PrintContextMenuStringOnWindowCentered(Window *window, String **strings, int index);
@@ -336,7 +336,7 @@ void ov15_02200140(BagAppData *appData, BagViewPocket *pocket, int a2, int a3);
 void ov15_022001C4(BagAppData *appData, BagViewPocket *pocket, int a2);
 void ov15_0220023C(BagAppData *appData, u8 *a1);
 void ov15_02200294(BagAppData *appData);
-void ov15_022002B4(BagAppData *appData, int a1);
+void BagApp_CenterSelectedItemIconSprite(BagAppData *appData, int cursorPos);
 int ov15_022002EC(int a0);
 void ov15_02200300(BagAppData *appData, int a1, int a2);
 void ov15_02200428(BagAppData *appData);

@@ -1,4 +1,5 @@
 #include "application/bag_app_internal.h"
+#include "graphic/bag/bag_graphics.naix"
 
 #include "gf_gfx_loader.h"
 #include "move.h"
@@ -103,701 +104,701 @@ static void BagApp_InitSpriteSystem(BagAppData *appData) {
 }
 
 static void BagApp_LoadSpriteResObjs(BagAppData *appData) {
-    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 26, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49401);
-    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 6, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49402);
-    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 51, FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 49403);
+    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00026_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49401);
+    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00006_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49402);
+    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00051_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 49403);
     SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_6_0, 4, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49410);
     for (int i = 0; i < 6; ++i) {
         SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(ITEM_NONE, ITEMNARC_NCGR), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 49404 + i);
     }
     sub_020776B8(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, 0, 49411);
     sub_02077834(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, 0, 49412);
-    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 15, FALSE, 2, NNS_G2D_VRAM_TYPE_2DMAIN, 49401);
+    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00015_NCLR, FALSE, 2, NNS_G2D_VRAM_TYPE_2DMAIN, 49401);
     SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_6_0, 10, FALSE, 2, NNS_G2D_VRAM_TYPE_2DMAIN, 49409);
     sub_020776EC(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, 49410);
-    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 47, FALSE, 10, NNS_G2D_VRAM_TYPE_2DSUB, 49402);
+    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00047_NCLR, FALSE, 10, NNS_G2D_VRAM_TYPE_2DSUB, 49402);
     for (int i = 0; i < 6; ++i) {
         SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(ITEM_NONE, ITEMNARC_NCLR), 0, TRUE, NNS_G2D_VRAM_TYPE_2DSUB, 49403 + i);
     }
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 25, FALSE, 49401);
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 5, FALSE, 49402);
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 49, FALSE, 49403);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00025_NCER, FALSE, 49401);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00005_NCER, FALSE, 49402);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00049_NCER, FALSE, 49403);
     SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIconCell(), FALSE, 49404);
     SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_6_0, 5, FALSE, 49405);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 21, FALSE, 49401);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 24, FALSE, 49402);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 4, FALSE, 49403);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_1_5, 50, FALSE, 49404);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00021_NANR, FALSE, 49401);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00024_NANR, FALSE, 49402);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00004_NANR, FALSE, 49403);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00050_NANR, FALSE, 49404);
     SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIconAnim(), FALSE, 49405);
     SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_6_0, 6, FALSE, 49406);
     sub_0207775C(appData->spriteSystem, appData->spriteManager, 49406, 49407);
-    appData->unk_69C = GfGfxLoader_GetPlttData(NARC_a_0_1_5, 48, &appData->unk_6A0, HEAP_ID_BAG);
+    appData->unk_69C = GfGfxLoader_GetPlttData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00048_NCLR, &appData->unk_6A0, HEAP_ID_BAG);
 }
 
 static const ManagedSpriteTemplate ov15_02200B0C[39] = {
-    {
-     .x = 177,
-     .y = 14,
-     .z = 0,
-     .animation = 0,
-     .drawPriority = 0,
-     .pal = 0,
-     .vram = NNS_G2D_VRAM_TYPE_2DMAIN,
-     .resIdList = {
+    [BAG_APP_SPRITE_0] = {
+                          .x = 177,
+                          .y = 14,
+                          .z = 0,
+                          .animation = 0,
+                          .drawPriority = 0,
+                          .pal = 0,
+                          .vram = NNS_G2D_VRAM_TYPE_2DMAIN,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49401,
             [GF_GFX_RES_TYPE_PLTT] = 49401,
             [GF_GFX_RES_TYPE_CELL] = 49401,
             [GF_GFX_RES_TYPE_ANIM] = 49402,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 22,
-     .y = 59,
-     .z = 0,
-     .animation = 0,
-     .drawPriority = 0,
-     .pal = 0,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_ITEM_ICON_1] = {
+                          .x = 22,
+                          .y = 59,
+                          .z = 0,
+                          .animation = 0,
+                          .drawPriority = 0,
+                          .pal = 0,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49404,
             [GF_GFX_RES_TYPE_PLTT] = 49403,
             [GF_GFX_RES_TYPE_CELL] = 49404,
             [GF_GFX_RES_TYPE_ANIM] = 49405,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 152,
-     .y = 59,
-     .z = 0,
-     .animation = 0,
-     .drawPriority = 0,
-     .pal = 0,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_ITEM_ICON_2] = {
+                          .x = 152,
+                          .y = 59,
+                          .z = 0,
+                          .animation = 0,
+                          .drawPriority = 0,
+                          .pal = 0,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49405,
             [GF_GFX_RES_TYPE_PLTT] = 49404,
             [GF_GFX_RES_TYPE_CELL] = 49404,
             [GF_GFX_RES_TYPE_ANIM] = 49405,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 22,
-     .y = 100,
-     .z = 0,
-     .animation = 0,
-     .drawPriority = 0,
-     .pal = 0,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_ITEM_ICON_3] = {
+                          .x = 22,
+                          .y = 100,
+                          .z = 0,
+                          .animation = 0,
+                          .drawPriority = 0,
+                          .pal = 0,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49406,
             [GF_GFX_RES_TYPE_PLTT] = 49405,
             [GF_GFX_RES_TYPE_CELL] = 49404,
             [GF_GFX_RES_TYPE_ANIM] = 49405,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 152,
-     .y = 100,
-     .z = 0,
-     .animation = 0,
-     .drawPriority = 0,
-     .pal = 0,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_ITEM_ICON_4] = {
+                          .x = 152,
+                          .y = 100,
+                          .z = 0,
+                          .animation = 0,
+                          .drawPriority = 0,
+                          .pal = 0,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49407,
             [GF_GFX_RES_TYPE_PLTT] = 49406,
             [GF_GFX_RES_TYPE_CELL] = 49404,
             [GF_GFX_RES_TYPE_ANIM] = 49405,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 22,
-     .y = 139,
-     .z = 0,
-     .animation = 0,
-     .drawPriority = 0,
-     .pal = 0,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_ITEM_ICON_5] = {
+                          .x = 22,
+                          .y = 139,
+                          .z = 0,
+                          .animation = 0,
+                          .drawPriority = 0,
+                          .pal = 0,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49408,
             [GF_GFX_RES_TYPE_PLTT] = 49407,
             [GF_GFX_RES_TYPE_CELL] = 49404,
             [GF_GFX_RES_TYPE_ANIM] = 49405,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 152,
-     .y = 139,
-     .z = 0,
-     .animation = 0,
-     .drawPriority = 0,
-     .pal = 0,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_ITEM_ICON_6] = {
+                          .x = 152,
+                          .y = 139,
+                          .z = 0,
+                          .animation = 0,
+                          .drawPriority = 0,
+                          .pal = 0,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49409,
             [GF_GFX_RES_TYPE_PLTT] = 49408,
             [GF_GFX_RES_TYPE_CELL] = 49404,
             [GF_GFX_RES_TYPE_ANIM] = 49405,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 48,
-     .y = 112,
-     .z = 0,
-     .animation = 0,
-     .drawPriority = 0,
-     .pal = 0,
-     .vram = NNS_G2D_VRAM_TYPE_2DMAIN,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_7] = {
+                          .x = 48,
+                          .y = 112,
+                          .z = 0,
+                          .animation = 0,
+                          .drawPriority = 0,
+                          .pal = 0,
+                          .vram = NNS_G2D_VRAM_TYPE_2DMAIN,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49411,
             [GF_GFX_RES_TYPE_PLTT] = 49410,
             [GF_GFX_RES_TYPE_CELL] = 49406,
             [GF_GFX_RES_TYPE_ANIM] = 49407,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 144,
-     .y = 112,
-     .z = 0,
-     .animation = 0,
-     .drawPriority = 0,
-     .pal = 0,
-     .vram = NNS_G2D_VRAM_TYPE_2DMAIN,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_8] = {
+                          .x = 144,
+                          .y = 112,
+                          .z = 0,
+                          .animation = 0,
+                          .drawPriority = 0,
+                          .pal = 0,
+                          .vram = NNS_G2D_VRAM_TYPE_2DMAIN,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49412,
             [GF_GFX_RES_TYPE_PLTT] = 49410,
             [GF_GFX_RES_TYPE_CELL] = 49406,
             [GF_GFX_RES_TYPE_ANIM] = 49407,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 16,
-     .y = 16,
-     .z = 0,
-     .animation = 0,
-     .drawPriority = 1,
-     .pal = 0,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_9] = {
+                          .x = 16,
+                          .y = 16,
+                          .z = 0,
+                          .animation = 0,
+                          .drawPriority = 1,
+                          .pal = 0,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 48,
-     .y = 16,
-     .z = 0,
-     .animation = 1,
-     .drawPriority = 1,
-     .pal = 1,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_10] = {
+                          .x = 48,
+                          .y = 16,
+                          .z = 0,
+                          .animation = 1,
+                          .drawPriority = 1,
+                          .pal = 1,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 80,
-     .y = 16,
-     .z = 0,
-     .animation = 2,
-     .drawPriority = 1,
-     .pal = 2,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_11] = {
+                          .x = 80,
+                          .y = 16,
+                          .z = 0,
+                          .animation = 2,
+                          .drawPriority = 1,
+                          .pal = 2,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 112,
-     .y = 16,
-     .z = 0,
-     .animation = 3,
-     .drawPriority = 1,
-     .pal = 3,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_12] = {
+                          .x = 112,
+                          .y = 16,
+                          .z = 0,
+                          .animation = 3,
+                          .drawPriority = 1,
+                          .pal = 3,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 144,
-     .y = 16,
-     .z = 0,
-     .animation = 4,
-     .drawPriority = 1,
-     .pal = 4,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_13] = {
+                          .x = 144,
+                          .y = 16,
+                          .z = 0,
+                          .animation = 4,
+                          .drawPriority = 1,
+                          .pal = 4,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 176,
-     .y = 16,
-     .z = 0,
-     .animation = 5,
-     .drawPriority = 1,
-     .pal = 5,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_14] = {
+                          .x = 176,
+                          .y = 16,
+                          .z = 0,
+                          .animation = 5,
+                          .drawPriority = 1,
+                          .pal = 5,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 208,
-     .y = 16,
-     .z = 0,
-     .animation = 6,
-     .drawPriority = 1,
-     .pal = 6,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_15] = {
+                          .x = 208,
+                          .y = 16,
+                          .z = 0,
+                          .animation = 6,
+                          .drawPriority = 1,
+                          .pal = 6,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 240,
-     .y = 16,
-     .z = 0,
-     .animation = 7,
-     .drawPriority = 1,
-     .pal = 7,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_16] = {
+                          .x = 240,
+                          .y = 16,
+                          .z = 0,
+                          .animation = 7,
+                          .drawPriority = 1,
+                          .pal = 7,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 24,
-     .y = 176,
-     .z = 0,
-     .animation = 12,
-     .drawPriority = 1,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_17] = {
+                          .x = 24,
+                          .y = 176,
+                          .z = 0,
+                          .animation = 12,
+                          .drawPriority = 1,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 64,
-     .y = 176,
-     .z = 0,
-     .animation = 13,
-     .drawPriority = 1,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_18] = {
+                          .x = 64,
+                          .y = 176,
+                          .z = 0,
+                          .animation = 13,
+                          .drawPriority = 1,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 224,
-     .y = 176,
-     .z = 0,
-     .animation = 16,
-     .drawPriority = 1,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_19] = {
+                          .x = 224,
+                          .y = 176,
+                          .z = 0,
+                          .animation = 16,
+                          .drawPriority = 1,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 16,
-     .y = 16,
-     .z = 0,
-     .animation = 8,
-     .drawPriority = 0,
-     .pal = 9,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_20] = {
+                          .x = 16,
+                          .y = 16,
+                          .z = 0,
+                          .animation = 8,
+                          .drawPriority = 0,
+                          .pal = 9,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 16,
-     .y = 48,
-     .z = 0,
-     .animation = 19,
-     .drawPriority = 1,
-     .pal = 9,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_21] = {
+                          .x = 16,
+                          .y = 48,
+                          .z = 0,
+                          .animation = 19,
+                          .drawPriority = 1,
+                          .pal = 9,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 144,
-     .y = 48,
-     .z = 0,
-     .animation = 19,
-     .drawPriority = 1,
-     .pal = 9,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_22] = {
+                          .x = 144,
+                          .y = 48,
+                          .z = 0,
+                          .animation = 19,
+                          .drawPriority = 1,
+                          .pal = 9,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 16,
-     .y = 88,
-     .z = 0,
-     .animation = 19,
-     .drawPriority = 1,
-     .pal = 9,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_23] = {
+                          .x = 16,
+                          .y = 88,
+                          .z = 0,
+                          .animation = 19,
+                          .drawPriority = 1,
+                          .pal = 9,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 144,
-     .y = 88,
-     .z = 0,
-     .animation = 19,
-     .drawPriority = 1,
-     .pal = 9,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_24] = {
+                          .x = 144,
+                          .y = 88,
+                          .z = 0,
+                          .animation = 19,
+                          .drawPriority = 1,
+                          .pal = 9,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 16,
-     .y = 128,
-     .z = 0,
-     .animation = 19,
-     .drawPriority = 1,
-     .pal = 9,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_25] = {
+                          .x = 16,
+                          .y = 128,
+                          .z = 0,
+                          .animation = 19,
+                          .drawPriority = 1,
+                          .pal = 9,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 144,
-     .y = 128,
-     .z = 0,
-     .animation = 19,
-     .drawPriority = 1,
-     .pal = 9,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_26] = {
+                          .x = 144,
+                          .y = 128,
+                          .z = 0,
+                          .animation = 19,
+                          .drawPriority = 1,
+                          .pal = 9,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 1,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 16,
-     .y = 48,
-     .z = 0,
-     .animation = 20,
-     .drawPriority = 0,
-     .pal = 9,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 1,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_27] = {
+                          .x = 16,
+                          .y = 48,
+                          .z = 0,
+                          .animation = 20,
+                          .drawPriority = 0,
+                          .pal = 9,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 48,
-     .y = 144,
-     .z = 0,
-     .animation = 22,
-     .drawPriority = 0,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_28] = {
+                          .x = 48,
+                          .y = 144,
+                          .z = 0,
+                          .animation = 22,
+                          .drawPriority = 0,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 144,
-     .y = 144,
-     .z = 0,
-     .animation = 22,
-     .drawPriority = 0,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_29] = {
+                          .x = 144,
+                          .y = 144,
+                          .z = 0,
+                          .animation = 22,
+                          .drawPriority = 0,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 48,
-     .y = 176,
-     .z = 0,
-     .animation = 22,
-     .drawPriority = 0,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_30] = {
+                          .x = 48,
+                          .y = 176,
+                          .z = 0,
+                          .animation = 22,
+                          .drawPriority = 0,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 144,
-     .y = 176,
-     .z = 0,
-     .animation = 22,
-     .drawPriority = 0,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_31] = {
+                          .x = 144,
+                          .y = 176,
+                          .z = 0,
+                          .animation = 22,
+                          .drawPriority = 0,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 136,
-     .y = 104,
-     .z = 0,
-     .animation = 25,
-     .drawPriority = 0,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP] = {
+                          .x = 136,
+                          .y = 104,
+                          .z = 0,
+                          .animation = 25,
+                          .drawPriority = 0,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 168,
-     .y = 104,
-     .z = 0,
-     .animation = 25,
-     .drawPriority = 0,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_TOSS_QUANTITY_TENS_PLACE_UP] = {
+                          .x = 168,
+                          .y = 104,
+                          .z = 0,
+                          .animation = 25,
+                          .drawPriority = 0,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 200,
-     .y = 104,
-     .z = 0,
-     .animation = 25,
-     .drawPriority = 0,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_TOSS_QUANTITY_ONES_PLACE_UP] = {
+                          .x = 200,
+                          .y = 104,
+                          .z = 0,
+                          .animation = 25,
+                          .drawPriority = 0,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 136,
-     .y = 152,
-     .z = 0,
-     .animation = 27,
-     .drawPriority = 0,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_TOSS_HUNDREDS_PLACE_DOWN] = {
+                          .x = 136,
+                          .y = 152,
+                          .z = 0,
+                          .animation = 27,
+                          .drawPriority = 0,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 168,
-     .y = 152,
-     .z = 0,
-     .animation = 27,
-     .drawPriority = 0,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_TOSS_TENS_PLACE_DOWN] = {
+                          .x = 168,
+                          .y = 152,
+                          .z = 0,
+                          .animation = 27,
+                          .drawPriority = 0,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 200,
-     .y = 152,
-     .z = 0,
-     .animation = 27,
-     .drawPriority = 0,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_ONES_PLACE_DOWN] = {
+                          .x = 200,
+                          .y = 152,
+                          .z = 0,
+                          .animation = 27,
+                          .drawPriority = 0,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
-    {
-     .x = 136,
-     .y = 176,
-     .z = 0,
-     .animation = 31,
-     .drawPriority = 0,
-     .pal = 8,
-     .vram = NNS_G2D_VRAM_TYPE_2DSUB,
-     .resIdList = {
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
+    [BAG_APP_SPRITE_38] = {
+                          .x = 136,
+                          .y = 176,
+                          .z = 0,
+                          .animation = 31,
+                          .drawPriority = 0,
+                          .pal = 8,
+                          .vram = NNS_G2D_VRAM_TYPE_2DSUB,
+                          .resIdList = {
             [GF_GFX_RES_TYPE_CHAR] = 49403,
             [GF_GFX_RES_TYPE_PLTT] = 49402,
             [GF_GFX_RES_TYPE_CELL] = 49403,
             [GF_GFX_RES_TYPE_ANIM] = 49404,
         },
-     .bgPriority = 0,
-     .vramTransfer = 0,
-     },
+                          .bgPriority = 0,
+                          .vramTransfer = 0,
+                          },
 };
 
 static void BagApp_CreateSprites(BagAppData *appData) {
@@ -960,7 +961,7 @@ static void BagApp_UpdatePageNavArrowSpritesVisibility(BagAppData *appData) {
 
 void ov15_02200140(BagAppData *appData, BagViewPocket *pocket, int a2, int a3) {
     for (int i = 0; i < 6; ++i) {
-        ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_1 + i], ov15_02200B0C[1 + i].x, ov15_02200B0C[1 + i].y, FX32_CONST(256));
+        ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], ov15_02200B0C[1 + i].x, ov15_02200B0C[1 + i].y, FX32_CONST(256));
         if (i < a2) {
             if (a3) {
                 BagApp_ReplaceItemIconResObjs(appData, i, appData->itemsInPocket[pocket->scroll + i]);
@@ -980,11 +981,11 @@ void ov15_022001C4(BagAppData *appData, BagViewPocket *pocket, int a2) {
         r7 = a2 % 6;
     }
     for (int i = 0; i < 6; ++i) {
-        ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_1 + i], ov15_02200B0C[1 + i].x, ov15_02200B0C[1 + i].y, FX32_CONST(256));
+        ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], ov15_02200B0C[1 + i].x, ov15_02200B0C[1 + i].y, FX32_CONST(256));
         if (i == r7) {
-            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_1 + i], TRUE);
+            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], TRUE);
         } else {
-            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_1 + i], FALSE);
+            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], FALSE);
         }
     }
     BagApp_UpdatePageNavArrowSpritesVisibility(appData);
@@ -1009,12 +1010,12 @@ void ov15_02200294(BagAppData *appData) {
     }
 }
 
-void ov15_022002B4(BagAppData *appData, int a1) {
+void BagApp_CenterSelectedItemIconSprite(BagAppData *appData, int cursorPos) {
     for (int i = 0; i < 6; ++i) {
-        if (a1 != i) {
-            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_1 + i], FALSE);
+        if (cursorPos != i) {
+            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], FALSE);
         } else {
-            ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_1 + i], 86, 76, FX32_CONST(256));
+            ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], 86, 76, FX32_CONST(256));
         }
     }
 }

@@ -56,10 +56,10 @@ void BagView_Init(BagView *bagView, SaveData *save, u8 context, BagCursor *curso
  * @param position:    Unused
  */
 void BagView_SetItem(BagView *bagView, ItemSlot *slots, u8 pocketId, u8 position);
-void sub_020778C8(BagView *bagView);
+void BagView_SetOnBike(BagView *bagView);
 void BagView_SetCheckUseData(BagView *bagView, ItemCheckUseData *checkUseData);
-void sub_020778E0(BagView *bagView, u8 a1);
-void sub_020778E8(BagView *bagView, u16 a1);
+void BagView_SetPartySlot(BagView *bagView, u8 partySlot);
+void BagView_SetMapLoadType(BagView *bagView, u16 mapLoadType);
 u16 BagView_GetItemId(BagView *bagView);
 u16 BagView_GetReturnCode(BagView *bagView);
 u8 BagView_GetPartySlot(BagView *bagView);

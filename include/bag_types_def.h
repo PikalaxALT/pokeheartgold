@@ -94,7 +94,7 @@ typedef struct BagView {
     u8 partySlot;
     u8 unk75;
     u16 onBike : 1;
-    u16 unk76_1 : 15;
+    u16 mapLoadType : 15;
     MenuInputStateMgr *menuInputStateMgr;
 } BagView; // size: 0x7C
 

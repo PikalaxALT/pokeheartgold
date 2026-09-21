@@ -1,6 +1,9 @@
 #include "global.h"
 
+#include "constants/field/map_load.h"
+
 #include "application/bag_app_internal.h"
+#include "graphic/bag/bag_graphics.naix"
 #include "msgdata/msg.naix"
 #include "msgdata/msg/msg_0010.h"
 
@@ -88,7 +91,7 @@ static BagAppState ov15_021FAE48(BagAppData *appData);
 static BagAppState ov15_021FAFFC(BagAppData *appData);
 static BagAppState ov15_021FB060(BagAppData *appData);
 static void ov15_021FB114(BagAppData *appData);
-static void ov15_021FB14C(BagAppData *appData);
+static void BagApp_PrepareContextMenu(BagAppData *appData);
 static void BagApp_PrintContextMenuStrings(BagAppData *appData, u8 *a1);
 static void ov15_021FB518(BagAppData *appData);
 static BagAppState ov15_021FB5AC(BagAppData *appData);
@@ -764,33 +767,33 @@ static void ov15_021F9A8C(BgConfig *bgConfig) {
 }
 
 static void ov15_021F9AE4(BagAppData *appData) {
-    appData->narc_a_0_1_5 = NARC_New(NARC_a_0_1_5, HEAP_ID_BAG);
-    GfGfxLoader_LoadCharData(NARC_a_0_1_5, 7, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
-    GfGfxLoader_LoadScrnData(NARC_a_0_1_5, 54, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
+    appData->narc_a_0_1_5 = NARC_New(NARC_graphic_bag_bag_graphics, HEAP_ID_BAG);
+    GfGfxLoader_LoadCharData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00007_NCGR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
+    GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00054_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
     if (appData->gender == PLAYER_GENDER_MALE) {
-        GfGfxLoader_LoadScrnData(NARC_a_0_1_5, 94, appData->bgConfig, GF_BG_LYR_MAIN_3, 0, 0, FALSE, HEAP_ID_BAG);
+        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00094_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_3, 0, 0, FALSE, HEAP_ID_BAG);
     } else {
-        GfGfxLoader_LoadScrnData(NARC_a_0_1_5, 93, appData->bgConfig, GF_BG_LYR_MAIN_3, 0, 0, FALSE, HEAP_ID_BAG);
+        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00093_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_3, 0, 0, FALSE, HEAP_ID_BAG);
     }
-    GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 8, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_0_OFFSET, 0, HEAP_ID_BAG);
-    GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 17, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_13_OFFSET, 32, HEAP_ID_BAG);
+    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00008_NCLR, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_0_OFFSET, 0, HEAP_ID_BAG);
+    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00017_NCLR, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_13_OFFSET, 32, HEAP_ID_BAG);
     LoadFontPal1(GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_11_OFFSET, HEAP_ID_BAG);
     LoadUserFrameGfx1(appData->bgConfig, GF_BG_LYR_MAIN_1, 0x3F7, 14, 0, HEAP_ID_BAG);
     LoadUserFrameGfx2(appData->bgConfig, GF_BG_LYR_MAIN_1, 0x3D9, 12, Options_GetFrame(appData->options), HEAP_ID_BAG);
-    GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 38, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_0_OFFSET, 0, HEAP_ID_BAG);
+    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00038_NCLR, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_0_OFFSET, 0, HEAP_ID_BAG);
     LoadFontPal1(GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_11_OFFSET, HEAP_ID_BAG);
-    GfGfxLoader_LoadCharData(NARC_a_0_1_5, 46, appData->bgConfig, GF_BG_LYR_SUB_2, 0, 0, FALSE, HEAP_ID_BAG);
-    appData->unk_68C = GfGfxLoader_GetPlttData(NARC_a_0_1_5, 40, &appData->unk_694[0], HEAP_ID_BAG);
-    appData->unk_690 = GfGfxLoader_GetPlttData(NARC_a_0_1_5, 41, &appData->unk_694[1], HEAP_ID_BAG);
-    GfGfxLoader_GXLoadPal(NARC_a_0_1_5, 8, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_8_OFFSET, 128, HEAP_ID_BAG);
+    GfGfxLoader_LoadCharData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00046_NCGR, appData->bgConfig, GF_BG_LYR_SUB_2, 0, 0, FALSE, HEAP_ID_BAG);
+    appData->unk_68C = GfGfxLoader_GetPlttData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00040_NCLR, &appData->unk_694[0], HEAP_ID_BAG);
+    appData->unk_690 = GfGfxLoader_GetPlttData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00041_NCLR, &appData->unk_694[1], HEAP_ID_BAG);
+    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00008_NCLR, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_8_OFFSET, 128, HEAP_ID_BAG);
     LoadUserFrameGfx2(appData->bgConfig, GF_BG_LYR_SUB_0, 0x3E2, 12, Options_GetFrame(appData->options), HEAP_ID_BAG);
 }
 
 void ov15_021F9C78(BagAppData *appData, BOOL a1) {
     if (a1 == TRUE) {
-        GfGfxLoader_LoadScrnData(NARC_a_0_1_5, 54, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
+        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00054_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
     } else {
-        GfGfxLoader_LoadScrnData(NARC_a_0_1_5, 9, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
+        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00009_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
     }
 }
 
@@ -1128,9 +1131,9 @@ static BagAppState ov15_021FA4F8(BagAppData *appData) {
     BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
 
     ov15_021FD574(appData, 2, 0, 0);
-    ov15_021FF4EC(appData, pocket->scroll, appData->cursorPos - 8);
-    ov15_022002B4(appData, appData->cursorPos - 8);
-    ov15_021FB14C(appData);
+    BagApp_SwitchItemButtonWindowsToContextMenuMode(appData, pocket->scroll, appData->cursorPos - 8);
+    BagApp_CenterSelectedItemIconSprite(appData, appData->cursorPos - 8);
+    BagApp_PrepareContextMenu(appData);
     appData->bagView->itemId = pocket->slots[pocket->scroll + appData->cursorPos - 8].id;
     appData->maxQuantity = pocket->slots[pocket->scroll + appData->cursorPos - 8].quantity;
     return BAG_APP_STATE_4;
@@ -1626,7 +1629,7 @@ static void ov15_021FB114(BagAppData *appData) {
     }
 }
 
-static void ov15_021FB14C(BagAppData *appData) {
+static void BagApp_PrepareContextMenu(BagAppData *appData) {
     int i; // forward decl required to match
     u8 stringIndices[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
     ItemData *itemData = LoadItemDataOrGfx(appData->bagView->itemId, ITEMNARC_PARAM, HEAP_ID_BAG);
@@ -1635,7 +1638,7 @@ static void ov15_021FB14C(BagAppData *appData) {
         appData->contextMenuActions[i] = NULL;
     }
     if (appData->bagView->context == BAG_VIEW_CONTEXT_NORMAL) {
-        if (appData->bagView->unk76_1 == 2 || appData->bagView->unk76_1 == 3) {
+        if (appData->bagView->mapLoadType == MAP_LOAD_TYPE_UNION || appData->bagView->mapLoadType == MAP_LOAD_TYPE_COLOSSEUM) {
             if (appData->bagView->pockets[appData->bagView->curPocket].pocketId == POCKET_MAIL) {
                 stringIndices[0] = BAG_ITEM_CONTEXT_MENU_ACTION_CHECK;
             }
@@ -2549,8 +2552,8 @@ static BagAppState ov15_021FCB64(BagAppData *appData) {
     ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_18], FALSE);
     ov15_02200458(appData, 0);
     ov15_021FD788(appData, 0);
-    ov15_021FF4EC(appData, pocket->scroll, appData->cursorPos - 8);
-    ov15_022002B4(appData, appData->cursorPos - 8);
+    BagApp_SwitchItemButtonWindowsToContextMenuMode(appData, pocket->scroll, appData->cursorPos - 8);
+    BagApp_CenterSelectedItemIconSprite(appData, appData->cursorPos - 8);
     ov15_021FECA0(appData, &appData->windows_main[BAG_APP_WINDOW_MAIN_0], appData->bagView->itemId);
     ov15_021FFF24(appData);
     if (GetItemAttr(appData->bagView->itemId, ITEMATTR_PREVENT_TOSS, HEAP_ID_BAG) || appData->unitSellPrice == 0) {
@@ -2824,6 +2827,9 @@ static void ov15_021FD404(BagAppData *appData, int a1, int pocket) {
     }
 }
 
+//        mode, srcX, srcY, dstX, dstY, width, height, unused
+//        mode=1: copy
+//        mode=2: zero out
 static u8 ov15_022013A8[6][4][8] = {
     {
      { 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -2928,63 +2934,63 @@ static void ov15_021FD4C0(BgConfig *bgConfig, int bgId, int a2, int a3) {
     }
 }
 
-static void ov15_021FD574(BagAppData *appData, u32 a1, int a2, int a3) {
-    NNSG2dScreenData *sp4;
-    void *r5;
+static void ov15_021FD574(BagAppData *appData, u32 layout, int a2, int a3) {
+    NNSG2dScreenData *pScrnData;
+    void *pRawScrnData;
 
-    GF_ASSERT(a1 <= 4);
+    GF_ASSERT(layout <= 4);
 
-    switch (a1) {
+    switch (layout) {
     case 0:
-        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 43, FALSE, &sp4, HEAP_ID_BAG);
-        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_1, sp4->rawData, sp4->szByte);
-        DC_FlushRange(GetBgTilemapBuffer(appData->bgConfig, GF_BG_LYR_SUB_1), sp4->szByte);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00043_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_1, pScrnData->rawData, pScrnData->szByte);
+        DC_FlushRange(GetBgTilemapBuffer(appData->bgConfig, GF_BG_LYR_SUB_1), pScrnData->szByte);
         ov15_021FD43C(appData->bgConfig, GF_BG_LYR_SUB_1, a2);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_1);
-        Heap_Free(r5);
+        Heap_Free(pRawScrnData);
 
-        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 39, FALSE, &sp4, HEAP_ID_BAG);
-        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, sp4->rawData, sp4->szByte);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00039_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, pScrnData->rawData, pScrnData->szByte);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_2);
-        Heap_Free(r5);
+        Heap_Free(pRawScrnData);
 
         ov15_0220005C(appData, 0, 0, 0);
         break;
     case 1:
-        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 44, FALSE, &sp4, HEAP_ID_BAG);
-        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_1, sp4->rawData, sp4->szByte);
-        DC_FlushRange(GetBgTilemapBuffer(appData->bgConfig, GF_BG_LYR_SUB_1), sp4->szByte);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00044_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_1, pScrnData->rawData, pScrnData->szByte);
+        DC_FlushRange(GetBgTilemapBuffer(appData->bgConfig, GF_BG_LYR_SUB_1), pScrnData->szByte);
         ov15_021FD4C0(appData->bgConfig, GF_BG_LYR_SUB_1, a2, a3);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_1);
-        Heap_Free(r5);
+        Heap_Free(pRawScrnData);
 
-        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 42, FALSE, &sp4, HEAP_ID_BAG);
-        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, sp4->rawData, sp4->szByte);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00042_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, pScrnData->rawData, pScrnData->szByte);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_2);
-        Heap_Free(r5);
+        Heap_Free(pRawScrnData);
 
         ov15_02200294(appData);
         ov15_0220005C(appData, a2, ov15_021FA098(appData), 0);
         break;
     case 2:
-        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 45, FALSE, &sp4, HEAP_ID_BAG);
-        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, sp4->rawData, sp4->szByte);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00045_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, pScrnData->rawData, pScrnData->szByte);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_2);
-        Heap_Free(r5);
+        Heap_Free(pRawScrnData);
         ov15_021FD43C(appData->bgConfig, GF_BG_LYR_SUB_1, a2);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_1);
         break;
     case 3:
-        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 52, FALSE, &sp4, HEAP_ID_BAG);
-        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, sp4->rawData, sp4->szByte);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00052_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, pScrnData->rawData, pScrnData->szByte);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_2);
-        Heap_Free(r5);
+        Heap_Free(pRawScrnData);
         break;
     case 4:
-        r5 = GfGfxLoader_GetScrnData(NARC_a_0_1_5, 53, FALSE, &sp4, HEAP_ID_BAG);
-        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, sp4->rawData, sp4->szByte);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00053_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, pScrnData->rawData, pScrnData->szByte);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_2);
-        Heap_Free(r5);
+        Heap_Free(pRawScrnData);
         break;
     }
 }
@@ -3213,7 +3219,7 @@ static void BagApp_Load3dAssets(BagAppData *appData) {
     u32 sp8, sp4, sp0, resHeaderFileID;
     u32 i;
 
-    narc = NARC_New(NARC_a_0_1_5, HEAP_ID_BAG);
+    narc = NARC_New(NARC_graphic_bag_bag_graphics, HEAP_ID_BAG);
     HeapExp_FndInitAllocator(&appData->threeDimState.allocator, HEAP_ID_BAG, 4);
     modelData = &appData->threeDimState.obj;
     if (appData->gender == PLAYER_GENDER_MALE) {
