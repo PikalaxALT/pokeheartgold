@@ -5,6 +5,7 @@
 #include "field/fieldmap.h"
 #include "field/map_prop_animation.h"
 #include "field/overlay_01_02204004.h"
+#include "graphic/shop_gra.naix"
 #include "msgdata/msg.naix"
 #include "msgdata/msg/msg_0737.h"
 
@@ -419,13 +420,13 @@ static void ov03_02257184(MartData *data) {
 }
 
 static void ov03_022571AC(MartData *data) { // MartData_LoadGraphics?
-    GfGfxLoader_LoadCharData(NARC_a_0_6_0, 0, data->bgConfig, GF_BG_LYR_MAIN_1, 0, 0, FALSE, HEAP_ID_FIELD2);
+    GfGfxLoader_LoadCharData(NARC_graphic_shop_gra, shop_gra_00000_NCGR, data->bgConfig, GF_BG_LYR_MAIN_1, 0, 0, FALSE, HEAP_ID_FIELD2);
     if (data->martType == MART_TYPE_NORMAL || data->martType == MART_TYPE_POKEATHLON_DAILY || data->martType == MART_TYPE_DATA_CARDS) {
-        GfGfxLoader_LoadScrnData(NARC_a_0_6_0, 2, data->bgConfig, GF_BG_LYR_MAIN_1, 0, 0, FALSE, HEAP_ID_FIELD2);
+        GfGfxLoader_LoadScrnData(NARC_graphic_shop_gra, shop_gra_00002_NSCR, data->bgConfig, GF_BG_LYR_MAIN_1, 0, 0, FALSE, HEAP_ID_FIELD2);
     } else {
-        GfGfxLoader_LoadScrnData(NARC_a_0_6_0, 3, data->bgConfig, GF_BG_LYR_MAIN_1, 0, 0, FALSE, HEAP_ID_FIELD2);
+        GfGfxLoader_LoadScrnData(NARC_graphic_shop_gra, shop_gra_00003_NSCR, data->bgConfig, GF_BG_LYR_MAIN_1, 0, 0, FALSE, HEAP_ID_FIELD2);
     }
-    GfGfxLoader_GXLoadPal(NARC_a_0_6_0, 1, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_0_OFFSET, 32, HEAP_ID_FIELD2);
+    GfGfxLoader_GXLoadPal(NARC_graphic_shop_gra, shop_gra_00001_NCLR, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_0_OFFSET, 32, HEAP_ID_FIELD2);
     LoadUserFrameGfx1(data->bgConfig, GF_BG_LYR_MAIN_3, 31, 11, 0, HEAP_ID_FIELD2);
     LoadUserFrameGfx2(data->bgConfig, GF_BG_LYR_MAIN_3, 1, 10, Options_GetFrame(data->options), HEAP_ID_FIELD2);
 }

@@ -768,32 +768,32 @@ static void ov15_021F9A8C(BgConfig *bgConfig) {
 
 static void ov15_021F9AE4(BagAppData *appData) {
     appData->narc_a_0_1_5 = NARC_New(NARC_graphic_bag_bag_graphics, HEAP_ID_BAG);
-    GfGfxLoader_LoadCharData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00007_NCGR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
-    GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00054_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
+    GfGfxLoader_LoadCharData(NARC_graphic_bag_bag_graphics, bag_graphics_00007_NCGR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
+    GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00054_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
     if (appData->gender == PLAYER_GENDER_MALE) {
-        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00094_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_3, 0, 0, FALSE, HEAP_ID_BAG);
+        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00094_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_3, 0, 0, FALSE, HEAP_ID_BAG);
     } else {
-        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00093_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_3, 0, 0, FALSE, HEAP_ID_BAG);
+        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00093_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_3, 0, 0, FALSE, HEAP_ID_BAG);
     }
-    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00008_NCLR, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_0_OFFSET, 0, HEAP_ID_BAG);
-    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00017_NCLR, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_13_OFFSET, 32, HEAP_ID_BAG);
+    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, bag_graphics_00008_NCLR, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_0_OFFSET, 0, HEAP_ID_BAG);
+    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, bag_graphics_00017_NCLR, GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_13_OFFSET, 32, HEAP_ID_BAG);
     LoadFontPal1(GF_PAL_LOCATION_MAIN_BG, GF_PAL_SLOT_11_OFFSET, HEAP_ID_BAG);
     LoadUserFrameGfx1(appData->bgConfig, GF_BG_LYR_MAIN_1, 0x3F7, 14, 0, HEAP_ID_BAG);
     LoadUserFrameGfx2(appData->bgConfig, GF_BG_LYR_MAIN_1, 0x3D9, 12, Options_GetFrame(appData->options), HEAP_ID_BAG);
-    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00038_NCLR, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_0_OFFSET, 0, HEAP_ID_BAG);
+    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, bag_graphics_00038_NCLR, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_0_OFFSET, 0, HEAP_ID_BAG);
     LoadFontPal1(GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_11_OFFSET, HEAP_ID_BAG);
-    GfGfxLoader_LoadCharData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00046_NCGR, appData->bgConfig, GF_BG_LYR_SUB_2, 0, 0, FALSE, HEAP_ID_BAG);
-    appData->unk_68C = GfGfxLoader_GetPlttData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00040_NCLR, &appData->unk_694[0], HEAP_ID_BAG);
-    appData->unk_690 = GfGfxLoader_GetPlttData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00041_NCLR, &appData->unk_694[1], HEAP_ID_BAG);
-    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00008_NCLR, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_8_OFFSET, 128, HEAP_ID_BAG);
+    GfGfxLoader_LoadCharData(NARC_graphic_bag_bag_graphics, bag_graphics_00046_NCGR, appData->bgConfig, GF_BG_LYR_SUB_2, 0, 0, FALSE, HEAP_ID_BAG);
+    appData->unk_68C = GfGfxLoader_GetPlttData(NARC_graphic_bag_bag_graphics, bag_graphics_00040_NCLR, &appData->unk_694[0], HEAP_ID_BAG);
+    appData->unk_690 = GfGfxLoader_GetPlttData(NARC_graphic_bag_bag_graphics, bag_graphics_00041_NCLR, &appData->unk_694[1], HEAP_ID_BAG);
+    GfGfxLoader_GXLoadPal(NARC_graphic_bag_bag_graphics, bag_graphics_00008_NCLR, GF_PAL_LOCATION_SUB_BG, GF_PAL_SLOT_8_OFFSET, 128, HEAP_ID_BAG);
     LoadUserFrameGfx2(appData->bgConfig, GF_BG_LYR_SUB_0, 0x3E2, 12, Options_GetFrame(appData->options), HEAP_ID_BAG);
 }
 
 void ov15_021F9C78(BagAppData *appData, BOOL a1) {
     if (a1 == TRUE) {
-        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00054_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
+        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00054_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
     } else {
-        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00009_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
+        GfGfxLoader_LoadScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00009_NSCR, appData->bgConfig, GF_BG_LYR_MAIN_2, 0, 0, FALSE, HEAP_ID_BAG);
     }
 }
 
@@ -2942,14 +2942,14 @@ static void ov15_021FD574(BagAppData *appData, u32 layout, int a2, int a3) {
 
     switch (layout) {
     case 0:
-        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00043_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00043_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
         BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_1, pScrnData->rawData, pScrnData->szByte);
         DC_FlushRange(GetBgTilemapBuffer(appData->bgConfig, GF_BG_LYR_SUB_1), pScrnData->szByte);
         ov15_021FD43C(appData->bgConfig, GF_BG_LYR_SUB_1, a2);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_1);
         Heap_Free(pRawScrnData);
 
-        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00039_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00039_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
         BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, pScrnData->rawData, pScrnData->szByte);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_2);
         Heap_Free(pRawScrnData);
@@ -2957,14 +2957,14 @@ static void ov15_021FD574(BagAppData *appData, u32 layout, int a2, int a3) {
         ov15_0220005C(appData, 0, 0, 0);
         break;
     case 1:
-        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00044_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00044_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
         BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_1, pScrnData->rawData, pScrnData->szByte);
         DC_FlushRange(GetBgTilemapBuffer(appData->bgConfig, GF_BG_LYR_SUB_1), pScrnData->szByte);
         ov15_021FD4C0(appData->bgConfig, GF_BG_LYR_SUB_1, a2, a3);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_1);
         Heap_Free(pRawScrnData);
 
-        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00042_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00042_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
         BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, pScrnData->rawData, pScrnData->szByte);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_2);
         Heap_Free(pRawScrnData);
@@ -2973,7 +2973,7 @@ static void ov15_021FD574(BagAppData *appData, u32 layout, int a2, int a3) {
         ov15_0220005C(appData, a2, ov15_021FA098(appData), 0);
         break;
     case 2:
-        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00045_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00045_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
         BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, pScrnData->rawData, pScrnData->szByte);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_2);
         Heap_Free(pRawScrnData);
@@ -2981,13 +2981,13 @@ static void ov15_021FD574(BagAppData *appData, u32 layout, int a2, int a3) {
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_1);
         break;
     case 3:
-        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00052_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00052_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
         BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, pScrnData->rawData, pScrnData->szByte);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_2);
         Heap_Free(pRawScrnData);
         break;
     case 4:
-        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00053_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
+        pRawScrnData = GfGfxLoader_GetScrnData(NARC_graphic_bag_bag_graphics, bag_graphics_00053_NSCR, FALSE, &pScrnData, HEAP_ID_BAG);
         BG_LoadScreenTilemapData(appData->bgConfig, GF_BG_LYR_SUB_2, pScrnData->rawData, pScrnData->szByte);
         ScheduleBgTilemapBufferTransfer(appData->bgConfig, GF_BG_LYR_SUB_2);
         Heap_Free(pRawScrnData);

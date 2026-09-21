@@ -95,3 +95,33 @@ nitrofs_files += fs.copyfile('font.narc')
 ###                         BAG                          ###
 ############################################################
 subdir('bag')
+
+############################################################
+###                       SHOP_GRA                       ###
+############################################################
+subdir('shop_gra')
+
+shop_gra_narc = custom_target('shop_gra.narc',
+    command : [
+        nitroarc_exe,
+        '--create',
+        '--index',
+        '--file', '@OUTPUT0@',
+        '@PRIVATE_DIR@',
+    ],
+    input : [
+        shop_gra_ncgr,
+        shop_gra_nclr,
+        shop_gra_ncer,
+        shop_gra_nanr,
+        shop_gra_nscr,
+    ],
+    output : [
+        'shop_gra.narc',
+        'shop_gra.naix'
+    ],
+    build_by_default:true
+)
+
+nitrofs_files += shop_gra_narc
+naix_headers += shop_gra_narc[1]

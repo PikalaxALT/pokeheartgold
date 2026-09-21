@@ -1,5 +1,6 @@
 #include "application/bag_app_internal.h"
 #include "graphic/bag/bag_graphics.naix"
+#include "graphic/shop_gra.naix"
 
 #include "gf_gfx_loader.h"
 #include "move.h"
@@ -104,35 +105,35 @@ static void BagApp_InitSpriteSystem(BagAppData *appData) {
 }
 
 static void BagApp_LoadSpriteResObjs(BagAppData *appData) {
-    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00026_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49401);
-    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00006_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49402);
-    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00051_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 49403);
-    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_6_0, 4, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49410);
+    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00026_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49401);
+    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00006_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49402);
+    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00051_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 49403);
+    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00004_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49410);
     for (int i = 0; i < 6; ++i) {
         SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(ITEM_NONE, ITEMNARC_NCGR), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 49404 + i);
     }
     sub_020776B8(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, 0, 49411);
     sub_02077834(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, 0, 49412);
-    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00015_NCLR, FALSE, 2, NNS_G2D_VRAM_TYPE_2DMAIN, 49401);
-    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_6_0, 10, FALSE, 2, NNS_G2D_VRAM_TYPE_2DMAIN, 49409);
+    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00015_NCLR, FALSE, 2, NNS_G2D_VRAM_TYPE_2DMAIN, 49401);
+    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00010_NCLR, FALSE, 2, NNS_G2D_VRAM_TYPE_2DMAIN, 49409);
     sub_020776EC(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, 49410);
-    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00047_NCLR, FALSE, 10, NNS_G2D_VRAM_TYPE_2DSUB, 49402);
+    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00047_NCLR, FALSE, 10, NNS_G2D_VRAM_TYPE_2DSUB, 49402);
     for (int i = 0; i < 6; ++i) {
         SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(ITEM_NONE, ITEMNARC_NCLR), 0, TRUE, NNS_G2D_VRAM_TYPE_2DSUB, 49403 + i);
     }
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00025_NCER, FALSE, 49401);
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00005_NCER, FALSE, 49402);
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00049_NCER, FALSE, 49403);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00025_NCER, FALSE, 49401);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00005_NCER, FALSE, 49402);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00049_NCER, FALSE, 49403);
     SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIconCell(), FALSE, 49404);
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_6_0, 5, FALSE, 49405);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00021_NANR, FALSE, 49401);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00024_NANR, FALSE, 49402);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00004_NANR, FALSE, 49403);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00050_NANR, FALSE, 49404);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00005_NCER, FALSE, 49405);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00021_NANR, FALSE, 49401);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00024_NANR, FALSE, 49402);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00004_NANR, FALSE, 49403);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00050_NANR, FALSE, 49404);
     SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIconAnim(), FALSE, 49405);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_a_0_6_0, 6, FALSE, 49406);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00006_NANR, FALSE, 49406);
     sub_0207775C(appData->spriteSystem, appData->spriteManager, 49406, 49407);
-    appData->unk_69C = GfGfxLoader_GetPlttData(NARC_graphic_bag_bag_graphics, NARC_bag_graphics_bag_graphics_00048_NCLR, &appData->unk_6A0, HEAP_ID_BAG);
+    appData->unk_69C = GfGfxLoader_GetPlttData(NARC_graphic_bag_bag_graphics, bag_graphics_00048_NCLR, &appData->unk_6A0, HEAP_ID_BAG);
 }
 
 static const ManagedSpriteTemplate ov15_02200B0C[39] = {

@@ -4,7 +4,7 @@ bag_graphics_narc = custom_target('bag_graphics.narc',
     command : [
         nitroarc_exe,
         '--create',
-        '--index-namespace',
+        '--index',
         '--file', '@OUTPUT0@',
         '@PRIVATE_DIR@',
     ],

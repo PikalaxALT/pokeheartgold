@@ -64,7 +64,7 @@ typedef enum NarcId {
     NARC_poketool_trmsg_trtbl = 57,
     NARC_a_0_5_8 = 58,
     NARC_a_0_5_9 = 59,
-    NARC_a_0_6_0 = 60,
+    NARC_graphic_shop_gra = 60,
     NARC_a_0_6_1 = 61,
     NARC_a_0_6_2 = 62,
     NARC_a_0_6_3 = 63,
