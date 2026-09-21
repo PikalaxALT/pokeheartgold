@@ -21,7 +21,7 @@ typedef enum BagAppState {
     BAG_APP_STATE_WAIT_FADE_AND_ENTER,
     BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE,
     BAG_APP_STATE_DEBUG_2,
-    BAG_APP_STATE_3,
+    BAG_APP_STATE_MOVE_ITEM,
     BAG_APP_STATE_4,
     BAG_APP_STATE_TOSS_SELECT_QUANTITY,
     BAG_APP_STATE_CONFIRM_TOSS_PRINT_MESSAGE,
@@ -79,7 +79,7 @@ typedef enum BagItemContextMenuAction {
 } BagItemContextMenuAction;
 
 typedef enum BagAppWindowId {
-    BAG_APP_WINDOW_MAIN_0 = 0,
+    BAG_APP_WINDOW_MAIN_DESCRIPTION = 0,
     BAG_APP_WINDOW_MAIN_1,
     BAG_APP_WINDOW_MAIN_2,
     BAG_APP_WINDOW_MAIN_3,
@@ -124,18 +124,18 @@ typedef enum BagAppSpriteId {
     BAG_APP_SPRITE_ITEM_ICON_4,
     BAG_APP_SPRITE_ITEM_ICON_5,
     BAG_APP_SPRITE_ITEM_ICON_6,
-    BAG_APP_SPRITE_7,
-    BAG_APP_SPRITE_8,
-    BAG_APP_SPRITE_9,
-    BAG_APP_SPRITE_10,
-    BAG_APP_SPRITE_11,
-    BAG_APP_SPRITE_12,
-    BAG_APP_SPRITE_13,
-    BAG_APP_SPRITE_14,
-    BAG_APP_SPRITE_15,
-    BAG_APP_SPRITE_16,
-    BAG_APP_SPRITE_17,
-    BAG_APP_SPRITE_18,
+    BAG_APP_SPRITE_MOVE_TYPE_ICON,
+    BAG_APP_SPRITE_MOVE_CATEGORY_ICON,
+    BAG_APP_SPRITE_POCKET_ICON_1,
+    BAG_APP_SPRITE_POCKET_ICON_2,
+    BAG_APP_SPRITE_POCKET_ICON_3,
+    BAG_APP_SPRITE_POCKET_ICON_4,
+    BAG_APP_SPRITE_POCKET_ICON_5,
+    BAG_APP_SPRITE_POCKET_ICON_6,
+    BAG_APP_SPRITE_POCKET_ICON_7,
+    BAG_APP_SPRITE_POCKET_ICON_8,
+    BAG_APP_SPRITE_PAGE_LEFT_BUTTON,
+    BAG_APP_SPRITE_PAGE_RIGHT_BUTTON,
     BAG_APP_SPRITE_19,
     BAG_APP_SPRITE_20,
     BAG_APP_SPRITE_21,
@@ -145,19 +145,45 @@ typedef enum BagAppSpriteId {
     BAG_APP_SPRITE_25,
     BAG_APP_SPRITE_26,
     BAG_APP_SPRITE_27,
-    BAG_APP_SPRITE_28,
-    BAG_APP_SPRITE_29,
-    BAG_APP_SPRITE_30,
-    BAG_APP_SPRITE_31,
+    BAG_APP_SPRITE_CONTEXT_MENU_ICON_1,
+    BAG_APP_SPRITE_CONTEXT_MENU_ICON_2,
+    BAG_APP_SPRITE_CONTEXT_MENU_ICON_3,
+    BAG_APP_SPRITE_CONTEXT_MENU_ICON_4,
     BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP,
     BAG_APP_SPRITE_TOSS_QUANTITY_TENS_PLACE_UP,
     BAG_APP_SPRITE_TOSS_QUANTITY_ONES_PLACE_UP,
-    BAG_APP_SPRITE_TOSS_HUNDREDS_PLACE_DOWN,
-    BAG_APP_SPRITE_TOSS_TENS_PLACE_DOWN,
-    BAG_APP_SPRITE_ONES_PLACE_DOWN,
+    BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_DOWN,
+    BAG_APP_SPRITE_TOSS_QUANTITY_TENS_PLACE_DOWN,
+    BAG_APP_SPRITE_TOSS_QUANTITY_ONES_PLACE_DOWN,
     BAG_APP_SPRITE_38,
     BAG_APP_SPRITE_MAX,
 } BagAppSpriteId;
+
+typedef enum BagAppCursorPos {
+    BAG_APP_CURSOR_POS_POCKET_1,
+    BAG_APP_CURSOR_POS_POCKET_2,
+    BAG_APP_CURSOR_POS_POCKET_3,
+    BAG_APP_CURSOR_POS_POCKET_4,
+    BAG_APP_CURSOR_POS_POCKET_5,
+    BAG_APP_CURSOR_POS_POCKET_6,
+    BAG_APP_CURSOR_POS_POCKET_7,
+    BAG_APP_CURSOR_POS_POCKET_8,
+    BAG_APP_CURSOR_POS_ITEM_1,
+    BAG_APP_CURSOR_POS_ITEM_2,
+    BAG_APP_CURSOR_POS_ITEM_3,
+    BAG_APP_CURSOR_POS_ITEM_4,
+    BAG_APP_CURSOR_POS_ITEM_5,
+    BAG_APP_CURSOR_POS_ITEM_6,
+    BAG_APP_CURSOR_POS_PAGE_LEFT,
+    BAG_APP_CURSOR_POS_PAGE_RIGHT,
+    BAG_APP_CURSOR_POS_CANCEL,
+    BAG_APP_CURSOR_POS_CONTEXT_MENU_1,
+    BAG_APP_CURSOR_POS_CONTEXT_MENU_2,
+    BAG_APP_CURSOR_POS_CONTEXT_MENU_3,
+    BAG_APP_CURSOR_POS_CONTEXT_MENU_4,
+
+    BAG_APP_CURSOR_POS_RESET_TO_CURR_POCKET = 17,
+} BagAppCursorPos;
 
 typedef struct BagAppData_Sub619 {
     u8 unk_0;
@@ -252,7 +278,7 @@ struct BagAppData {
     u8 unk_64A;
     u8 unk_64B;
     u8 filler_64C[32];
-    int unk_66C;
+    int moveItemCursorPos;
     u8 unk_670;
     u8 unk_671;
     u8 unk_672;
@@ -293,9 +319,9 @@ void ov15_021FE8A4(BagAppData *appData);
 void BagApp_LoadContextMenuStrings(BagAppData *appData);
 void BagApp_UnloadContextMenuStrings(BagAppData *appData);
 void ov15_021FEB84(BagAppData *appData, u8 *stringIndices, int a2);
-void ov15_021FECA0(BagAppData *appData, Window *window, int itemId);
-void ov15_021FECC4(BagAppData *appData, Window *window);
-void ov15_021FECD8(BagAppData *appData, Window *window, int pocket);
+void BagApp_PrintItemDescriptionOnWindow(BagAppData *appData, Window *window, int itemId);
+void BagApp_ClearItemDescriptionWindow(BagAppData *appData, Window *window);
+void BagApp_PrintPocketDescriptionOnWindow(BagAppData *appData, Window *window, int pocket);
 void ov15_021FED24(BagAppData *appData);
 void ov15_021FED3C(BagAppData *appData);
 void ov15_021FED58(BagAppData *appData);
@@ -326,7 +352,7 @@ void ov15_021FF8D4(BagAppData *appData);
 void ov15_021FF950(BagAppData *appData);
 void ov15_021FF964(BagAppData *appData);
 void ov15_021FF97C(BagAppData *appData, u16 itemId, int a2);
-void ov15_021FFECC(BagAppData *appData, int a1);
+void ov15_021FFECC(BagAppData *appData, BagAppCursorPos a1);
 void ov15_021FFF24(BagAppData *appData);
 void ov15_021FFF34(BagAppData *appData, int a1);
 void ov15_021FFFDC(BagAppData *appData, int a1);
@@ -337,7 +363,7 @@ void ov15_022001C4(BagAppData *appData, BagViewPocket *pocket, int a2);
 void ov15_0220023C(BagAppData *appData, u8 *a1);
 void ov15_02200294(BagAppData *appData);
 void BagApp_CenterSelectedItemIconSprite(BagAppData *appData, int cursorPos);
-int ov15_022002EC(int a0);
+int BagApp_GetNumberWidthType(int a0);
 void ov15_02200300(BagAppData *appData, int a1, int a2);
 void ov15_02200428(BagAppData *appData);
 void ov15_02200458(BagAppData *appData, int a1);

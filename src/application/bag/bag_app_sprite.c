@@ -7,6 +7,53 @@
 #include "unk_02077678.h"
 #include "vram_transfer_manager.h"
 
+enum BagAppCharTag {
+    BAG_APP_CHAR_TAG_01 = 49401,
+    BAG_APP_CHAR_TAG_02,
+    BAG_APP_CHAR_TAG_03,
+    BAG_APP_CHAR_TAG_ITEM_ICON_1,
+    BAG_APP_CHAR_TAG_ITEM_ICON_2,
+    BAG_APP_CHAR_TAG_ITEM_ICON_3,
+    BAG_APP_CHAR_TAG_ITEM_ICON_4,
+    BAG_APP_CHAR_TAG_ITEM_ICON_5,
+    BAG_APP_CHAR_TAG_ITEM_ICON_6,
+    BAG_APP_CHAR_TAG_10,
+    BAG_APP_CHAR_TAG_MOVE_TYPE_ICON,
+    BAG_APP_CHAR_TAG_MOVE_CATEGORY_ICON,
+};
+
+enum BagAppPlttTag {
+    BAG_APP_PLTT_TAG_01 = 49401,
+    BAG_APP_PLTT_TAG_02,
+    BAG_APP_PLTT_TAG_ITEM_ICON_1,
+    BAG_APP_PLTT_TAG_ITEM_ICON_2,
+    BAG_APP_PLTT_TAG_ITEM_ICON_3,
+    BAG_APP_PLTT_TAG_ITEM_ICON_4,
+    BAG_APP_PLTT_TAG_ITEM_ICON_5,
+    BAG_APP_PLTT_TAG_ITEM_ICON_6,
+    BAG_APP_PLTT_TAG_09,
+    BAG_APP_PLTT_TAG_MOVE_TYPE_CATEGORY_ICON,
+};
+
+enum BagAppCellTag {
+    BAG_APP_CELL_TAG_01 = 49401,
+    BAG_APP_CELL_TAG_02,
+    BAG_APP_CELL_TAG_03,
+    BAG_APP_CELL_TAG_ITEM_ICON,
+    BAG_APP_CELL_TAG_05,
+    BAG_APP_CELL_TAG_MOVE_TYPE_CATEGORY_ICON,
+};
+
+enum BagAppAnimTag {
+    BAG_APP_ANIM_TAG_01 = 49401,
+    BAG_APP_ANIM_TAG_02,
+    BAG_APP_ANIM_TAG_03,
+    BAG_APP_ANIM_TAG_04,
+    BAG_APP_ANIM_TAG_ITEM_ICON,
+    BAG_APP_ANIM_TAG_06,
+    BAG_APP_ANIM_TAG_MOVE_TYPE_CATEGORY_ICON,
+};
+
 static void BagApp_ReplaceItemIconResObjs(BagAppData *appData, int idx, u16 itemId);
 static void BagApp_InitSpriteSystem(BagAppData *appData);
 static void BagApp_LoadSpriteResObjs(BagAppData *appData);
@@ -40,8 +87,8 @@ void ov15_021FF8D4(BagAppData *appData) {
 }
 
 static void BagApp_ReplaceItemIconResObjs(BagAppData *appData, int idx, u16 itemId) {
-    SpriteSystem_ReplaceCharResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(itemId, ITEMNARC_NCGR), FALSE, 49404 + idx);
-    SpriteSystem_ReplacePlttResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(itemId, ITEMNARC_NCLR), FALSE, 49403 + idx);
+    SpriteSystem_ReplaceCharResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(itemId, ITEMNARC_NCGR), FALSE, BAG_APP_CHAR_TAG_ITEM_ICON_1 + idx);
+    SpriteSystem_ReplacePlttResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(itemId, ITEMNARC_NCLR), FALSE, BAG_APP_PLTT_TAG_ITEM_ICON_1 + idx);
 }
 
 void ov15_021FF950(BagAppData *appData) {
@@ -60,16 +107,16 @@ void ov15_021FF964(BagAppData *appData) {
 }
 
 void ov15_021FF97C(BagAppData *appData, u16 itemId, int drawFlag) {
-    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_7], drawFlag);
-    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_8], drawFlag);
+    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_MOVE_TYPE_ICON], drawFlag);
+    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_MOVE_CATEGORY_ICON], drawFlag);
     if (drawFlag) {
         u16 move = TMHMGetMove(itemId);
         u16 type = GetMoveAttr(move, MOVEATTR_TYPE);
         u16 category = GetMoveAttr(move, MOVEATTR_CLASS);
-        SpriteSystem_ReplaceCharResObj(appData->spriteSystem, appData->spriteManager, sub_020776B4(), sub_02077678(type), TRUE, 49411);
-        ManagedSprite_SetPaletteOverride(appData->sprites[BAG_APP_SPRITE_7], sub_0207769C(type) + 4);
-        SpriteSystem_ReplaceCharResObj(appData->spriteSystem, appData->spriteManager, sub_02077830(), sub_02077800(category), TRUE, 49412);
-        ManagedSprite_SetPaletteOverride(appData->sprites[BAG_APP_SPRITE_8], sub_02077818(category) + 4);
+        SpriteSystem_ReplaceCharResObj(appData->spriteSystem, appData->spriteManager, GetTypeIconGfxNarcId(), GetTypeIconGfxCharFileId(type), TRUE, BAG_APP_CHAR_TAG_MOVE_TYPE_ICON);
+        ManagedSprite_SetPaletteOverride(appData->sprites[BAG_APP_SPRITE_MOVE_TYPE_ICON], GetTypeIconGfxPlttOverride(type) + 4);
+        SpriteSystem_ReplaceCharResObj(appData->spriteSystem, appData->spriteManager, GetMoveCategoryIconGfxNarcId(), GetMoveCategoryIconGfxCharFileId(category), TRUE, BAG_APP_CHAR_TAG_MOVE_CATEGORY_ICON);
+        ManagedSprite_SetPaletteOverride(appData->sprites[BAG_APP_SPRITE_MOVE_CATEGORY_ICON], GetMoveCategoryIconGfxPlttOverride(category) + 4);
     }
 }
 
@@ -105,34 +152,34 @@ static void BagApp_InitSpriteSystem(BagAppData *appData) {
 }
 
 static void BagApp_LoadSpriteResObjs(BagAppData *appData) {
-    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00026_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49401);
-    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00006_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49402);
-    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00051_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 49403);
-    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00004_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, 49410);
+    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00026_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, BAG_APP_CHAR_TAG_01);
+    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00006_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, BAG_APP_CHAR_TAG_02);
+    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00051_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DSUB, BAG_APP_CHAR_TAG_03);
+    SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00004_NCGR, FALSE, NNS_G2D_VRAM_TYPE_2DMAIN, BAG_APP_CHAR_TAG_10);
     for (int i = 0; i < 6; ++i) {
-        SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(ITEM_NONE, ITEMNARC_NCGR), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, 49404 + i);
+        SpriteSystem_LoadCharResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(ITEM_NONE, ITEMNARC_NCGR), FALSE, NNS_G2D_VRAM_TYPE_2DSUB, BAG_APP_CHAR_TAG_ITEM_ICON_1 + i);
     }
-    sub_020776B8(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, 0, 49411);
-    sub_02077834(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, 0, 49412);
-    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00015_NCLR, FALSE, 2, NNS_G2D_VRAM_TYPE_2DMAIN, 49401);
-    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00010_NCLR, FALSE, 2, NNS_G2D_VRAM_TYPE_2DMAIN, 49409);
-    sub_020776EC(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, 49410);
-    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00047_NCLR, FALSE, 10, NNS_G2D_VRAM_TYPE_2DSUB, 49402);
+    SpriteSystem_LoadMoveTypeIconCharResObj(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, 0, BAG_APP_CHAR_TAG_MOVE_TYPE_ICON);
+    SpriteSystem_LoadMoveCategoryIconCharResObj(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, 0, BAG_APP_CHAR_TAG_MOVE_CATEGORY_ICON);
+    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00015_NCLR, FALSE, 2, NNS_G2D_VRAM_TYPE_2DMAIN, BAG_APP_PLTT_TAG_01);
+    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00010_NCLR, FALSE, 2, NNS_G2D_VRAM_TYPE_2DMAIN, BAG_APP_PLTT_TAG_09);
+    SpriteSystem_LoadMoveTypeAndCategoryIconsPltt(appData->spriteSystem, appData->spriteManager, NNS_G2D_VRAM_TYPE_2DMAIN, BAG_APP_PLTT_TAG_MOVE_TYPE_CATEGORY_ICON);
+    SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00047_NCLR, FALSE, 10, NNS_G2D_VRAM_TYPE_2DSUB, BAG_APP_PLTT_TAG_02);
     for (int i = 0; i < 6; ++i) {
-        SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(ITEM_NONE, ITEMNARC_NCLR), 0, TRUE, NNS_G2D_VRAM_TYPE_2DSUB, 49403 + i);
+        SpriteSystem_LoadPlttResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIndexMapping(ITEM_NONE, ITEMNARC_NCLR), 0, TRUE, NNS_G2D_VRAM_TYPE_2DSUB, BAG_APP_PLTT_TAG_ITEM_ICON_1 + i);
     }
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00025_NCER, FALSE, 49401);
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00005_NCER, FALSE, 49402);
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00049_NCER, FALSE, 49403);
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIconCell(), FALSE, 49404);
-    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00005_NCER, FALSE, 49405);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00021_NANR, FALSE, 49401);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00024_NANR, FALSE, 49402);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00004_NANR, FALSE, 49403);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00050_NANR, FALSE, 49404);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIconAnim(), FALSE, 49405);
-    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00006_NANR, FALSE, 49406);
-    sub_0207775C(appData->spriteSystem, appData->spriteManager, 49406, 49407);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00025_NCER, FALSE, BAG_APP_CELL_TAG_01);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00005_NCER, FALSE, BAG_APP_CELL_TAG_02);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00049_NCER, FALSE, BAG_APP_CELL_TAG_03);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIconCell(), FALSE, BAG_APP_CELL_TAG_ITEM_ICON);
+    SpriteSystem_LoadCellResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00005_NCER, FALSE, BAG_APP_CELL_TAG_05);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00021_NANR, FALSE, BAG_APP_ANIM_TAG_01);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00024_NANR, FALSE, BAG_APP_ANIM_TAG_02);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00004_NANR, FALSE, BAG_APP_ANIM_TAG_03);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_bag_bag_graphics, bag_graphics_00050_NANR, FALSE, BAG_APP_ANIM_TAG_04);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_itemtool_itemdata_item_icon, GetItemIconAnim(), FALSE, BAG_APP_ANIM_TAG_ITEM_ICON);
+    SpriteSystem_LoadAnimResObj(appData->spriteSystem, appData->spriteManager, NARC_graphic_shop_gra, shop_gra_00006_NANR, FALSE, BAG_APP_ANIM_TAG_06);
+    SpriteSystem_LoadMoveTypeAndCategoryIconsCellAndAnim(appData->spriteSystem, appData->spriteManager, BAG_APP_CELL_TAG_MOVE_TYPE_CATEGORY_ICON, BAG_APP_ANIM_TAG_MOVE_TYPE_CATEGORY_ICON);
     appData->unk_69C = GfGfxLoader_GetPlttData(NARC_graphic_bag_bag_graphics, bag_graphics_00048_NCLR, &appData->unk_6A0, HEAP_ID_BAG);
 }
 
@@ -146,10 +193,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 0,
                           .vram = NNS_G2D_VRAM_TYPE_2DMAIN,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49401,
-            [GF_GFX_RES_TYPE_PLTT] = 49401,
-            [GF_GFX_RES_TYPE_CELL] = 49401,
-            [GF_GFX_RES_TYPE_ANIM] = 49402,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_01,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_01,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_01,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_02,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -163,10 +210,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 0,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49404,
-            [GF_GFX_RES_TYPE_PLTT] = 49403,
-            [GF_GFX_RES_TYPE_CELL] = 49404,
-            [GF_GFX_RES_TYPE_ANIM] = 49405,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_ITEM_ICON_1,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_ITEM_ICON_1,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_ITEM_ICON,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_ITEM_ICON,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -180,10 +227,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 0,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49405,
-            [GF_GFX_RES_TYPE_PLTT] = 49404,
-            [GF_GFX_RES_TYPE_CELL] = 49404,
-            [GF_GFX_RES_TYPE_ANIM] = 49405,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_ITEM_ICON_2,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_ITEM_ICON_2,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_ITEM_ICON,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_ITEM_ICON,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -197,10 +244,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 0,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49406,
-            [GF_GFX_RES_TYPE_PLTT] = 49405,
-            [GF_GFX_RES_TYPE_CELL] = 49404,
-            [GF_GFX_RES_TYPE_ANIM] = 49405,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_ITEM_ICON_3,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_ITEM_ICON_3,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_ITEM_ICON,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_ITEM_ICON,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -214,10 +261,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 0,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49407,
-            [GF_GFX_RES_TYPE_PLTT] = 49406,
-            [GF_GFX_RES_TYPE_CELL] = 49404,
-            [GF_GFX_RES_TYPE_ANIM] = 49405,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_ITEM_ICON_4,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_ITEM_ICON_4,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_ITEM_ICON,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_ITEM_ICON,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -231,10 +278,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 0,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49408,
-            [GF_GFX_RES_TYPE_PLTT] = 49407,
-            [GF_GFX_RES_TYPE_CELL] = 49404,
-            [GF_GFX_RES_TYPE_ANIM] = 49405,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_ITEM_ICON_5,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_ITEM_ICON_5,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_ITEM_ICON,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_ITEM_ICON,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -248,15 +295,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 0,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49409,
-            [GF_GFX_RES_TYPE_PLTT] = 49408,
-            [GF_GFX_RES_TYPE_CELL] = 49404,
-            [GF_GFX_RES_TYPE_ANIM] = 49405,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_ITEM_ICON_6,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_ITEM_ICON_6,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_ITEM_ICON,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_ITEM_ICON,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_7] = {
+    [BAG_APP_SPRITE_MOVE_TYPE_ICON] = {
                           .x = 48,
                           .y = 112,
                           .z = 0,
@@ -265,15 +312,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 0,
                           .vram = NNS_G2D_VRAM_TYPE_2DMAIN,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49411,
-            [GF_GFX_RES_TYPE_PLTT] = 49410,
-            [GF_GFX_RES_TYPE_CELL] = 49406,
-            [GF_GFX_RES_TYPE_ANIM] = 49407,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_MOVE_TYPE_ICON,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_MOVE_TYPE_CATEGORY_ICON,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_MOVE_TYPE_CATEGORY_ICON,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_MOVE_TYPE_CATEGORY_ICON,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_8] = {
+    [BAG_APP_SPRITE_MOVE_CATEGORY_ICON] = {
                           .x = 144,
                           .y = 112,
                           .z = 0,
@@ -282,15 +329,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 0,
                           .vram = NNS_G2D_VRAM_TYPE_2DMAIN,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49412,
-            [GF_GFX_RES_TYPE_PLTT] = 49410,
-            [GF_GFX_RES_TYPE_CELL] = 49406,
-            [GF_GFX_RES_TYPE_ANIM] = 49407,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_MOVE_CATEGORY_ICON,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_MOVE_TYPE_CATEGORY_ICON,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_MOVE_TYPE_CATEGORY_ICON,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_MOVE_TYPE_CATEGORY_ICON,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_9] = {
+    [BAG_APP_SPRITE_POCKET_ICON_1] = {
                           .x = 16,
                           .y = 16,
                           .z = 0,
@@ -299,15 +346,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 0,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_10] = {
+    [BAG_APP_SPRITE_POCKET_ICON_2] = {
                           .x = 48,
                           .y = 16,
                           .z = 0,
@@ -316,15 +363,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 1,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_11] = {
+    [BAG_APP_SPRITE_POCKET_ICON_3] = {
                           .x = 80,
                           .y = 16,
                           .z = 0,
@@ -333,15 +380,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 2,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_12] = {
+    [BAG_APP_SPRITE_POCKET_ICON_4] = {
                           .x = 112,
                           .y = 16,
                           .z = 0,
@@ -350,15 +397,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 3,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_13] = {
+    [BAG_APP_SPRITE_POCKET_ICON_5] = {
                           .x = 144,
                           .y = 16,
                           .z = 0,
@@ -367,15 +414,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 4,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_14] = {
+    [BAG_APP_SPRITE_POCKET_ICON_6] = {
                           .x = 176,
                           .y = 16,
                           .z = 0,
@@ -384,15 +431,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 5,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_15] = {
+    [BAG_APP_SPRITE_POCKET_ICON_7] = {
                           .x = 208,
                           .y = 16,
                           .z = 0,
@@ -401,15 +448,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 6,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_16] = {
+    [BAG_APP_SPRITE_POCKET_ICON_8] = {
                           .x = 240,
                           .y = 16,
                           .z = 0,
@@ -418,15 +465,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 7,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_17] = {
+    [BAG_APP_SPRITE_PAGE_LEFT_BUTTON] = {
                           .x = 24,
                           .y = 176,
                           .z = 0,
@@ -435,15 +482,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_18] = {
+    [BAG_APP_SPRITE_PAGE_RIGHT_BUTTON] = {
                           .x = 64,
                           .y = 176,
                           .z = 0,
@@ -452,10 +499,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
@@ -469,10 +516,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
@@ -486,10 +533,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 9,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -503,10 +550,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 9,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -520,10 +567,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 9,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -537,10 +584,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 9,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -554,10 +601,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 9,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -571,10 +618,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 9,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -588,10 +635,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 9,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 1,
                           .vramTransfer = 0,
@@ -605,15 +652,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 9,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_28] = {
+    [BAG_APP_SPRITE_CONTEXT_MENU_ICON_1] = {
                           .x = 48,
                           .y = 144,
                           .z = 0,
@@ -622,15 +669,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_29] = {
+    [BAG_APP_SPRITE_CONTEXT_MENU_ICON_2] = {
                           .x = 144,
                           .y = 144,
                           .z = 0,
@@ -639,15 +686,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_30] = {
+    [BAG_APP_SPRITE_CONTEXT_MENU_ICON_3] = {
                           .x = 48,
                           .y = 176,
                           .z = 0,
@@ -656,15 +703,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_31] = {
+    [BAG_APP_SPRITE_CONTEXT_MENU_ICON_4] = {
                           .x = 144,
                           .y = 176,
                           .z = 0,
@@ -673,10 +720,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
@@ -690,10 +737,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
@@ -707,10 +754,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
@@ -724,15 +771,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_TOSS_HUNDREDS_PLACE_DOWN] = {
+    [BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_DOWN] = {
                           .x = 136,
                           .y = 152,
                           .z = 0,
@@ -741,15 +788,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_TOSS_TENS_PLACE_DOWN] = {
+    [BAG_APP_SPRITE_TOSS_QUANTITY_TENS_PLACE_DOWN] = {
                           .x = 168,
                           .y = 152,
                           .z = 0,
@@ -758,15 +805,15 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
                           },
-    [BAG_APP_SPRITE_ONES_PLACE_DOWN] = {
+    [BAG_APP_SPRITE_TOSS_QUANTITY_ONES_PLACE_DOWN] = {
                           .x = 200,
                           .y = 152,
                           .z = 0,
@@ -775,10 +822,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
@@ -792,10 +839,10 @@ static const ManagedSpriteTemplate ov15_02200B0C[39] = {
                           .pal = 8,
                           .vram = NNS_G2D_VRAM_TYPE_2DSUB,
                           .resIdList = {
-            [GF_GFX_RES_TYPE_CHAR] = 49403,
-            [GF_GFX_RES_TYPE_PLTT] = 49402,
-            [GF_GFX_RES_TYPE_CELL] = 49403,
-            [GF_GFX_RES_TYPE_ANIM] = 49404,
+            [GF_GFX_RES_TYPE_CHAR] = BAG_APP_CHAR_TAG_03,
+            [GF_GFX_RES_TYPE_PLTT] = BAG_APP_PLTT_TAG_02,
+            [GF_GFX_RES_TYPE_CELL] = BAG_APP_CELL_TAG_03,
+            [GF_GFX_RES_TYPE_ANIM] = BAG_APP_ANIM_TAG_04,
         },
                           .bgPriority = 0,
                           .vramTransfer = 0,
@@ -810,17 +857,17 @@ static void BagApp_CreateSprites(BagAppData *appData) {
     }
     ManagedSprite_SetPriority(appData->sprites[BAG_APP_SPRITE_19], 1);
     for (i = 0; i < 4; ++i) {
-        ManagedSprite_SetPriority(appData->sprites[BAG_APP_SPRITE_28 + i], 1);
+        ManagedSprite_SetPriority(appData->sprites[BAG_APP_SPRITE_CONTEXT_MENU_ICON_1 + i], 1);
     }
     for (i = 0; i < 8; ++i) {
-        ManagedSprite_SetPriority(appData->sprites[BAG_APP_SPRITE_9 + i], 1);
+        ManagedSprite_SetPriority(appData->sprites[BAG_APP_SPRITE_POCKET_ICON_1 + i], 1);
     }
     ov15_02200458(appData, 1);
     ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_0], FALSE);
-    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_7], FALSE);
-    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_8], FALSE);
+    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_MOVE_TYPE_ICON], FALSE);
+    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_MOVE_CATEGORY_ICON], FALSE);
     for (i = 0; i < 4; ++i) {
-        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_28 + i], FALSE);
+        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_CONTEXT_MENU_ICON_1 + i], FALSE);
     }
     for (i = 0; i < 6; ++i) {
         ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP + i], FALSE);
@@ -833,34 +880,35 @@ static void ov15_021FFEC0(BagAppData *appData) {
     appData->unk_648 = 0;
 }
 
+//     x, y, anim, plttOverride
 static const u8 ov15_02200AB8[][4] = {
-    { 16,  16,  8,  9 },
-    { 48,  16,  8,  9 },
-    { 80,  16,  8,  9 },
-    { 112, 16,  8,  9 },
-    { 144, 16,  8,  9 },
-    { 176, 16,  8,  9 },
-    { 208, 16,  8,  9 },
-    { 240, 16,  8,  9 },
-    { 48,  56,  10, 9 },
-    { 176, 56,  10, 9 },
-    { 48,  96,  10, 9 },
-    { 176, 96,  10, 9 },
-    { 48,  136, 10, 9 },
-    { 176, 136, 10, 9 },
-    { 24,  176, 14, 9 },
-    { 64,  176, 14, 9 },
-    { 224, 176, 17, 9 },
-    { 48,  144, 23, 9 },
-    { 144, 144, 23, 9 },
-    { 48,  176, 23, 9 },
-    { 144, 176, 23, 9 },
+    [BAG_APP_CURSOR_POS_POCKET_1] = { 16,  16,  8,  9 },
+    [BAG_APP_CURSOR_POS_POCKET_2] = { 48,  16,  8,  9 },
+    [BAG_APP_CURSOR_POS_POCKET_3] = { 80,  16,  8,  9 },
+    [BAG_APP_CURSOR_POS_POCKET_4] = { 112, 16,  8,  9 },
+    [BAG_APP_CURSOR_POS_POCKET_5] = { 144, 16,  8,  9 },
+    [BAG_APP_CURSOR_POS_POCKET_6] = { 176, 16,  8,  9 },
+    [BAG_APP_CURSOR_POS_POCKET_7] = { 208, 16,  8,  9 },
+    [BAG_APP_CURSOR_POS_POCKET_8] = { 240, 16,  8,  9 },
+    [BAG_APP_CURSOR_POS_ITEM_1] = { 48,  56,  10, 9 },
+    [BAG_APP_CURSOR_POS_ITEM_2] = { 176, 56,  10, 9 },
+    [BAG_APP_CURSOR_POS_ITEM_3] = { 48,  96,  10, 9 },
+    [BAG_APP_CURSOR_POS_ITEM_4] = { 176, 96,  10, 9 },
+    [BAG_APP_CURSOR_POS_ITEM_5] = { 48,  136, 10, 9 },
+    [BAG_APP_CURSOR_POS_ITEM_6] = { 176, 136, 10, 9 },
+    [BAG_APP_CURSOR_POS_PAGE_LEFT] = { 24,  176, 14, 9 },
+    [BAG_APP_CURSOR_POS_PAGE_RIGHT] = { 64,  176, 14, 9 },
+    [BAG_APP_CURSOR_POS_CANCEL] = { 224, 176, 17, 9 },
+    [BAG_APP_CURSOR_POS_CONTEXT_MENU_1] = { 48,  144, 23, 9 },
+    [BAG_APP_CURSOR_POS_CONTEXT_MENU_2] = { 144, 144, 23, 9 },
+    [BAG_APP_CURSOR_POS_CONTEXT_MENU_3] = { 48,  176, 23, 9 },
+    [BAG_APP_CURSOR_POS_CONTEXT_MENU_4] = { 144, 176, 23, 9 },
 };
 
-void ov15_021FFECC(BagAppData *appData, int a1) {
-    ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_20], ov15_02200AB8[a1][0], ov15_02200AB8[a1][1], FX32_CONST(256));
-    ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_20], ov15_02200AB8[a1][2]);
-    ManagedSprite_SetPaletteOverride(appData->sprites[BAG_APP_SPRITE_20], ov15_02200AB8[a1][3]);
+void ov15_021FFECC(BagAppData *appData, BagAppCursorPos cursorPos) {
+    ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_20], ov15_02200AB8[cursorPos][0], ov15_02200AB8[cursorPos][1], FX32_CONST(256));
+    ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_20], ov15_02200AB8[cursorPos][2]);
+    ManagedSprite_SetPaletteOverride(appData->sprites[BAG_APP_SPRITE_20], ov15_02200AB8[cursorPos][3]);
     ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_20], TRUE);
 }
 
@@ -952,11 +1000,11 @@ void ov15_0220005C(BagAppData *appData, int a1, int a2, int a3) {
 
 static void BagApp_UpdatePageNavArrowSpritesVisibility(BagAppData *appData) {
     if (appData->bagView->pockets[appData->bagView->curPocket].count <= 6) {
-        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_17], FALSE);
-        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_18], FALSE);
+        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_PAGE_LEFT_BUTTON], FALSE);
+        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_PAGE_RIGHT_BUTTON], FALSE);
     } else {
-        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_17], TRUE);
-        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_18], TRUE);
+        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_PAGE_LEFT_BUTTON], TRUE);
+        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_PAGE_RIGHT_BUTTON], TRUE);
     }
 }
 
@@ -996,18 +1044,18 @@ void ov15_0220023C(BagAppData *appData, u8 *a1) {
     ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_20], TRUE);
     for (int i = 0; i < 4; ++i) {
         if (a1[i] != 0xFF) {
-            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_28 + i], TRUE);
+            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_CONTEXT_MENU_ICON_1 + i], TRUE);
         } else {
-            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_28 + i], FALSE);
+            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_CONTEXT_MENU_ICON_1 + i], FALSE);
         }
     }
-    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_17], FALSE);
-    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_18], FALSE);
+    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_PAGE_LEFT_BUTTON], FALSE);
+    ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_PAGE_RIGHT_BUTTON], FALSE);
 }
 
 void ov15_02200294(BagAppData *appData) {
     for (int i = 0; i < 4; ++i) {
-        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_28 + i], FALSE);
+        ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_CONTEXT_MENU_ICON_1 + i], FALSE);
     }
 }
 
@@ -1021,7 +1069,7 @@ void BagApp_CenterSelectedItemIconSprite(BagAppData *appData, int cursorPos) {
     }
 }
 
-int ov15_022002EC(int a0) {
+int BagApp_GetNumberWidthType(int a0) {
     int result = 0;
     if (a0 < 100) {
         result = 1;
@@ -1060,11 +1108,11 @@ void ov15_02200300(BagAppData *appData, int a1, int a2) {
         ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP + ov15_02200A58[a1 - 2][i]], TRUE);
         ManagedSprite_SetAnim(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP + ov15_02200A58[a1 - 2][i]], ov15_02200A88[a1 - 2][i]);
     }
-    int r0 = ov15_022002EC(a2);
+    int r0 = BagApp_GetNumberWidthType(a2);
     if (r0 != 0) {
         if (a1 - 2 == 0 && r0 == 2) {
             ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP], FALSE);
-            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_HUNDREDS_PLACE_DOWN], FALSE);
+            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_DOWN], FALSE);
         } else if (a1 - 2 == 1) {
             for (i = 0; i < ov15_022009A0[r0 - 1]; ++i) {
                 ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_TOSS_QUANTITY_HUNDREDS_PLACE_UP + ov15_02200A14[r0 - 1][i]], FALSE);
@@ -1085,24 +1133,24 @@ void ov15_02200428(BagAppData *appData) {
     ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_38], FALSE);
 }
 
-void ov15_02200458(BagAppData *appData, int a1) {
+void ov15_02200458(BagAppData *appData, int drawState) {
     int i;
-    u8 sp0[POCKETS_COUNT];
+    u8 enabledPocketFlags[POCKETS_COUNT];
 
-    GF_ASSERT(a1 == 1 || a1 == 0);
+    GF_ASSERT(drawState == 1 || drawState == 0);
 
-    MI_CpuClear8(sp0, POCKETS_COUNT);
+    MI_CpuClear8(enabledPocketFlags, POCKETS_COUNT);
     for (i = 0; i < POCKETS_COUNT; ++i) {
         GF_ASSERT(appData->bagView->pockets[i].pocketId < POCKETS_COUNT);
         if (appData->bagView->pockets[i].slots != NULL) {
-            sp0[appData->bagView->pockets[i].pocketId] = 1;
+            enabledPocketFlags[appData->bagView->pockets[i].pocketId] = 1;
         }
     }
     for (i = 0; i < POCKETS_COUNT; ++i) {
-        if (sp0[i]) {
-            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_9 + i], a1);
+        if (enabledPocketFlags[i]) {
+            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_POCKET_ICON_1 + i], drawState);
         } else {
-            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_9 + i], FALSE);
+            ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_POCKET_ICON_1 + i], FALSE);
         }
     }
 }

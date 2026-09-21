@@ -18,7 +18,7 @@ static void ov15_021FE3E0(BagAppData *appData);
 static void ov15_021FE204(BagAppData *appData);
 static void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno);
 static void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno);
-static void ov15_021FE5C4(BagAppData *appData, u16 itemId);
+static void BagApp_PrintItemDescriptionOnWindowMain0(BagAppData *appData, u16 itemId);
 static void BagApp_PrintTMHMDetails(BagAppData *appData, u16 itemId);
 static void ov15_021FE8C4(BagAppData *appData, u16 a1, u16 a2, u32 textColor);
 static void BagApp_PrintTMorHMNumberOnWindow(BagAppData *appData, Window *window, ItemSlot *slot, u32 y);
@@ -42,7 +42,7 @@ static const u8 ov15_022008C8[] = {
 };
 
 void ov15_021FE020(BagAppData *appData) {
-    AddWindowParameterized(appData->bgConfig, &appData->windows_main[BAG_APP_WINDOW_MAIN_0], GF_BG_LYR_MAIN_1, 0, 18, 32, 6, 4, 0x001);
+    AddWindowParameterized(appData->bgConfig, &appData->windows_main[BAG_APP_WINDOW_MAIN_DESCRIPTION], GF_BG_LYR_MAIN_1, 0, 18, 32, 6, 4, 0x001);
     AddWindowParameterized(appData->bgConfig, &appData->windows_main[BAG_APP_WINDOW_MAIN_1], GF_BG_LYR_MAIN_1, 0, 13, 32, 4, 4, 0x0C1);
     AddWindowParameterized(appData->bgConfig, &appData->windows_main[BAG_APP_WINDOW_MAIN_2], GF_BG_LYR_SUB_0, 2, 1, 27, 2, 11, 0x001);
     AddWindowParameterized(appData->bgConfig, &appData->windows_main[BAG_APP_WINDOW_MAIN_3], GF_BG_LYR_SUB_0, 2, 1, 27, 4, 11, 0x053);
@@ -197,7 +197,7 @@ static void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno) {
     BufferItemNamePlural(appData->msgFormat, fieldno, ov15_021F9D60(appData, itemSlot, FALSE));
 }
 
-static void ov15_021FE5C4(BagAppData *appData, u16 itemId) {
+static void BagApp_PrintItemDescriptionOnWindowMain0(BagAppData *appData, u16 itemId) {
     String *string;
     if (itemId != 0xFFFF) {
         string = String_New(130, HEAP_ID_BAG);
@@ -205,7 +205,7 @@ static void ov15_021FE5C4(BagAppData *appData, u16 itemId) {
     } else {
         string = NewString_ReadMsgData(appData->msgData, msg_0010_00097);
     }
-    AddTextPrinterParameterizedWithColor(&appData->windows_main[BAG_APP_WINDOW_MAIN_0], 0, string, 20, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
+    AddTextPrinterParameterizedWithColor(&appData->windows_main[BAG_APP_WINDOW_MAIN_DESCRIPTION], 0, string, 20, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
     String_Delete(string);
 }
 
@@ -376,7 +376,7 @@ void ov15_021FEB84(BagAppData *appData, u8 *stringIndices, int a2) {
     if (appData->bagView->pockets[appData->bagView->curPocket].pocketId == POCKET_TMHMS) {
         FillWindowPixelBuffer(&appData->windows_main[BAG_APP_WINDOW_MAIN_1], 0);
         BagApp_PrintTMHMDetails(appData, appData->bagView->itemId);
-        ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_0]);
+        ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_DESCRIPTION]);
         ov15_021FF97C(appData, appData->bagView->itemId, TRUE);
         ov15_021F9C78(appData, FALSE);
     }
@@ -400,18 +400,18 @@ void ov15_021FEB84(BagAppData *appData, u8 *stringIndices, int a2) {
     ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_2]);
 }
 
-void ov15_021FECA0(BagAppData *appData, Window *window, int itemId) {
+void BagApp_PrintItemDescriptionOnWindow(BagAppData *appData, Window *window, int itemId) {
     FillWindowPixelBuffer(window, 0);
-    ov15_021FE5C4(appData, itemId);
+    BagApp_PrintItemDescriptionOnWindowMain0(appData, itemId);
     ScheduleWindowCopyToVram(window);
 }
 
-void ov15_021FECC4(BagAppData *appData, Window *window) {
+void BagApp_ClearItemDescriptionWindow(BagAppData *appData, Window *window) {
     FillWindowPixelBuffer(window, 0);
     ScheduleWindowCopyToVram(window);
 }
 
-void ov15_021FECD8(BagAppData *appData, Window *window, int pocket) {
+void BagApp_PrintPocketDescriptionOnWindow(BagAppData *appData, Window *window, int pocket) {
     String *string = NewString_ReadMsgData(appData->msgData, msg_0010_00120 + pocket);
     FillWindowPixelBuffer(window, 0);
     AddTextPrinterParameterizedWithColor(window, 0, string, 20, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(15, 14, 0), NULL);
