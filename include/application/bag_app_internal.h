@@ -35,8 +35,8 @@ typedef enum BagAppState {
     BAG_APP_STATE_HANDLE_INPUT_GIVE_ITEM,
     BAG_APP_STATE_GIVE_ITEM_ERROR_WAIT_MESSAGE,
     BAG_APP_STATE_SELL_HANDLE_INPUT,
-    BAG_APP_STATE_17,
-    BAG_APP_STATE_18,
+    BAG_APP_STATE_SELL_ITEM_CHOOSE_QUANTITY_WAIT_MESSAGE,
+    BAG_APP_STATE_SELL_ITEM_CHOOSE_QUANTITY,
     BAG_APP_STATE_19,
     BAG_APP_STATE_20,
     BAG_APP_STATE_CONFIRM_SALE_WAIT_MESSAGE,
@@ -101,11 +101,11 @@ typedef enum BagAppWindowId {
     BAG_APP_WINDOW_SUB_9,
     BAG_APP_WINDOW_SUB_10,
     BAG_APP_WINDOW_SUB_11,
-    BAG_APP_WINDOW_SUB_12,
-    BAG_APP_WINDOW_SUB_13,
-    BAG_APP_WINDOW_SUB_14,
-    BAG_APP_WINDOW_SUB_15,
-    BAG_APP_WINDOW_SUB_16,
+    BAG_APP_WINDOW_SUB_CONTEXT_SELECTED_ITEM,
+    BAG_APP_WINDOW_SUB_CONTEXT_OPTION_1,
+    BAG_APP_WINDOW_SUB_CONTEXT_OPTION_2,
+    BAG_APP_WINDOW_SUB_CONTEXT_OPTION_3,
+    BAG_APP_WINDOW_SUB_CONTEXT_OPTION_4,
     BAG_APP_WINDOW_SUB_17,
     BAG_APP_WINDOW_SUB_18,
     BAG_APP_WINDOW_SUB_19,
@@ -117,7 +117,7 @@ typedef enum BagAppWindowId {
 } BagAppWindowId;
 
 typedef enum BagAppSpriteId {
-    BAG_APP_SPRITE_0 = 0,
+    BAG_APP_SPRITE_UNUSED_MOVE_ITEM_CURSOR = 0,
     BAG_APP_SPRITE_ITEM_ICON_1,
     BAG_APP_SPRITE_ITEM_ICON_2,
     BAG_APP_SPRITE_ITEM_ICON_3,
@@ -185,7 +185,7 @@ typedef enum BagAppCursorPos {
     BAG_APP_CURSOR_POS_RESET_TO_CURR_POCKET = 17,
 } BagAppCursorPos;
 
-typedef struct BagAppData_Sub619 {
+typedef struct BagAppData_UnkDebugSubstruct {
     u8 unk_0;
     u8 unk_1;
     u8 unk_2;
@@ -196,7 +196,7 @@ typedef struct BagAppData_Sub619 {
     u8 unk_7_0 : 4;
     u8 unk_7_4 : 3;
     u8 unk_7_7 : 1;
-} BagAppData_Sub619;
+} BagAppData_UnkDebugSubstruct;
 
 typedef struct BagAppSpriteAnimationTransitionManager {
     u8 spriteId;
@@ -264,13 +264,13 @@ struct BagAppData {
     String *unk_5E8;
     String *unk_5EC;
     u8 filler_5F0[4];
-    String *unk_5F4[8];
+    String *pocketNameStrings[8];
     u8 unk_614;
     u8 gender;
     u8 textPrinterId;
     u8 unk_617;
     u8 unk_618;
-    BagAppData_Sub619 unk_619;
+    BagAppData_UnkDebugSubstruct unkDebugStruct;
     u8 filler_624[0x20];
     int cursorPos;
     u8 unk_648;
@@ -280,8 +280,8 @@ struct BagAppData {
     u8 filler_64C[32];
     int moveItemCursorPos;
     u8 unk_670;
-    u8 unk_671;
-    u8 unk_672;
+    u8 moveItemMode;
+    u8 moveItemOriginalSlot;
     int unk_674;
     u8 filler_678[3];
     u8 customCallbackState;
@@ -308,10 +308,10 @@ void ov15_021F9C78(BagAppData *appData, BOOL a1);
 u16 ov15_021F9D60(BagAppData *appData, u16 slot, BOOL fetchQuantity);
 BOOL IsBerryOrMulch(u8 pocketId, u16 itemId);
 
-void ov15_021FE020(BagAppData *appData);
-void ov15_021FE154(BagAppData *appData);
-void ov15_021FE4C8(BagAppData *appData);
-void ov15_021FE504(BagAppData *appData);
+void BagApp_CreateMainWindows(BagAppData *appData);
+void BagApp_RemoveWindows(BagAppData *appData);
+void BagApp_LoadPocketNames(BagAppData *appData);
+void BagApp_DeletePocketNames(BagAppData *appData);
 void ov15_021FE528(BagAppData *appData);
 void ov15_021FE868(BagAppData *appData);
 void ov15_021FE874(BagAppData *appData);
@@ -324,8 +324,8 @@ void BagApp_ClearItemDescriptionWindow(BagAppData *appData, Window *window);
 void BagApp_PrintPocketDescriptionOnWindow(BagAppData *appData, Window *window, int pocket);
 void ov15_021FED24(BagAppData *appData);
 void ov15_021FED3C(BagAppData *appData);
-void ov15_021FED58(BagAppData *appData);
-void ov15_021FED60(BagAppData *appData);
+void BagApp_RemoveContextMenuWindows(BagAppData *appData);
+void BagApp_PrintMoveTheItemMessage(BagAppData *appData);
 void ov15_021FEDEC(BagAppData *appData, u32 a1);
 void ov15_021FEEA4(BagAppData *appData);
 u8 BagApp_PrintMessage(BagAppData *appData, int a1);
@@ -335,12 +335,12 @@ void ov15_021FF068(BagAppData *appData);
 void ov15_021FF0FC(BagAppData *appData, int a1);
 void ov15_021FF1E0(BagAppData *appData);
 void ov15_021FF29C(BagAppData *appData, int a1);
-void ov15_021FF364(BagAppData *appData, int a1, int a2, int a3);
+void ov15_021FF364(BagAppData *appData, int scroll, int itemSlot, BOOL isMoveMode);
 void BagApp_SwitchItemButtonWindowsToContextMenuMode(BagAppData *appData, int scroll, int offset);
-void ov15_021FF560(BagAppData *appData);
+void BagApp_ClearSelectedItemWindow(BagAppData *appData);
 void ov15_021FF6BC(BagAppData *appData, int pocketCount, int pocketScroll, int offset);
 void BagApp_PrintContextMenuStringOnWindowCentered(Window *window, String **strings, int index);
-void ov15_021FF7AC(Window *window);
+void BagApp_ClearFourWindowsAt(Window *window);
 void BagApp_PrintTrashContextOptionOnWindow(BagAppData *appData);
 void BagApp_PrintSellContextOptionOnWindow(BagAppData *appData);
 void ov15_021FF834(BagAppData *appData);
@@ -361,7 +361,7 @@ void ov15_0220005C(BagAppData *appData, int a1, int a2, int a3);
 void ov15_02200140(BagAppData *appData, BagViewPocket *pocket, int a2, int a3);
 void ov15_022001C4(BagAppData *appData, BagViewPocket *pocket, int a2);
 void ov15_0220023C(BagAppData *appData, u8 *a1);
-void ov15_02200294(BagAppData *appData);
+void BagApp_HideContextMenuIcons(BagAppData *appData);
 void BagApp_CenterSelectedItemIconSprite(BagAppData *appData, int cursorPos);
 int BagApp_GetNumberWidthType(int a0);
 void ov15_02200300(BagAppData *appData, int a1, int a2);

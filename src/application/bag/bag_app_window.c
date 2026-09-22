@@ -14,8 +14,8 @@
 
 static void BagApp_AddItemNameWindows(BagAppData *appData);
 static void BagApp_RemoveItemNameWindows(BagAppData *appData);
-static void ov15_021FE3E0(BagAppData *appData);
-static void ov15_021FE204(BagAppData *appData);
+static void BagApp_RemoveContextMenuWindowsInternal(BagAppData *appData);
+static void BagApp_ShowContextMenuWindows(BagAppData *appData);
 static void ov15_021FE584(BagAppData *appData, int itemSlot, u16 fieldno);
 static void ov15_021FE5A4(BagAppData *appData, int itemSlot, u16 fieldno);
 static void BagApp_PrintItemDescriptionOnWindowMain0(BagAppData *appData, u16 itemId);
@@ -41,7 +41,7 @@ static const u8 ov15_022008C8[] = {
     NUM_BAG_KEY_ITEMS,
 };
 
-void ov15_021FE020(BagAppData *appData) {
+void BagApp_CreateMainWindows(BagAppData *appData) {
     AddWindowParameterized(appData->bgConfig, &appData->windows_main[BAG_APP_WINDOW_MAIN_DESCRIPTION], GF_BG_LYR_MAIN_1, 0, 18, 32, 6, 4, 0x001);
     AddWindowParameterized(appData->bgConfig, &appData->windows_main[BAG_APP_WINDOW_MAIN_1], GF_BG_LYR_MAIN_1, 0, 13, 32, 4, 4, 0x0C1);
     AddWindowParameterized(appData->bgConfig, &appData->windows_main[BAG_APP_WINDOW_MAIN_2], GF_BG_LYR_SUB_0, 2, 1, 27, 2, 11, 0x001);
@@ -57,11 +57,11 @@ void ov15_021FE020(BagAppData *appData) {
     }
 }
 
-void ov15_021FE154(BagAppData *appData) {
+void BagApp_RemoveWindows(BagAppData *appData) {
     for (u16 i = 0; i < 8; ++i) {
         RemoveWindow(&appData->windows_main[i]);
     }
-    ov15_021FE3E0(appData);
+    BagApp_RemoveContextMenuWindowsInternal(appData);
     BagApp_RemoveItemNameWindows(appData);
 }
 
@@ -83,7 +83,7 @@ static const int ov15_02200908[12][3] = {
 static void BagApp_AddItemNameWindows(BagAppData *appData) {
     if (appData->windows_sub[BAG_APP_WINDOW_SUB_0].bgConfig == NULL) {
         for (int i = 0; i < 12; ++i) {
-            AddWindowParameterized(appData->bgConfig, &appData->windows_sub[i], GF_BG_LYR_SUB_0, ov15_02200908[i][0], ov15_02200908[i][1], 11, 4, 11, ov15_02200908[i][2]);
+            AddWindowParameterized(appData->bgConfig, &appData->windows_sub[BAG_APP_WINDOW_SUB_0 + i], GF_BG_LYR_SUB_0, ov15_02200908[i][0], ov15_02200908[i][1], 11, 4, 11, ov15_02200908[i][2]);
         }
     }
 }
@@ -91,9 +91,9 @@ static void BagApp_AddItemNameWindows(BagAppData *appData) {
 static void BagApp_RemoveItemNameWindows(BagAppData *appData) {
     if (appData->windows_sub[BAG_APP_WINDOW_SUB_0].bgConfig != NULL) {
         for (int i = 0; i < 12; ++i) {
-            ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[i]);
-            RemoveWindow(&appData->windows_sub[i]);
-            appData->windows_sub[i].bgConfig = NULL;
+            ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[BAG_APP_WINDOW_SUB_0 + i]);
+            RemoveWindow(&appData->windows_sub[BAG_APP_WINDOW_SUB_0 + i]);
+            appData->windows_sub[BAG_APP_WINDOW_SUB_0 + i].bgConfig = NULL;
         }
     }
 }
@@ -111,13 +111,13 @@ static const int ov15_022008D0[3][2] = {
     { 24, 14 },
 };
 
-static void ov15_021FE204(BagAppData *appData) {
-    if (appData->windows_sub[BAG_APP_WINDOW_SUB_12].bgConfig == NULL) {
-        AddWindowParameterized(appData->bgConfig, &appData->windows_sub[BAG_APP_WINDOW_SUB_12], GF_BG_LYR_SUB_0, 12, 7, 11, 4, 11, 0x2CF);
-        FillWindowPixelBuffer(&appData->windows_sub[BAG_APP_WINDOW_SUB_12], 0);
+static void BagApp_ShowContextMenuWindows(BagAppData *appData) {
+    if (appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_SELECTED_ITEM].bgConfig == NULL) {
+        AddWindowParameterized(appData->bgConfig, &appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_SELECTED_ITEM], GF_BG_LYR_SUB_0, 12, 7, 11, 4, 11, 0x2CF);
+        FillWindowPixelBuffer(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_SELECTED_ITEM], 0);
         for (int i = 0; i < 4; ++i) {
-            AddWindowParameterized(appData->bgConfig, &appData->windows_sub[BAG_APP_WINDOW_SUB_13 + i], GF_BG_LYR_SUB_0, ov15_022008E8[i][0], ov15_022008E8[i][1], 10, 2, 11, 0x31B + 20 * i);
-            FillWindowPixelBuffer(&appData->windows_sub[BAG_APP_WINDOW_SUB_13 + i], 0);
+            AddWindowParameterized(appData->bgConfig, &appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_OPTION_1 + i], GF_BG_LYR_SUB_0, ov15_022008E8[i][0], ov15_022008E8[i][1], 10, 2, 11, 0x31B + 20 * i);
+            FillWindowPixelBuffer(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_OPTION_1 + i], 0);
         }
         for (int i = 0; i < 3; ++i) {
             AddWindowParameterized(appData->bgConfig, &appData->windows_sub[BAG_APP_WINDOW_SUB_17 + i], GF_BG_LYR_SUB_0, ov15_022008D0[i][0], ov15_022008D0[i][1], 2, 3, 11, 0x2FB + 6 * i);
@@ -134,10 +134,10 @@ static void ov15_021FE204(BagAppData *appData) {
     }
 }
 
-static void ov15_021FE3E0(BagAppData *appData) {
+static void BagApp_RemoveContextMenuWindowsInternal(BagAppData *appData) {
     int i; // forward decl is required to match
 
-    if (appData->windows_sub[BAG_APP_WINDOW_SUB_12].bgConfig != NULL) {
+    if (appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_SELECTED_ITEM].bgConfig != NULL) {
         for (i = 0; i < 3; ++i) {
             ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[BAG_APP_WINDOW_SUB_17 + i]);
             RemoveWindow(&appData->windows_sub[BAG_APP_WINDOW_SUB_17 + i]);
@@ -158,27 +158,27 @@ static void ov15_021FE3E0(BagAppData *appData) {
         appData->windows_sub[BAG_APP_WINDOW_SUB_20].bgConfig = NULL;
 
         for (i = 0; i < 4; ++i) {
-            ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[BAG_APP_WINDOW_SUB_13 + i]);
-            RemoveWindow(&appData->windows_sub[BAG_APP_WINDOW_SUB_13 + i]);
-            appData->windows_sub[BAG_APP_WINDOW_SUB_13 + i].bgConfig = NULL;
+            ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_OPTION_1 + i]);
+            RemoveWindow(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_OPTION_1 + i]);
+            appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_OPTION_1 + i].bgConfig = NULL;
         }
-        ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[BAG_APP_WINDOW_SUB_12]);
-        RemoveWindow(&appData->windows_sub[BAG_APP_WINDOW_SUB_12]);
-        appData->windows_sub[BAG_APP_WINDOW_SUB_12].bgConfig = NULL;
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_SELECTED_ITEM]);
+        RemoveWindow(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_SELECTED_ITEM]);
+        appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_SELECTED_ITEM].bgConfig = NULL;
     }
 }
 
-void ov15_021FE4C8(BagAppData *appData) {
+void BagApp_LoadPocketNames(BagAppData *appData) {
     MsgData *msgData = NewMsgDataFromNarc(MSGDATA_LOAD_LAZY, NARC_msgdata_msg, msg_0225, HEAP_ID_BAG);
     for (u16 i = 0; i < 8; ++i) {
-        appData->unk_5F4[i] = NewString_ReadMsgData(msgData, msg_0225_00000 + i);
+        appData->pocketNameStrings[i] = NewString_ReadMsgData(msgData, msg_0225_00000 + i);
     }
     DestroyMsgData(msgData);
 }
 
-void ov15_021FE504(BagAppData *appData) {
+void BagApp_DeletePocketNames(BagAppData *appData) {
     for (u16 i = 0; i < 8; ++i) {
-        String_Delete(appData->unk_5F4[i]);
+        String_Delete(appData->pocketNameStrings[i]);
     }
 }
 
@@ -426,25 +426,25 @@ void ov15_021FED24(BagAppData *appData) {
 
 void ov15_021FED3C(BagAppData *appData) {
     ov15_021FED24(appData);
-    ov15_021FE3E0(appData);
+    BagApp_RemoveContextMenuWindowsInternal(appData);
     ov15_021FF97C(appData, ITEM_NONE, FALSE);
 }
 
-void ov15_021FED58(BagAppData *appData) {
-    ov15_021FE3E0(appData);
+void BagApp_RemoveContextMenuWindows(BagAppData *appData) {
+    BagApp_RemoveContextMenuWindowsInternal(appData);
 }
 
-void ov15_021FED60(BagAppData *appData) {
+void BagApp_PrintMoveTheItemMessage(BagAppData *appData) {
     FillWindowPixelBuffer(&appData->windows_main[BAG_APP_WINDOW_MAIN_2], 0xFF);
-    String *r6 = NewString_ReadMsgData(appData->msgData, msg_0010_00046);
-    String *r4 = String_New(130, HEAP_ID_BAG);
-    ov15_021FE584(appData, appData->unk_672, 0);
-    StringExpandPlaceholders(appData->msgFormat, r4, r6);
+    String *string = NewString_ReadMsgData(appData->msgData, msg_0010_00046);
+    String *formattedString = String_New(130, HEAP_ID_BAG);
+    ov15_021FE584(appData, appData->moveItemOriginalSlot, 0);
+    StringExpandPlaceholders(appData->msgFormat, formattedString, string);
     DrawFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_2], TRUE, 0x3E2, 12);
-    AddTextPrinterParameterizedWithColor(&appData->windows_main[BAG_APP_WINDOW_MAIN_2], 1, r4, 0, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
+    AddTextPrinterParameterizedWithColor(&appData->windows_main[BAG_APP_WINDOW_MAIN_2], 1, formattedString, 0, 0, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
     ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_2]);
-    String_Delete(r4);
-    String_Delete(r6);
+    String_Delete(formattedString);
+    String_Delete(string);
 }
 
 void ov15_021FEDEC(BagAppData *appData, u32 a1) {
@@ -541,13 +541,13 @@ void BagApp_DestroyYesNoPrompt(BagAppData *appData) {
 void ov15_021FF068(BagAppData *appData) {
     Window *window = &appData->windows_sub[BAG_APP_WINDOW_SUB_23];
     FillWindowPixelBuffer(window, 0);
-    String *r4 = NewString_ReadMsgData(appData->msgData, msg_0010_00083);
+    String *string = NewString_ReadMsgData(appData->msgData, msg_0010_00083);
     BufferIntegerAsString(appData->msgFormat, 0, appData->unitSellPrice * appData->quantity, 6, PRINTING_MODE_RIGHT_ALIGN, TRUE);
-    StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, r4);
+    StringExpandPlaceholders(appData->msgFormat, appData->formattedStrbuf, string);
     u32 width = FontID_String_GetWidth(0, appData->formattedStrbuf, 0);
     AddTextPrinterParameterizedWithColor(window, 0, appData->formattedStrbuf, 0, 4, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
     ScheduleWindowCopyToVram(window);
-    String_Delete(r4);
+    String_Delete(string);
 }
 
 void ov15_021FF0FC(BagAppData *appData, int a1) {
@@ -619,7 +619,7 @@ static int BagViewPocket_GetIndexWithAtMostXNonEmptySlots(BagViewPocket *pocket,
     return i;
 }
 
-void ov15_021FF364(BagAppData *appData, int a1, int a2, int a3) {
+void ov15_021FF364(BagAppData *appData, int scroll, int itemSlot, BOOL isMoveMode) {
     int i;
     // this variable exists for some reason
     // apparently the dev anticipated a case
@@ -647,11 +647,11 @@ void ov15_021FF364(BagAppData *appData, int a1, int a2, int a3) {
         ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[offTargetWindowBase + i]);
     }
     count = 0;
-    for (i = BagViewPocket_GetIndexWithAtMostXNonEmptySlots(pocket, appData->bagView->curPocket, a1); i < ov15_022008C8[appData->bagView->curPocket]; ++i) {
+    for (i = BagViewPocket_GetIndexWithAtMostXNonEmptySlots(pocket, appData->bagView->curPocket, scroll); i < ov15_022008C8[appData->bagView->curPocket]; ++i) {
         if (pocket->slots[i].id != ITEM_NONE && pocket->slots[i].quantity != 0) {
-            if (a3 == 0) {
+            if (isMoveMode == 0) {
                 BagApp_PrintItemNameAndMaybeQuantityOnWindow(appData, &appData->windows_sub[targetWindowBase + count], appData->itemNameStrings[i], pocket, i);
-            } else if (i == appData->unk_672) {
+            } else if (i == appData->moveItemOriginalSlot) {
                 BagApp_PrintItemNameAndMaybeQuantityOnWindow(appData, &appData->windows_sub[targetWindowBase + count], appData->itemNameStrings[i], pocket, i);
             } else {
                 AddTextPrinterParameterizedWithColor(&appData->windows_sub[targetWindowBase + count], 0, appData->itemNameStrings[i], 0, 16, TEXT_SPEED_NOTRANSFER, MAKE_TEXT_COLOR(1, 2, 0), NULL);
@@ -670,17 +670,17 @@ void BagApp_SwitchItemButtonWindowsToContextMenuMode(BagAppData *appData, int sc
     BagViewPocket *pocket = &appData->bagView->pockets[appData->bagView->curPocket];
     offset = scroll + offset;
     for (int i = 0; i < 6; ++i) {
-        ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[i]);
+        ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[BAG_APP_WINDOW_SUB_0 + i]);
     }
     BagApp_RemoveItemNameWindows(appData);
     ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_6]);
-    ov15_021FE204(appData);
-    BagApp_PrintItemNameAndMaybeQuantityOnWindow(appData, &appData->windows_sub[BAG_APP_WINDOW_SUB_12], appData->itemNameStrings[offset], pocket, offset);
-    ScheduleWindowCopyToVram(&appData->windows_sub[BAG_APP_WINDOW_SUB_12]);
+    BagApp_ShowContextMenuWindows(appData);
+    BagApp_PrintItemNameAndMaybeQuantityOnWindow(appData, &appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_SELECTED_ITEM], appData->itemNameStrings[offset], pocket, offset);
+    ScheduleWindowCopyToVram(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_SELECTED_ITEM]);
 }
 
-void ov15_021FF560(BagAppData *appData) {
-    ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[BAG_APP_WINDOW_SUB_12]);
+void BagApp_ClearSelectedItemWindow(BagAppData *appData) {
+    ClearWindowTilemapAndScheduleTransfer(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_SELECTED_ITEM]);
 }
 
 static void BagApp_PrintItemNameAndMaybeQuantityOnWindow(BagAppData *appData, Window *window, String *string, BagViewPocket *pocket, int slotId) {
@@ -738,7 +738,7 @@ void BagApp_PrintContextMenuStringOnWindowCentered(Window *window, String **stri
     ScheduleWindowCopyToVram(window);
 }
 
-void ov15_021FF7AC(Window *window) {
+void BagApp_ClearFourWindowsAt(Window *window) {
     for (int i = 0; i < 4; ++i) {
         ClearWindowTilemapAndScheduleTransfer(&window[i]);
     }
