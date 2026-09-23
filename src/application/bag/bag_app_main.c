@@ -380,7 +380,7 @@ BOOL Bag_Init(OverlayManager *man, int *state) {
     ov15_02200030(appData, appData->bagView->curPocket);
     ov15_021FD404(appData, 1, appData->bagView->curPocket);
     ov15_021FF6BC(appData, appData->bagView->pockets[appData->bagView->curPocket].count, appData->bagView->pockets[appData->bagView->curPocket].scroll, 0);
-    ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 1);
+    BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 1);
     appData->cursorPos = appData->bagView->pockets[appData->bagView->curPocket].position + 8;
     ov15_021FFECC(appData, appData->cursorPos);
     BagApp_UpdateDescriptionOnTopScreen(appData);
@@ -1231,7 +1231,7 @@ static void ov15_021FA6F4(BagAppData *appData, BagViewPocket *pocket) {
     ov15_021FD574(appData, 0, BagApp_GetNumItemsOnCurrentPage(appData), 0);
     ov15_021FF364(appData, pocket->scroll, -1, 0);
     ov15_021FF6BC(appData, pocket->count, pocket->scroll, 0);
-    ov15_02200140(appData, pocket, BagApp_GetNumItemsOnCurrentPage(appData), 1);
+    BagApp_UpdateItemIconsVisibility(appData, pocket, BagApp_GetNumItemsOnCurrentPage(appData), 1);
 }
 
 static BagAppState ov15_021FA73C(BagAppData *appData, BagAppCursorPos input, u8 *pSelectedItemFlag, int a3, int a4, MenuInputState inputState) {
@@ -1259,7 +1259,7 @@ static BagAppState ov15_021FA73C(BagAppData *appData, BagAppCursorPos input, u8 
         ov15_021FF364(appData, pocket->scroll, -1, 0);
         ov15_02200030(appData, appData->bagView->curPocket);
         ov15_021FF6BC(appData, pocket->count, pocket->scroll, 0);
-        ov15_02200140(appData, pocket, BagApp_GetNumItemsOnCurrentPage(appData), 1);
+        BagApp_UpdateItemIconsVisibility(appData, pocket, BagApp_GetNumItemsOnCurrentPage(appData), 1);
         ov15_021FD404(appData, 1, appData->bagView->curPocket);
         PlaySE(SEQ_SE_DP_SELECT);
         BagApp_UpdateDescriptionOnTopScreen(appData);
@@ -1478,8 +1478,8 @@ static void ov15_021FAC48(BagAppData *appData) {
         ov15_021FD574(appData, 1, BagApp_GetNumItemsOnCurrentPage(appData), appData->cursorPos - BAG_APP_CURSOR_POS_ITEM_1);
         ov15_021FF364(appData, pocket->scroll, appData->cursorPos - BAG_APP_CURSOR_POS_ITEM_1, TRUE);
         ov15_021FF6BC(appData, pocket->count, pocket->scroll, 0);
-        ov15_02200140(appData, pocket, BagApp_GetNumItemsOnCurrentPage(appData), 0);
-        ov15_022001C4(appData, pocket, pocket->scroll + appData->cursorPos - BAG_APP_CURSOR_POS_ITEM_1);
+        BagApp_UpdateItemIconsVisibility(appData, pocket, BagApp_GetNumItemsOnCurrentPage(appData), 0);
+        BagApp_ShowOnlySelectedItemIcon(appData, pocket, pocket->scroll + appData->cursorPos - BAG_APP_CURSOR_POS_ITEM_1);
         ov15_021FFECC(appData, appData->cursorPos);
         appData->moveItemCursorPos = appData->cursorPos - BAG_APP_CURSOR_POS_ITEM_1;
     }
@@ -1505,7 +1505,7 @@ static int MoveItemHandleDPad(int curPos) {
 static void ov15_021FAD80(BagAppData *appData, BagViewPocket *pocket) {
     ov15_021FD574(appData, 1, BagApp_GetNumItemsOnCurrentPage(appData), ov15_021FA098(appData));
     ov15_021FF364(appData, pocket->scroll, ov15_021FA098(appData), 1);
-    ov15_022001C4(appData, pocket, appData->moveItemOriginalSlot);
+    BagApp_ShowOnlySelectedItemIcon(appData, pocket, appData->moveItemOriginalSlot);
     ov15_021FF6BC(appData, appData->bagView->pockets[appData->bagView->curPocket].count, appData->bagView->pockets[appData->bagView->curPocket].scroll, 0);
 }
 
@@ -1630,7 +1630,7 @@ static BagAppState ov15_021FB060(BagAppData *appData) {
     ov15_02200030(appData, appData->bagView->curPocket);
     ov15_021FD404(appData, 1, appData->bagView->curPocket);
     ov15_021FF6BC(appData, pocket->count, pocket->scroll, 0);
-    ov15_02200140(appData, pocket, BagApp_GetNumItemsOnCurrentPage(appData), 1);
+    BagApp_UpdateItemIconsVisibility(appData, pocket, BagApp_GetNumItemsOnCurrentPage(appData), 1);
     ov15_021FED24(appData);
     ov15_021FFECC(appData, appData->cursorPos);
     return BAG_APP_STATE_HANDLE_INPUT_NORMAL_MODE;
@@ -1766,7 +1766,7 @@ static void ov15_021FB518(BagAppData *appData) {
     ov15_02200030(appData, appData->bagView->curPocket);
     ov15_021FD404(appData, 1, appData->bagView->curPocket);
     ov15_021FF6BC(appData, pocket->count, pocket->scroll, 0);
-    ov15_02200140(appData, pocket, BagApp_GetNumItemsOnCurrentPage(appData), 0);
+    BagApp_UpdateItemIconsVisibility(appData, pocket, BagApp_GetNumItemsOnCurrentPage(appData), 0);
     ov15_021FFECC(appData, appData->cursorPos);
     ov15_021F9C78(appData, TRUE);
 }
@@ -1790,7 +1790,7 @@ static BagAppState ov15_021FB604(BagAppData *appData) {
     BagApp_HideContextMenuIcons(appData);
     BagApp_ClearSelectedItemWindow(appData);
     BagApp_ClearFourWindowsAt(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_OPTION_1]);
-    ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
+    BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
     ov15_021FE868(appData);
     ov15_021FED3C(appData);
     ov15_021FB518(appData);
@@ -1906,7 +1906,7 @@ static BagAppState BagApp_UseTMHM(BagAppData *appData) {
             ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
             ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
             ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_DESCRIPTION]);
-            ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
+            BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
             ov15_021FE868(appData);
             BagApp_HideContextMenuIcons(appData);
             ov15_021FB518(appData);
@@ -1986,7 +1986,7 @@ static BagAppState BagApp_UseItemInPlaceMessage(BagAppData *appData) {
             ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
             ov15_021FBB28(appData);
             ov15_021FB518(appData);
-            ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 1);
+            BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 1);
             BagApp_UpdateDescriptionOnTopScreen(appData);
             ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_DESCRIPTION]);
             ov15_021FD788(appData, 1);
@@ -2187,7 +2187,7 @@ static BagAppState BagAppMainTask_ConfirmToss_HandleYesNo(BagAppData *appData) {
         ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
         ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
         ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_DESCRIPTION]);
-        ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
+        BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
         ov15_021FD788(appData, 1);
@@ -2213,7 +2213,7 @@ static BagAppState BagAppMainTask_CompleteToss_WaitButton(BagAppData *appData) {
         ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_DESCRIPTION]);
         Pocket_TakeItem(appData->bagView->pockets[appData->bagView->curPocket].slots, appData->bagView->pockets[appData->bagView->curPocket].count, appData->bagView->itemId, appData->quantity, HEAP_ID_BAG);
         BagApp_SetItemNameStringsFromCurPocket(appData);
-        ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 1);
+        BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 1);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
         ov15_021FB518(appData);
@@ -2240,7 +2240,7 @@ static BagAppState BagApp_ItemContextMenu_Register(BagAppData *appData) {
         BagApp_HideContextMenuIcons(appData);
         BagApp_ClearSelectedItemWindow(appData);
         BagApp_ClearFourWindowsAt(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_OPTION_1]);
-        ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
+        BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
         ov15_021FB518(appData);
@@ -2255,7 +2255,7 @@ static BagAppState ov15_021FC2E0(BagAppData *appData) {
         BagApp_HideContextMenuIcons(appData);
         BagApp_ClearSelectedItemWindow(appData);
         BagApp_ClearFourWindowsAt(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_OPTION_1]);
-        ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
+        BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
         ov15_021FB518(appData);
@@ -2271,7 +2271,7 @@ static BagAppState BagApp_ItemContextMenu_Deselect(BagAppData *appData) {
     BagApp_HideContextMenuIcons(appData);
     BagApp_ClearSelectedItemWindow(appData);
     BagApp_ClearFourWindowsAt(&appData->windows_sub[BAG_APP_WINDOW_SUB_CONTEXT_OPTION_1]);
-    ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
+    BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
     ov15_021FE868(appData);
     ov15_021FED3C(appData);
     ov15_021FB518(appData);
@@ -2714,7 +2714,7 @@ static BagAppState ov15_021FD058(BagAppData *appData) {
     ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_DESCRIPTION]);
     ov15_02200428(appData);
     ov15_021FFF24(appData);
-    ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
+    BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
     ov15_021FE868(appData);
     ov15_021FED3C(appData);
     ov15_021FB518(appData);
@@ -2759,7 +2759,7 @@ static BagAppState BagAppMainTask_ConfirmSale_HandleYesNo(BagAppData *appData) {
         ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
         ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
         ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_DESCRIPTION]);
-        ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
+        BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 0);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
         ov15_021FB518(appData);
@@ -2797,7 +2797,7 @@ static BagAppState BagAppMainTask_CompleteSale_WaitMessage(BagAppData *appData) 
         ClearFrameAndWindow2(&appData->windows_main[BAG_APP_WINDOW_MAIN_3], TRUE);
         ClearWindowTilemapAndScheduleTransfer(&appData->windows_main[BAG_APP_WINDOW_MAIN_3]);
         ScheduleWindowCopyToVram(&appData->windows_main[BAG_APP_WINDOW_MAIN_DESCRIPTION]);
-        ov15_02200140(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 1);
+        BagApp_UpdateItemIconsVisibility(appData, &appData->bagView->pockets[appData->bagView->curPocket], BagApp_GetNumItemsOnCurrentPage(appData), 1);
         ov15_021FE868(appData);
         ov15_021FED3C(appData);
         ov15_021FB518(appData);

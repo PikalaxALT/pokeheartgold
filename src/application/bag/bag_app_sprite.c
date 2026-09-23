@@ -183,7 +183,7 @@ static void BagApp_LoadSpriteResObjs(BagAppData *appData) {
     appData->unk_69C = GfGfxLoader_GetPlttData(NARC_graphic_bag_bag_graphics, bag_graphics_00048_NCLR, &appData->unk_6A0, HEAP_ID_BAG);
 }
 
-static const ManagedSpriteTemplate ov15_02200B0C[39] = {
+static const ManagedSpriteTemplate sSpriteTemplates[39] = {
     [BAG_APP_SPRITE_UNUSED_MOVE_ITEM_CURSOR] = {
                                                 .x = 177,
                                                 .y = 14,
@@ -853,7 +853,7 @@ static void BagApp_CreateSprites(BagAppData *appData) {
     u32 i;
 
     for (i = 0; i < 39; ++i) {
-        appData->sprites[i] = SpriteSystem_NewSpriteWithYOffset(appData->spriteSystem, appData->spriteManager, &ov15_02200B0C[i], FX32_CONST(256));
+        appData->sprites[i] = SpriteSystem_NewSpriteWithYOffset(appData->spriteSystem, appData->spriteManager, &sSpriteTemplates[i], FX32_CONST(256));
     }
     ManagedSprite_SetPriority(appData->sprites[BAG_APP_SPRITE_19], 1);
     for (i = 0; i < 4; ++i) {
@@ -1008,11 +1008,11 @@ static void BagApp_UpdatePageNavArrowSpritesVisibility(BagAppData *appData) {
     }
 }
 
-void ov15_02200140(BagAppData *appData, BagViewPocket *pocket, int a2, int a3) {
+void BagApp_UpdateItemIconsVisibility(BagAppData *appData, BagViewPocket *pocket, int numShown, BOOL replaceIcon) {
     for (int i = 0; i < 6; ++i) {
-        ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], ov15_02200B0C[1 + i].x, ov15_02200B0C[1 + i].y, FX32_CONST(256));
-        if (i < a2) {
-            if (a3) {
+        ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], sSpriteTemplates[BAG_APP_SPRITE_ITEM_ICON_1 + i].x, sSpriteTemplates[BAG_APP_SPRITE_ITEM_ICON_1 + i].y, FX32_CONST(256));
+        if (i < numShown) {
+            if (replaceIcon) {
                 BagApp_ReplaceItemIconResObjs(appData, i, appData->itemsInPocket[pocket->scroll + i]);
             }
             ManagedSprite_SetDrawFlag(appData->sprites[i + 1], TRUE);
@@ -1023,15 +1023,15 @@ void ov15_02200140(BagAppData *appData, BagViewPocket *pocket, int a2, int a3) {
     BagApp_UpdatePageNavArrowSpritesVisibility(appData);
 }
 
-void ov15_022001C4(BagAppData *appData, BagViewPocket *pocket, int a2) {
-    int r7 = -1;
-    int r2 = (a2 / 6) * 6;
-    if (pocket->scroll == r2) {
-        r7 = a2 % 6;
+void BagApp_ShowOnlySelectedItemIcon(BagAppData *appData, BagViewPocket *pocket, int itemSlot) {
+    int slotOnPage = -1;
+    int scroll = (itemSlot / 6) * 6;
+    if (pocket->scroll == scroll) {
+        slotOnPage = itemSlot % 6;
     }
     for (int i = 0; i < 6; ++i) {
-        ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], ov15_02200B0C[1 + i].x, ov15_02200B0C[1 + i].y, FX32_CONST(256));
-        if (i == r7) {
+        ManagedSprite_SetPositionXYWithSubscreenOffset(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], sSpriteTemplates[BAG_APP_SPRITE_ITEM_ICON_1 + i].x, sSpriteTemplates[BAG_APP_SPRITE_ITEM_ICON_1 + i].y, FX32_CONST(256));
+        if (i == slotOnPage) {
             ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], TRUE);
         } else {
             ManagedSprite_SetDrawFlag(appData->sprites[BAG_APP_SPRITE_ITEM_ICON_1 + i], FALSE);
