@@ -1,5 +1,5 @@
 FROM ubuntu:26.04
-LABEL com.docker.image.name=ghcr.io/pret/pokeheartgold
+LABEL com.docker.image.name=ghcr.io/pikalaxalt/pokeheartgold
 
 RUN apt-get -y update \
  && apt-get -y install \
